@@ -2,9 +2,8 @@ export default function Main(){
     
     return(
         <>
-            <div className="text-amber-300">
-                admoadawodw
-
+            <div className="text-red-900">
+                lalalalal
             </div>
         </>
     )
