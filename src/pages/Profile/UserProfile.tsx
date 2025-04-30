@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export default function UserProfile() {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
+
       <div className="w-16 sm:w-56 bg-teal-800 text-white p-4 flex flex-col gap-6">
         <div className="text-center text-2xl font-bold hidden sm:block">PROMIGO</div>
         <div className="flex flex-col gap-4 mt-8">
@@ -25,7 +25,7 @@ export default function UserProfile() {
         </div>
       </div>
 
-      {/* Main Content */}
+      
       <div className="flex-1 p-6">
         <div className="flex justify-between items-center mb-6">
           <div className="text-3xl font-semibold">PROMIGO</div>
@@ -72,7 +72,7 @@ export default function UserProfile() {
                 <label className="block text-gray-700 font-semibold mb-1">Role</label>
                 <Input defaultValue="User" disabled />
               </div>
-            </div>x`
+            </div>
 
             <div className="mt-6 text-right">
               <Button className="bg-teal-700 hover:bg-teal-800 text-white px-6 py-2 rounded">
