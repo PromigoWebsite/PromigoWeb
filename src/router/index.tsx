@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "../theme"
 import Home from "../pages/homePage"
 import PromoList from "../pages/PromoList"
+import Profile from "../pages/Profile"
 export const router = createBrowserRouter([
     {
         id: "root",
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
             {
                 path:"/list",
                 element:<PromoList/>
+            },
+            {
+                path:"/userprofile",
+                element:<Profile/>
             }
         ]
     },
