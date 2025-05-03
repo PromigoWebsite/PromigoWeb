@@ -26,11 +26,23 @@ export const PromoAPI = {
     },
     get: async (search: string) => {
         return await axios.request({
-            url: "promo/search",
+            url: "/promo/search",
             method: "GET",
             params: {
                 search,
             }
         })
+    },
+    newest: async () => {
+        return await axios.request({
+            url: `/promo/newest`,
+            method: "GET",
+        })
+    },
+    reccomendation: async () => {
+        return await axios.request({
+          url: `/promo/recommendation`,
+          method: 'GET',
+        });
     }
 }
