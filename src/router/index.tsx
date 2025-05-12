@@ -1,14 +1,12 @@
 import { createBrowserRouter } from "react-router-dom";
 
-// Import komponen dengan penamaan yang konsisten (kapital di awal untuk komponen React)
 import Layout from "../theme";
 import Home from "../pages/homePage";
 import PromoList from "../pages/PromoList";
 import AboutUsPage from "../pages/aboutUsPage";
 import PromoDetail from "../pages/promoDetail";
-import ProfilePage from "../pages/profilePage"; // ✅ Sudah diperbaiki
+import ProfilePage from "../pages/profilePage"; 
 
-// Definisi router
 export const router = createBrowserRouter([
   {
     id: "root",
@@ -28,7 +26,7 @@ export const router = createBrowserRouter([
         element: <AboutUsPage />,
       },
       {
-        path: "/detail",
+        path: "/detail/:id",
         element: <PromoDetail />,
       },
       {

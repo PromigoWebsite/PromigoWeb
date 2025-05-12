@@ -1,11 +1,16 @@
 export interface Promo{
+    id?: number,
     brand_id?: string,
     name?: string,
     discount?: string,
     description?: string,
     status?: string,
     started_at?: string,
+    ended_at?: string,
     path?: string,
     brand_name?: string,
     logo?: string,
+    terms?: Array<string>,
+    type?: string,
+    category?: string,
 }

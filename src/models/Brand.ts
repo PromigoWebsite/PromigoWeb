@@ -4,4 +4,5 @@ export interface Brand {
     address?: string,
     logo?: string,
     category?: string,
+    mobile?: string,
 }

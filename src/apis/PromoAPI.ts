@@ -28,14 +28,14 @@ export const PromoAPI = {
             }
         })
     },
-    get: async (search: string) => {
+    get: async (id?: string) => {
         return await axios.request({
-            url: "/promo/search",
-            method: "GET",
-            params: {
-                search,
-            }
-        })
+          url: `/promo/${id}`,
+          method: "GET",
+          params: {
+            id,
+          },
+        });
     },
     newest: async () => {
         return await axios.request({
