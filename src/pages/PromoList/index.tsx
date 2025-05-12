@@ -4,13 +4,14 @@ import { PromoAPI } from '../../apis/PromoAPI';
 import Lucide from '../../basic_components/Lucide';
 import { AxiosError } from 'axios';
 import { toast } from "react-toastify";
-import {  useSearchParams } from 'react-router-dom';
+import {  useNavigate, useSearchParams } from 'react-router-dom';
 import { PromoFilter } from '../../models/Promo_filter';
 import { BrandAPI } from '../../apis/BrandAPI';
 import { Brand } from '../../models/Brand';
 
 
 export default function PromoPage() {
+  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const search = searchParams.get("search") || '';
   const [sort, setSort] = useState('');
@@ -22,15 +23,15 @@ export default function PromoPage() {
   const [promos,setPromo] = useState<Array<Promo>>([]);
   const [brands, setBrands] = useState<Array<Brand>>([]);
   const promoTypes = [
-    { value: "discount", label: "Diskon" },
-    { value: "cashback", label: "Cashback" },
-    { value: "freeShipping", label: "Gratis Ongkir" },
+    'Diskon',
+    'Cashback',
+    'Gratis Ongkir'
   ];
 
   const promoCategories = [
-    { value: "food", label: "Food" },
-    { value: "drink", label: "Drink" },
-    { value: "electronic", label: "Electronic" },
+    'Makanan',
+    'Minuman',
+    'Elektronik',
   ]; 
 
   const [reset, setReset] = useState<boolean>(false);
@@ -69,7 +70,6 @@ export default function PromoPage() {
   const checkBox = (
     filterCategory: keyof PromoFilter,
     filterValue: string | undefined,
-    label: string | undefined
   ) => {
     return (
       <>
@@ -86,7 +86,7 @@ export default function PromoPage() {
             }}
             className="mr-1"
           />
-          {label}
+          {filterValue}
         </label>
         <br />
       </>
@@ -141,7 +141,7 @@ export default function PromoPage() {
           {promoTypeChecked && (
             <div className="space-y-1 mt-2">
               {promoTypes.map((type) =>
-                checkBox("type", type.value, type.label)
+                checkBox("type", type)
               )}
             </div>
           )}
@@ -174,7 +174,7 @@ export default function PromoPage() {
           {categoryChecked && (
             <div className="space-y-1 mt-2">
               {promoCategories.map((category) =>
-                checkBox("category", category.value, category.label)
+                checkBox("category", category)
               )}
             </div>
           )}
@@ -208,7 +208,7 @@ export default function PromoPage() {
           {brandChecked && (
             <div className="space-y-1 mt-2">
               {brands.map((brand) =>
-                checkBox("brand", brand.name,  brand.name)
+                checkBox("brand", brand.name)
               )}
             </div>
           )}
@@ -263,7 +263,7 @@ export default function PromoPage() {
               key={index}
               className=" col-span-3 rounded-lg p-4 bg-white shadow hover:shadow-xl transition flex flex-col items-center"
               onClick={() => {
-                console.log("hi");
+                navigate(`/detail/${product.id}`);
               }}
             >
               <img

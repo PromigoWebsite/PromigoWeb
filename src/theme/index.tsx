@@ -59,9 +59,14 @@ export default function Main() {
               <span className="whitespace-nowrap">Favorite Page</span>
             </button>
             {/* NewestButton */}
-            <button className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10">
+            <button
+              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+              onClick={() => {
+                navigate("/about");
+              }}
+            >
               <Lucide icon="Flame" className="min-w-[70px] h-[25px] relative" />
-              <span className="whitespace-nowrap">Newest Page</span>
+              <span className="whitespace-nowrap">About us</span>
             </button>
           </div>
         </div>

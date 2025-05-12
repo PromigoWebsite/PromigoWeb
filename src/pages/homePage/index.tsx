@@ -5,9 +5,12 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { PromoAPI } from "../../apis/PromoAPI";
 import { Promo } from "../../models/Promo";
+import { useNavigate } from "react-router-dom";
+import Lucide from "../../basic_components/Lucide";
+import Carousel from "../../basic_components/Carousel";
 
 export default function Main() {
-
+    const navigate = useNavigate();
     const [brands,setBrands] = useState<Array<Brand>>([]);
     const [newestPromos, setNewestPromos] = useState<Array<Promo>>([]);
     const [reccomendations, setReccomendations] = useState<Array<Promo>>([]);
@@ -101,7 +104,12 @@ export default function Main() {
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Recommendation</h2>
             <div className="flex gap-6">
-              <button className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105">
+              <button
+                className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105"
+                onClick={() => {
+                  navigate(`/detail/${reccomendations[0].id}`);
+                }}
+              >
                 <img
                   src={reccomendations[0]?.path}
                   // src="https://res.cloudinary.com/duht72unt/image/upload/v1742742517/KFCPromotional_kof3bx.jpg"
@@ -122,9 +130,16 @@ export default function Main() {
                   </span>
                 </div>
                 <div className="flex justify-start mt-3 text-gray-500 text-sm">
-                  <button className="mr-2">👍 Like</button>
-                  {/* <button>💬 Share</button> */}
-                  <button>⭐ Favorite</button>
+                  <Lucide
+                    icon="ThumbsUp"
+                    className="h-[18px] stroke-3 relative mr-1"
+                  />
+                  <button className="mr-2">Like</button>
+                  <Lucide
+                    icon="Star"
+                    className="h-[18px] stroke-3 relative mr-1"
+                  />
+                  <button>Favorite</button>
                 </div>
               </button>
               <div className="w-1/3 flex flex-col justify-between">
@@ -133,7 +148,7 @@ export default function Main() {
                     index !== 0 && (
                       <button
                         onClick={() => {
-                          console.log("hi");
+                          navigate(`/detail/${item.id}`);
                         }}
                       >
                         <img
@@ -153,27 +168,33 @@ export default function Main() {
           {/* Newest Promo Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Newest Promo</h2>
-            <div
-              className="flex flex-nowrap w-full overflow-x-auto pb-3 gap-4"
-              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-            >
+            <Carousel className="w-full">
               {newestPromos.map((item, index) => (
-                <button
-                  key={index}
-                  className="bg-white rounded-lg shadow-md p-3 flex-shrink-0 hover:scale-105"
-                  onClick={()=>{
-                    console.log("hi");
+                <div
+                  className="flex-shrink-0 flex-grow-0 min-w-0"
+                  style={{
+                    flex: "0 0 auto",
+                    width: "auto",
+                    marginRight: "1rem",
                   }}
                 >
-                  <img
-                    src={item.path}
-                    alt={item.name}
-                    className=" object-cover rounded-md"
-                  />
-                  <div className="text-sm font-medium mt-2">{item.name}</div>
-                </button>
+                  <button
+                    key={index}
+                    className="bg-white rounded-lg shadow-md p-3 hover:scale-105 transition-transform"
+                    onClick={() => {
+                      navigate(`/detail/${item.id}`);
+                    }}
+                  >
+                    <img
+                      src={item.path}
+                      alt={item.name}
+                      className="object-cover rounded-md"
+                    />
+                    <div className="text-sm font-medium mt-2">{item.name}</div>
+                  </button>
+                </div>
               ))}
-            </div>
+            </Carousel>
           </div>
         </div>
       </div>
