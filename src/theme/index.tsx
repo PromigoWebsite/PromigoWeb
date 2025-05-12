@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import Lucide from "../basic_components/Lucide";
 
@@ -7,6 +7,7 @@ export default function Main() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col h-screen">
@@ -28,14 +29,24 @@ export default function Main() {
             />
             <span className="whitespace-nowrap">Menu List </span>
           </button>
-          <div className="flex flex-col space-y-6 w-full">
+          <div className="flex flex-col space-y-2 w-full">
             {/* homeButton */}
-            <button className="flex h-[30px] justify-start text-white items-center">
+            <button
+              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+              onClick={() => {
+                navigate("/");
+              }}
+            >
               <Lucide icon="House" className="min-w-[70px] h-[25px] relative" />
               <span className="whitespace-nowrap">Home Page</span>
             </button>
             {/* PromoButton */}
-            <button className="flex h-[30px] justify-start text-white items-center">
+            <button
+              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+              onClick={() => {
+                navigate("/list");
+              }}
+            >
               <Lucide
                 icon="BadgePercent"
                 className="min-w-[70px] h-[25px] relative"
@@ -43,12 +54,12 @@ export default function Main() {
               <span className="whitespace-nowrap">Promo Page</span>
             </button>
             {/* FavoriteButton */}
-            <button className="flex h-[30px] justify-start text-white items-center">
+            <button className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10">
               <Lucide icon="Star" className="min-w-[70px] h-[25px] relative" />
               <span className="whitespace-nowrap">Favorite Page</span>
             </button>
             {/* NewestButton */}
-            <button className="flex h-[30px] justify-start text-white items-center">
+            <button className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10">
               <Lucide icon="Flame" className="min-w-[70px] h-[25px] relative" />
               <span className="whitespace-nowrap">Newest Page</span>
             </button>
@@ -68,9 +79,14 @@ export default function Main() {
                 "max-w-[320px]",
               ])}
             >
-              <p className="font-bold text-lg text-gray-700 pr-4 font-serif">
+              <button
+                className="font-bold text-lg text-gray-700 pr-4 font-serif"
+                onClick={() => {
+                  navigate(`/`);
+                }}
+              >
                 PROMIGO
-              </p>
+              </button>
 
               {/* Input Pencarian */}
               {isSearchVisible && (
@@ -79,6 +95,11 @@ export default function Main() {
                   placeholder="Search..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      navigate(`/list/?search=${searchQuery}`);
+                    }
+                  }}
                   className="px-4 py-2 outline-none flex-1 bg-transparent"
                 />
               )}

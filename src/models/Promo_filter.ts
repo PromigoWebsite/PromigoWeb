@@ -1,3 +1,5 @@
 export interface PromoFilter{
-    brand_id?: number,
+    type?: string,
+    category?: string,
+    brand?: string,
 }

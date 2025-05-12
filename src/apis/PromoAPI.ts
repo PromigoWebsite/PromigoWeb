@@ -1,13 +1,17 @@
+import { PromoFilter } from "../models/Promo_filter";
 import { PromoPaginated } from "../models/Promo_Paginated";
 import axios from "./axios"
 
 export const PromoAPI = {
-    all: async() => {
+    all: async({search,sort,filter}:{search?: string, sort?: string, filter?: PromoFilter}) => {
         return await axios.request({
             url: "/promos",
             method: "GET",
             params: {
                 page: 'all',
+                search,
+                sort,
+                filter,
             },
         });
     },

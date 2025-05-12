@@ -101,13 +101,14 @@ export default function Main() {
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Recommendation</h2>
             <div className="flex gap-6">
-              <div className="bg-white rounded-lg shadow-lg p-4 w-2/3">
+              <button className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105">
                 <img
                   src={reccomendations[0]?.path}
+                  // src="https://res.cloudinary.com/duht72unt/image/upload/v1742742517/KFCPromotional_kof3bx.jpg"
                   alt="Starbucks Promo"
-                  className="w-full h-96 rounded-md"
+                  className="rounded-md size-[400px]"
                 />
-                <h3 className="text-lg font-semibold mt-3">
+                <h3 className="text-lg font-semibold mt-3 self-start">
                   {reccomendations[0]?.name}
                 </h3>
                 <div className="flex items-center gap-2 mt-2">
@@ -119,26 +120,30 @@ export default function Main() {
                   <span className="text-sm text-gray-600">
                     {reccomendations[0]?.brand_name}
                   </span>
-                  <button className="ml-auto text-blue-500 font-semibold">
-                    Follow
-                  </button>
                 </div>
-                <div className="flex justify-between mt-3 text-gray-500 text-sm">
-                  <button>👍 Like</button>
-                  <button>💬 Share</button>
+                <div className="flex justify-start mt-3 text-gray-500 text-sm">
+                  <button className="mr-2">👍 Like</button>
+                  {/* <button>💬 Share</button> */}
                   <button>⭐ Favorite</button>
                 </div>
-              </div>
-              <div className="w-1/3 flex flex-col gap-2">
+              </button>
+              <div className="w-1/3 flex flex-col justify-between">
                 {reccomendations.map(
                   (item, index) =>
                     index !== 0 && (
-                      <img
-                        key={index}
-                        src={item.path}
-                        alt={item.name || "Promo Image"}
-                        className="w-72 h-48 rounded-lg shadow-md"
-                      />
+                      <button
+                        onClick={() => {
+                          console.log("hi");
+                        }}
+                      >
+                        <img
+                          key={index}
+                          src={item.path}
+                          // src="https://res.cloudinary.com/duht72unt/image/upload/v1742742517/KFCPromotional_kof3bx.jpg"
+                          alt={item.name || "Promo Image"}
+                          className="h-40 rounded-lg shadow-md hover:scale-105"
+                        />
+                      </button>
                     )
                 )}
               </div>
@@ -148,16 +153,25 @@ export default function Main() {
           {/* Newest Promo Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Newest Promo</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div
+              className="flex flex-nowrap w-full overflow-x-auto pb-3 gap-4"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
               {newestPromos.map((item, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-md p-3">
+                <button
+                  key={index}
+                  className="bg-white rounded-lg shadow-md p-3 flex-shrink-0 hover:scale-105"
+                  onClick={()=>{
+                    console.log("hi");
+                  }}
+                >
                   <img
                     src={item.path}
                     alt={item.name}
-                    className="w-full rounded-md"
+                    className=" object-cover rounded-md"
                   />
-                  <h3 className="text-sm font-medium mt-2">{item.name}</h3>
-                </div>
+                  <div className="text-sm font-medium mt-2">{item.name}</div>
+                </button>
               ))}
             </div>
           </div>
