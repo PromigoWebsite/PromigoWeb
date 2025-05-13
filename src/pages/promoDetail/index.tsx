@@ -3,12 +3,46 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Promo } from "../../models/Promo";
 import { Brand } from "../../models/Brand";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
 import dayjs from "dayjs";
+import Lucide from "../../basic_components/Lucide";
+import clsx from "clsx";
+import { ReportAPI } from "../../apis/reportAPI";
+
 export default function Main() {
+  const params = useParams();
   const [promo, setPromo] = useState<Promo>();
   const [brand, setBrand] = useState<Brand>();
-  const params = useParams();
-  
+  const [reportModal, setReportModal] = useState<boolean>(false);
+  const [reportValue, setReportValue] = useState<string>("");
+  const [reportIndex, setReportIndex] = useState<number>();
+  const reportParameter = [
+    {
+      headline: "Iklan Tidak sesuai",
+      description:
+        "Isi dari promo tidak sesuai dengan yang berlaku sebenarnya.",
+    },
+    {
+      headline: "Konten tidak pantas",
+      description:
+        "Ada gambar atau kata-kata yang tidak pantas/sesuai untuk umum.",
+    },
+    {
+      headline: "Pelanggaran Hak Cipta",
+      description:
+        "Menggunakan logo, nama brand, atau gambar produk lain tanpa izin.",
+    },
+    {
+      headline: "Lainnya",
+      description:
+        "Tolong jelaskan alasan pelaporan secara detail pada form dibawah ini",
+    },
+  ];
 
   const getItems = () => {
     PromoAPI.get(params?.id).then((res) => {
@@ -22,6 +56,12 @@ export default function Main() {
     });
   };
 
+  const submitReport = (value: string) => {
+    if (params?.id && !isNaN(+params.id)) {
+      ReportAPI.addReport(value, (+params.id));
+    }
+  };
+
   useEffect(() => {
     if (params?.id && !isNaN(+params.id)) {
       getItems();
@@ -29,8 +69,8 @@ export default function Main() {
   }, []);
 
   useEffect(() => {
-    console.log(promo);
-  }, [promo]);
+    console.log(reportValue);
+  }, [reportValue]);
   return (
     <div className="flex flex-col md:flex-row p-6 md:justify-center">
       {/* Left Section */}
@@ -46,11 +86,11 @@ export default function Main() {
 
         <div className="rounded-xl shadow-md p-4 border border-gray-300">
           <div className="flex flex-col">
-            <div className="font-bold text-lg">Location</div>
+            <div className="font-bold text-lg">Lokasi</div>
             <div className="break-words">{brand?.address}</div>
           </div>
           <div>
-            <div className="font-bold text-lg">Telephone</div>
+            <div className="font-bold text-lg">Kontak</div>
             {brand?.mobile}
           </div>
           {/* <h2 className="font-bold text-lg mb-2">Follow Us</h2>
@@ -63,7 +103,7 @@ export default function Main() {
       </div>
 
       {/* Right Section */}
-      <div className="md:w-1/2 bg-white rounded-xl shadow-md px-8 py-6 border border-gray-300">
+      <div className="md:w-1/2 bg-white rounded-xl shadow-md px-8 py-6 border border-gray-300 flex flex-col">
         <div className="flex justify-between items-start ">
           <div>
             <div className="text-[40px] mt-4 pr-9 font-bold mb-7 ">
@@ -86,16 +126,19 @@ export default function Main() {
           <div className="bg-gray-200 text-gray-700 px-4 py-1 rounded-full text-md flex items-center">
             {promo?.category}
           </div>
-          <span className="ml-auto text-sm text-gray-500">175k Like ♡</span>
+          <div className="ml-auto text-sm text-gray-500 self-center">
+            175k Like
+          </div>
+          <Lucide icon="Heart" className="w-4 h-auto stroke-1 ml-1" />
         </div>
 
         <p className="mb-4 pr-11">{promo?.description}</p>
 
         <div className="mb-2">
-          <h2 className="font-semibold mb-2 text-xl">Validity</h2>
+          <h2 className="font-semibold mb-2 text-xl">Validitas</h2>
           <ul className="list-disc pl-5 text-md">
             <li>
-              Valid until{" "}
+              Berlaku hingga{" "}
               {promo?.ended_at
                 ? dayjs(promo.ended_at).format("MMMM D, YYYY")
                 : "Undefined"}
@@ -104,7 +147,7 @@ export default function Main() {
         </div>
 
         <div>
-          <h2 className="font-semibold mb-2 text-xl">Terms and Conditions</h2>
+          <h2 className="font-semibold mb-2 text-xl">Syarat dan Ketentuan</h2>
           <ul className="list-disc pl-5 space-y-1 text-md">
             {promo?.terms?.length != 0 ? (
               promo?.terms?.map((term, index) => <li key={index}>{term}</li>)
@@ -113,7 +156,105 @@ export default function Main() {
             )}
           </ul>
         </div>
+
+        <div className="flex justify-end mt-auto">
+          <button
+            className="py-2 pl-1 bg-[#567C8D] w-12 rounded-full flex justify-center items-center"
+            onClick={() => {
+              setReportModal(true);
+            }}
+          >
+            <Lucide icon="Flag" className="size-5 stroke-3 relative mr-1" />
+          </button>
+        </div>
       </div>
+      <Dialog open={reportModal} onClose={() => {}} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="max-w-xl max-h-[1000px] bg-gray-200 p-8 rounded-2xl">
+            {/* Headline */}
+            <div className="flex justify-between mb-4">
+              <DialogTitle className="font-bold text-2xl">
+                Laporkan Promo
+              </DialogTitle>
+              <button
+                onClick={() => {
+                  setReportModal(false);
+                  setReportValue("");
+                  setReportIndex(-1);
+                }}
+              >
+                <Lucide icon="X" className="w-9 h-auto stroke-2 " />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="mb-2">Pilih alasan pelaporan promo ini:</div>
+            <div className="flex flex-col">
+              <div className="mb-2">
+                {reportParameter.map((params, index) => (
+                  <div className="flex">
+                    <input
+                      type="checkbox"
+                      className="mr-2 self-start mt-1.5"
+                      checked={index == reportIndex}
+                      onClick={() => {
+                        if (index != reportParameter.length - 1) {
+                          setReportValue(params.headline);
+                        }
+                        setReportIndex(index);
+                      }}
+                    />
+                    <div>
+                      <span className="font-semibold">{params.headline}</span> -{" "}
+                      {params.description}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mb-2">
+                {reportIndex == reportParameter.length - 1 && (
+                  <textarea
+                    className="border border-gray-300 rounded w-full h-32 p-2 align-top resize-none"
+                    placeholder="Masukkan detail laporan Anda..."
+                    value={reportValue}
+                    onChange={(e) => {
+                      setReportValue(e.target.value);
+                    }}
+                  ></textarea>
+                )}
+              </div>
+              <div className="self-end">
+                <button
+                  className={clsx(
+                    "border border-gray-400 font-semibold rounded-xl py-2 px-4 text-xs mr-2",
+                    reportValue
+                      ? "bg-[#80FF93] hover:bg-[#60DF73] cursor-pointer"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  )}
+                  disabled={!reportValue}
+                  onClick={() => {
+                    submitReport(reportValue);
+                  }}
+                >
+                  Report
+                </button>
+                <button
+                  className="border border-gray-400  font-semibold rounded-xl py-2 px-4 text-xs"
+                  onClick={() => {
+                    setReportModal(false);
+                    setReportValue("");
+                    setReportIndex(-1);
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+            <div></div>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </div>
   );
 }
