@@ -76,7 +76,7 @@ export default function Main() {
 
           {/* Affiliate Brand Section */}
           <div className="mt-6">
-            <h2 className="text-2xl font-semibold mb-4">Affiliate Brand</h2>
+            <h2 className="text-2xl font-semibold mb-4">Rekan Brand</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
               {brands.map((item, index) => (
                 <div
@@ -102,7 +102,7 @@ export default function Main() {
 
           {/* Recommendation Section */}
           <div className="mt-10">
-            <h2 className="text-2xl font-semibold mb-4">Recommendation</h2>
+            <h2 className="text-2xl font-semibold mb-4">Rekomendasi</h2>
             <div className="flex gap-6">
               <button
                 className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105"
@@ -167,7 +167,7 @@ export default function Main() {
 
           {/* Newest Promo Section */}
           <div className="mt-10">
-            <h2 className="text-2xl font-semibold mb-4">Newest Promo</h2>
+            <h2 className="text-2xl font-semibold mb-4">Promo Terbaru</h2>
             <Carousel className="w-full">
               {newestPromos.map((item, index) => (
                 <div

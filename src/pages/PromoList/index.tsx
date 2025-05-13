@@ -153,7 +153,7 @@ export default function PromoPage() {
               setCategoryChecked(!categoryChecked);
             }}
           >
-            Category
+            Kategori
             {categoryChecked ? (
               <div>
                 <Lucide
@@ -219,7 +219,7 @@ export default function PromoPage() {
             setApplyChanges(!applyChanges);
           }}
         >
-          Apply
+          Terapkan
         </button>
         <button
           className="text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white"
@@ -231,7 +231,7 @@ export default function PromoPage() {
             setReset(!reset);
           }}
         >
-          Reset
+          Hapus
         </button>
       </aside>
 
@@ -251,8 +251,8 @@ export default function PromoPage() {
             onChange={(e) => setSort(e.target.value)}
             className="border p-2 rounded"
           >
-            <option value="">Order By</option>
-            <option value="DESC">Newest</option>
+            <option value="">Urutkan</option>
+            <option value="DESC">Terbaru</option>
           </select>
         </div>
 
