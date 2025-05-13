@@ -6,6 +6,8 @@ import PromoList from "../pages/PromoList";
 import AboutUsPage from "../pages/aboutUsPage";
 import PromoDetail from "../pages/promoDetail";
 import ProfilePage from "../pages/profilePage"; 
+import RegisterPage from "../pages/Register";
+import LoginPage from "../pages/LoginPage";
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +34,14 @@ export const router = createBrowserRouter([
       {
         path: "/profile",
         element: <ProfilePage />, 
+      },
+      {
+        path: "/register",
+        element: <RegisterPage />, 
+      },
+      {
+        path: "/login",
+        element: <LoginPage />, 
       },
       
     ],

@@ -17,6 +17,7 @@ export default function Main() {
           className={clsx([
             "flex flex-col bg-[#567C8D] shadow-md rounded-tr-xl transition-all duration-300 overflow-hidden",
             isSidebarOpen ? "w-[250px]" : "w-[70px]",
+            "z-2"
           ])}
         >
           <button
@@ -74,10 +75,10 @@ export default function Main() {
         {/* Main Content */}
         <div className="flex flex-col flex-1">
           {/* Navbar */}
-          <nav className="flex justify-center p-3">
+          <nav className="flex justify-center p-3 z-1 ">
             <div
               className={clsx([
-                "flex items-center h-[60px] border border-gray-300 rounded-full px-4 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-300",
+                "flex items-center h-[60px] border bg-white border-gray-300 rounded-full px-4 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-300",
                 isSidebarOpen
                   ? "w-full md:max-w-[1050px]"
                   : "w-full md:max-w-[1300px]",
@@ -128,14 +129,14 @@ export default function Main() {
           </nav>
 
           {/* Main Content Area */}
-          <div className="flex-1 p-4 bg-gray-50">
+          <div className="flex-1 p-4 bg-gray-50 z-0">
             <Outlet />
           </div>
         </div>
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 text-gray-700 p-6 shadow-md">
+      <footer className="bg-gray-100 text-gray-700 p-6 shadow-md z-1">
         <div className="container mx-auto flex flex-col md:flex-row justify-between">
           <div>
             <h2 className="font-bold text-lg">PROMIGO</h2>
