@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import Lucide from "../../basic_components/Lucide";
 import clsx from "clsx";
 import { ReportAPI } from "../../apis/reportAPI";
+import { toast } from "react-toastify";
 
 export default function Main() {
   const params = useParams();
@@ -235,6 +236,10 @@ export default function Main() {
                   disabled={!reportValue}
                   onClick={() => {
                     submitReport(reportValue);
+                    setReportValue("");
+                    setReportIndex(-1);
+                    setReportModal(false);
+                    toast.success('Promo berhasil di laporkan');
                   }}
                 >
                   Report
