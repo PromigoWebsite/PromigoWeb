@@ -19,7 +19,7 @@ export default function Main() {
       [name]: value,
     }));
   };
-  
+
 
   const toggleEdit = () => {
     // Jika saat ini sedang dalam mode edit dan akan di-save, tambahkan logic save di sini (jika perlu)

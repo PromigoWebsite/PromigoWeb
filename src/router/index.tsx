@@ -8,6 +8,8 @@ import PromoDetail from "../pages/promoDetail";
 import ProfilePage from "../pages/profilePage"; 
 import RegisterPage from "../pages/Register";
 import LoginPage from "../pages/LoginPage";
+import FavoritePage from "../pages/favoritePage";
+import BrandPage from "../pages/brandPage";
 
 export const router = createBrowserRouter([
   {
@@ -43,7 +45,14 @@ export const router = createBrowserRouter([
         path: "/login",
         element: <LoginPage />, 
       },
-      
+      {
+        path: "/favorite",
+        element: <FavoritePage />, 
+      },
+      {
+        path: "/brand",
+        element: <BrandPage />, 
+      },
     ],
   },
 ]);
