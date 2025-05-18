@@ -1,4 +1,3 @@
-import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { RouterProvider } from "react-router-dom";
@@ -8,18 +7,16 @@ import Lucide from "./basic_components/Lucide";
 
 createRoot(document.getElementById("root")!).render(
   <>
-    <StrictMode>
-      <RouterProvider router={router} />
-    </StrictMode>
+    <RouterProvider router={router} />
 
     <ToastContainer
       icon={({ type }) => {
         if (type === "success")
-        return <Lucide icon="LaptopMinimalCheck" className="stroke-2"/>;
+          return <Lucide icon="CheckCheck" className="stroke-2 text-black" />;
         if (type === "warning")
-          return <Lucide icon="CircleX" className="stroke-2" />;
-        if (type === "error") 
-          return <Lucide icon="CircleX" className="stroke-2" />;
+          return <Lucide icon="CircleX" className="stroke-2 text-black" />;
+        if (type === "error")
+          return <Lucide icon="CircleX" className="stroke-2 text-black" />;
         else return "unidentified";
       }}
     />

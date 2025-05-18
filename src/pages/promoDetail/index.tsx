@@ -14,14 +14,21 @@ import Lucide from "../../basic_components/Lucide";
 import clsx from "clsx";
 import { ReportAPI } from "../../apis/reportAPI";
 import { toast } from "react-toastify";
+import { useAuth } from "../../hook/useAuth";
+import { AuthAPI } from "../../apis/authAPI";
+import { LoginModal } from "../../basic_components/LoginModal";
 
 export default function Main() {
   const params = useParams();
   const [promo, setPromo] = useState<Promo>();
+  const [isAuth, setIsAuth] = useState<boolean>(false);
+  const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
   const [brand, setBrand] = useState<Brand>();
   const [reportModal, setReportModal] = useState<boolean>(false);
   const [reportValue, setReportValue] = useState<string>("");
   const [reportIndex, setReportIndex] = useState<number>();
+  
+
   const reportParameter = [
     {
       headline: "Iklan Tidak sesuai",
@@ -63,8 +70,16 @@ export default function Main() {
     }
   };
 
+  const authenticate = ()=>{
+    AuthAPI.user()
+    .then((res)=>{
+      setIsAuth(res.status === 200);
+    })
+  }
+
   useEffect(() => {
     if (params?.id && !isNaN(+params.id)) {
+      authenticate();
       getItems();
     }
   }, []);
@@ -88,7 +103,7 @@ export default function Main() {
         <div className="rounded-xl shadow-md p-4 border border-gray-300">
           <div className="flex flex-col">
             <div className="font-bold text-lg">Lokasi</div>
-            <div className="break-words">{brand?.address}</div>
+            <div className="break-words w-[500px]">{brand?.address}</div>
           </div>
           <div>
             <div className="font-bold text-lg">Kontak</div>
@@ -162,13 +177,20 @@ export default function Main() {
           <button
             className="py-2 pl-1 bg-[#567C8D] w-12 rounded-full flex justify-center items-center"
             onClick={() => {
-              setReportModal(true);
+              if (isAuth) {
+                setReportModal(true);
+              } else {
+                setLoginModalOpen(true);
+              }
             }}
           >
             <Lucide icon="Flag" className="size-5 stroke-3 relative mr-1" />
           </button>
         </div>
       </div>
+
+      <LoginModal openModal={loginModalOpen} setOpenModal={setLoginModalOpen}/>
+
       <Dialog open={reportModal} onClose={() => {}} className="relative z-50">
         <DialogBackdrop className="fixed inset-0 bg-black/30" />
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
@@ -202,6 +224,8 @@ export default function Main() {
                       onClick={() => {
                         if (index != reportParameter.length - 1) {
                           setReportValue(params.headline);
+                        } else {
+                          setReportValue("");
                         }
                         setReportIndex(index);
                       }}
@@ -239,7 +263,7 @@ export default function Main() {
                     setReportValue("");
                     setReportIndex(-1);
                     setReportModal(false);
-                    toast.success('Promo berhasil di laporkan');
+                    toast.success("Promo berhasil di laporkan");
                   }}
                 >
                   Report

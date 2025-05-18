@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
 import Registerbg from '../../assets/Registerbg.png';
+import api from '../../apis/api';
+import axios from '../../apis/axios';
+import { useNavigate } from 'react-router-dom';
+import { AuthAPI } from '../../apis/authAPI';
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
     const [form, setForm] = useState({
-        username: '',
+        email: '',
         password: '',
         rememberMe: false,
     });
+    const navigate = useNavigate();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -16,23 +22,46 @@ const LoginForm = () => {
         setForm({ ...form, [name]: type === 'checkbox' ? checked : value });
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(form);
+        await axios.get(`${api.BaseUrl}/sanctum/csrf-cookie`);
+        await axios.post('/login',(form))
+        .then(()=>{
+            toast.success("Login Berhasil");
+            navigate("/");
+        })
+        .catch((error)=>{
+            toast.error(error.response?.data?.message || error.message);
+        })
+        
+       
     };
 
+    const isAuth = () => {
+        AuthAPI.user().
+        then((res)=>{
+            if(res.data.id == null || res.data.id == undefined){
+                toast.error('Kamu sudah pernah login');
+                navigate('/');
+            }
+        })
+    }
+
+    useEffect(()=>{
+        isAuth();
+    },[]);
     return (
         <>
             <form
                 onSubmit={handleSubmit}
-                className="bg-white shadow-lg rounded-xl px-8 py-8 w-full max-w-90 h-120 relative"
+                className="bg-white shadow-lg rounded-xl px-8 py-8 w-full max-w-90 h-130 relative"
             >
                 <div className="text-center text-2xl font-serif font-semibold mb-8 py-4">
-                    Welcome Back!
+                    Selamat Datang Kembali!
                 </div>
 
                 <div className="text-center text-sm text-gray-600 mb-8">
-                    Please enter your credentials to login
+                    Tolong masukkan data untuk melakukan login
                 </div>
 
                 {/* Username */}
@@ -46,9 +75,9 @@ const LoginForm = () => {
                         <div className="bg-gray-200 rounded-full pl-4 pr-4 py-2">
                             <input
                                 type="text"
-                                name="username"
-                                placeholder="Username"
-                                value={form.username}
+                                name="email"
+                                placeholder="email"
+                                value={form.email}
                                 onChange={handleChange}
                                 className="bg-transparent w-full outline-none text-sm"
                                 required
@@ -114,10 +143,16 @@ const LoginForm = () => {
 
                 {/* Register Link */}
                 <div className="text-center text-sm text-gray-600">
-                    Don't have an account?{' '}
-                    <a href="#" className="text-blue-600 hover:text-blue-800">
-                        Register here
-                    </a>
+                    Belum mempunyai akun?{' '}
+                    <button onClick={()=>{navigate('/register')}} className="text-blue-600 hover:text-blue-800">
+                        Daftar disini
+                    </button>
+                </div>
+                <div className="text-center text-sm text-gray-600">
+                Ingin pindah ke halaman utama?{' '}
+                    <button onClick={()=>{navigate('/')}} className="text-blue-600 hover:text-blue-800">
+                        Tekan disini
+                    </button>
                 </div>
             </form>
         </>

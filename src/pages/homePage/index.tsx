@@ -8,12 +8,16 @@ import { Promo } from "../../models/Promo";
 import { useNavigate } from "react-router-dom";
 import Lucide from "../../basic_components/Lucide";
 import Carousel from "../../basic_components/Carousel";
+import { AuthAPI } from "../../apis/authAPI";
+import axios from "../../apis/axios";
+import api from "../../apis/api";
 
 export default function Main() {
     const navigate = useNavigate();
     const [brands,setBrands] = useState<Array<Brand>>([]);
     const [newestPromos, setNewestPromos] = useState<Array<Promo>>([]);
     const [reccomendations, setReccomendations] = useState<Array<Promo>>([]);
+    const [brandExpanded, setBrandExpanded] = useState(false);
 
     const fetchBrand = ()=>{
       BrandAPI.all()
@@ -52,6 +56,15 @@ export default function Main() {
         });
     };
 
+    const checkLogin = async ()=>{
+      const user = axios.get('/user');
+      console.log(user);
+    };
+
+    useEffect(() => {
+      checkLogin();
+    }, []);
+
     useEffect(()=>{
       fetchBrand();
       fetchNewestPromo();
@@ -63,41 +76,64 @@ export default function Main() {
     },[newestPromos]);
 
     return (
-      <div className="p-6 bg-white flex justify-center">
-        <div className="max-w-screen-2xl px-25 w-full">
+      <div className="p-6 bg-gray-50 flex justify-center">
+        <div className="max-w-screen-xl w-full flex flex-col">
           {/* Promo Banner */}
-          <div className="w-full h-auto rounded-lg overflow-hidden shadow-md -mt-2">
+          <div className="w-full rounded-lg overflow-hidden shadow-md mt-2 self-center">
             <img
-              src="https://res.cloudinary.com/duht72unt/image/upload/v1742742517/KFCPromotional_kof3bx.jpg"
+              src="https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/asset/promo/starbucks%20banner.png"
               alt="KFC Promo"
-              className="w-full h-auto object-cover"
+              className="object-cover"
             />
           </div>
 
-          {/* Affiliate Brand Section */}
+          {/* brand */}
           <div className="mt-6">
             <h2 className="text-2xl font-semibold mb-4">Rekan Brand</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
-              {brands.map((item, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-xl p-4 shadow-lg flex flex-col items-center transition-transform transform hover:scale-105"
-                >
-                  <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
-                    <img
-                      src={item.logo}
-                      alt={item.name}
-                      className="w-16 h-16 object-contain"
-                    />
+              {brands
+                .slice(0, brandExpanded ? brands.length : 4)
+                .map((item, index) => (
+                  <div
+                    key={index}
+                    className="bg-white rounded-xl p-4 shadow-lg flex flex-col items-center transition-transform transition-duration-300 ease-in-out transform hover:scale-105"
+                  >
+                    <div className="w-20 h-20 rounded-full border border-gray-300 overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center">
+                      <img
+                        src={item.logo}
+                        alt={item.name}
+                        className="object-contain"
+                      />
+                    </div>
+                    <h3 className="mt-3 text-lg font-semibold">{item.name}</h3>
+                    <p className="text-sm text-gray-500">{item.category}</p>
                   </div>
-                  <h3 className="mt-3 text-lg font-semibold">{item.name}</h3>
-                  <p className="text-sm text-gray-500">{item.category}</p>
-                  {/* <p className="text-xs mt-1 text-red-500 flex items-center">
-                    ❤ {brand.likes} Likes
-                  </p> */}
-                </div>
-              ))}
+                ))}
             </div>
+
+            {brands.length > 4 && (
+              <div className="flex justify-center mt-4">
+                <button
+                  className="text-blue-500 font-medium hover:text-blue-700 flex items-center transform transition-all duration-300 hover:-translate-y-0.5"
+                  onClick={() => setBrandExpanded(!brandExpanded)}
+                >
+                  {brandExpanded ? (
+                    <>
+                      Show less{" "}
+                      <Lucide icon="ChevronUp" className="ml-1 w-4 h-4" />
+                    </>
+                  ) : (
+                    <div className="flex justify-end">
+                      See more ({brands.length - 4} more){" "}
+                      <Lucide
+                        icon="ChevronDown"
+                        className="ml-1 w-4 h-4 mt-1.5"
+                      />
+                    </div>
+                  )}
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Recommendation Section */}
@@ -112,7 +148,6 @@ export default function Main() {
               >
                 <img
                   src={reccomendations[0]?.path}
-                  // src="https://res.cloudinary.com/duht72unt/image/upload/v1742742517/KFCPromotional_kof3bx.jpg"
                   alt="Starbucks Promo"
                   className="rounded-md size-[400px]"
                 />
@@ -123,7 +158,7 @@ export default function Main() {
                   <img
                     src={reccomendations[0]?.logo}
                     alt="Starbucks"
-                    className="w-6 h-6 rounded-full"
+                    className="w-6 h-6 rounded-full border border-gray-300"
                   />
                   <span className="text-sm text-gray-600">
                     {reccomendations[0]?.brand_name}
@@ -131,13 +166,8 @@ export default function Main() {
                 </div>
                 <div className="flex justify-start mt-3 text-gray-500 text-sm">
                   <Lucide
-                    icon="ThumbsUp"
-                    className="h-[18px] stroke-3 relative mr-1"
-                  />
-                  <button className="mr-2">Like</button>
-                  <Lucide
                     icon="Star"
-                    className="h-[18px] stroke-3 relative mr-1"
+                    className="h-[18px] fill-yellow-300  mr-1"
                   />
                   <button>Favorite</button>
                 </div>
@@ -154,9 +184,8 @@ export default function Main() {
                         <img
                           key={index}
                           src={item.path}
-                          // src="https://res.cloudinary.com/duht72unt/image/upload/v1742742517/KFCPromotional_kof3bx.jpg"
                           alt={item.name || "Promo Image"}
-                          className="h-40 rounded-lg shadow-md hover:scale-105"
+                          className="h-40 w-36 rounded-lg shadow-md hover:scale-105"
                         />
                       </button>
                     )
@@ -164,14 +193,14 @@ export default function Main() {
               </div>
             </div>
           </div>
-
           {/* Newest Promo Section */}
-          <div className="mt-10">
+          <div className="w-full flex flex-col mt-10">
             <h2 className="text-2xl font-semibold mb-4">Promo Terbaru</h2>
-            <Carousel className="w-full">
+            <Carousel className="pb-2">
               {newestPromos.map((item, index) => (
                 <div
-                  className="flex-shrink-0 flex-grow-0 min-w-0"
+                  key={index}
+                  className="flex-shrink-0 flex-grow-0"
                   style={{
                     flex: "0 0 auto",
                     width: "auto",
@@ -179,18 +208,21 @@ export default function Main() {
                   }}
                 >
                   <button
-                    key={index}
-                    className="bg-white rounded-lg shadow-md p-3 hover:scale-105 transition-transform"
+                    className="bg-white h-[350px] rounded-lg shadow-md p-3 hover:shadow-lg transition-all duration-300 flex flex-col"
                     onClick={() => {
                       navigate(`/detail/${item.id}`);
                     }}
                   >
-                    <img
-                      src={item.path}
-                      alt={item.name}
-                      className="object-cover rounded-md"
-                    />
-                    <div className="text-sm font-medium mt-2">{item.name}</div>
+                    <div className="flex justify-center max-w-[200px]">
+                      <img
+                        src={item.path}
+                        alt={item.name}
+                        className="object-fill rounded-md h-[250px]"
+                      />
+                    </div>
+                    <div className="text-sm font-medium max-w-52 self-center">
+                      {item.name}
+                    </div>
                   </button>
                 </div>
               ))}
@@ -201,20 +233,4 @@ export default function Main() {
     );
 }
 
-
-
-
-// const brands = [
-//     { name: "Starbucks", category: "Food / Drink", logo: starbucksLogo, likes: "14.5k" },
-//     { name: "HokBen", category: "Food / Drink", logo: hokbenLogo, likes: "7.5k" },
-//     { name: "A&W", category: "Food / Drink", logo: awLogo, likes: "14.5k" },
-//     { name: "Bakmie EF", category: "Food / Drink", logo: bakmieLogo, likes: "9.8k" },
-// ];
-
-// const newestPromos = [
-//     { name: "Pizza Hut Double Pizza 50% Off", image: pizzaHutPromo },
-//     { name: "Pizza Hut Double Pizza 50% Off", image: pizzaHutPromo },
-//     { name: "Pizza Hut Double Pizza 50% Off", image: pizzaHutPromo },
-//     { name: "Pizza Hut BCA Cashback 40%", image: pizzaHutPromo },
-// ];
 

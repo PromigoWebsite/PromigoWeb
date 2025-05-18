@@ -1,13 +1,31 @@
-import { useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Outlet, useLoaderData, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import Lucide from "../basic_components/Lucide";
+import { Menu, MenuItem } from "../basic_components/FloatingMenu";
+import { AuthAPI } from "../apis/authAPI";
+import { toast } from "react-toastify";
 
 export default function Main() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
+  const [isAuth, setIsAuth] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
+  
+  const authenticate = ()=>{
+    AuthAPI.user()
+    .then((res)=>{
+      setIsAuth(res.status === 200);
+    })
+  }
+  
+  useEffect(()=>{
+    authenticate();
+  },[]);
+  useEffect(() => {
+    console.log(isAuth);
+  }, [isAuth]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -15,9 +33,9 @@ export default function Main() {
         {/* Sidebar */}
         <div
           className={clsx([
-            "flex flex-col bg-[#567C8D] shadow-md rounded-tr-xl transition-all duration-300 overflow-hidden",
-            isSidebarOpen ? "w-[250px]" : "w-[70px]",
-            "z-2"
+            "flex flex-col bg-[#567C8D] shadow-md rounded-tr-4xl transition-all duration-300 overflow-hidden",
+            isSidebarOpen ? "w-[250px]" : "w-[71px]",
+            "z-2",
           ])}
         >
           <button
@@ -66,7 +84,7 @@ export default function Main() {
                 navigate("/about");
               }}
             >
-              <Lucide icon="Flame" className="min-w-[70px] h-[25px] relative" />
+              <Lucide icon="Users" className="min-w-[70px] h-[25px] relative" />
               <span className="whitespace-nowrap">About us</span>
             </button>
           </div>
@@ -75,10 +93,10 @@ export default function Main() {
         {/* Main Content */}
         <div className="flex flex-col flex-1">
           {/* Navbar */}
-          <nav className="flex justify-center p-3 z-1 ">
+          <nav className="flex justify-center p-3 z-1 bg-gray-50">
             <div
               className={clsx([
-                "flex items-center h-[60px] border bg-white border-gray-300 rounded-full px-4 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-300",
+                "flex items-center h-[60px] border bg-white border-gray-300 rounded-full pl-4 pr-8 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-300",
                 isSidebarOpen
                   ? "w-full md:max-w-[1050px]"
                   : "w-full md:max-w-[1300px]",
@@ -103,10 +121,15 @@ export default function Main() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      navigate(`/list/?search=${searchQuery}`);
+                      if(searchQuery != ''){
+                        navigate(`/list/?search=${searchQuery}`);
+                      }else{
+                         navigate(`/list`);
+                      }
+                      
                     }
                   }}
-                  className="px-4 py-2 outline-none flex-1 bg-transparent"
+                  className="mr-4 pl-4 py-2 outline-none flex-1 bg-gray-300/30 rounded-full"
                 />
               )}
 
@@ -115,15 +138,58 @@ export default function Main() {
                 <button onClick={() => setIsSearchVisible(!isSearchVisible)}>
                   <Lucide
                     icon={isSearchVisible ? "CircleX" : "Search"}
-                    className="stroke-2 size-6"
+                    className="stroke-2 text-gray-500 size-6 "
                   />
                 </button>
                 <button>
-                  <Lucide icon="Bell" className="stroke-2 size-6" />
+                  <Lucide
+                    icon="Star"
+                    className="stroke-2 text-gray-500 size-6"
+                  />
                 </button>
-                <button>
-                  <Lucide icon="CircleUserRound" className="stroke-2 size-6" />
-                </button>
+                <Menu
+                  label={
+                    isAuth ? (
+                      <div className="size-9 rounded-full overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center">
+                        <img
+                          src="https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/member/PhotoJason.jpg"
+                          className="object-contain size-"
+                        />
+                      </div>
+                    ) : (
+                      <Lucide
+                        icon="CircleUserRound"
+                        className="stroke-2 text-gray-500 size-6"
+                      />
+                    )
+                  }
+                >
+                  {isAuth ? (
+                    <>
+                      <MenuItem label="Profil" onClick={()=>toast.success('dummy123')}/>
+
+                      <MenuItem
+                        label="Logout"
+                        onClick={() => {
+                          AuthAPI.logout()
+                          .then((res)=>{
+                            if(res.status == 200){
+                              navigate('/login');
+                            }
+                          })
+
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <MenuItem
+                      label="Login"
+                      onClick={() => {
+                        navigate("/login");
+                      }}
+                    />
+                  )}
+                </Menu>
               </div>
             </div>
           </nav>
