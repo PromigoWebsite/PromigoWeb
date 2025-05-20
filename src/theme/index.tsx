@@ -60,7 +60,8 @@ export default function Main() {
               <span className="whitespace-nowrap">Promo Page</span>
             </button>
             {/* FavoriteButton */}
-            <button
+            {isAuth && !loading && ( 
+              <button
               className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
               onClick={() => {
                 navigate(`/favorite`);
@@ -69,6 +70,8 @@ export default function Main() {
               <Lucide icon="Heart" className="min-w-[70px] h-[25px] relative" />
               <span className="whitespace-nowrap">Favorite Page</span>
             </button>
+            )}
+            
             {/* NewestButton */}
             <button
               className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"

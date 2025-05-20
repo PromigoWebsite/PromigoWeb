@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { AuthAPI } from '../../apis/authAPI';
 import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
+import { useUser } from '../../context';
 
 const RegisterForm = () => {
     const [form, setForm] = useState({
@@ -20,6 +21,7 @@ const RegisterForm = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirm, setShowConfirm] = useState(false);
     const [showTerms, setShowTerms] = useState(false);
+    const {refreshUser} = useUser();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value, type, checked } = e.target;
@@ -40,6 +42,7 @@ const RegisterForm = () => {
         .then((res)=>{
             if(res.status == 200){
                 toast.success('Akun berhasil dibentuk');
+                refreshUser();
                 navigate('/');
             }
         })
