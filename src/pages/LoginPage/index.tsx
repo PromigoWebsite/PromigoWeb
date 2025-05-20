@@ -6,6 +6,7 @@ import axios from '../../apis/axios';
 import { useNavigate } from 'react-router-dom';
 import { AuthAPI } from '../../apis/authAPI';
 import { toast } from 'react-toastify';
+import { useUser } from '../../context';
 
 const LoginForm = () => {
     const [form, setForm] = useState({
@@ -14,6 +15,7 @@ const LoginForm = () => {
         rememberMe: false,
     });
     const navigate = useNavigate();
+    const { isAuth, refreshUser, loading } = useUser();
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -28,6 +30,7 @@ const LoginForm = () => {
         await axios.post('/login',(form))
         .then(()=>{
             toast.success("Login Berhasil");
+            refreshUser();
             navigate("/");
         })
         .catch((error)=>{
@@ -37,19 +40,12 @@ const LoginForm = () => {
        
     };
 
-    const isAuth = () => {
-        AuthAPI.user().
-        then((res)=>{
-            if(res.data.id == null || res.data.id == undefined){
-                toast.error('Kamu sudah pernah login');
-                navigate('/');
-            }
-        })
-    }
-
-    useEffect(()=>{
-        isAuth();
-    },[]);
+    useEffect(() => {
+      if (isAuth && !loading) {
+        toast.error("Kamu sudah pernah login");
+        navigate("/");
+      }
+    }, [isAuth]);
     return (
         <>
             <form
@@ -144,9 +140,9 @@ const LoginForm = () => {
                 {/* Register Link */}
                 <div className="text-center text-sm text-gray-600">
                     Belum mempunyai akun?{' '}
-                    <button onClick={()=>{navigate('/register')}} className="text-blue-600 hover:text-blue-800">
+                    <a onClick={()=>{navigate('/register')}} className="text-blue-600 hover:text-blue-800">
                         Daftar disini
-                    </button>
+                    </a>
                 </div>
                 <div className="text-center text-sm text-gray-600">
                 Ingin pindah ke halaman utama?{' '}

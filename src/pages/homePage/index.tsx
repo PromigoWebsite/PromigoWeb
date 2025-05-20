@@ -8,9 +8,7 @@ import { Promo } from "../../models/Promo";
 import { useNavigate } from "react-router-dom";
 import Lucide from "../../basic_components/Lucide";
 import Carousel from "../../basic_components/Carousel";
-import { AuthAPI } from "../../apis/authAPI";
-import axios from "../../apis/axios";
-import api from "../../apis/api";
+
 
 export default function Main() {
     const navigate = useNavigate();
@@ -55,15 +53,6 @@ export default function Main() {
           }
         });
     };
-
-    const checkLogin = async ()=>{
-      const user = axios.get('/user');
-      console.log(user);
-    };
-
-    useEffect(() => {
-      checkLogin();
-    }, []);
 
     useEffect(()=>{
       fetchBrand();

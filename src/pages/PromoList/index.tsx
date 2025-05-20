@@ -42,7 +42,6 @@ export default function PromoPage() {
   const [applyChanges, setApplyChanges] = useState<boolean>(false);
   const [categoryChecked,setCategoryChecked] = useState<boolean>(true);
   const [promoTypeChecked, setPromoTypeChecked] = useState<boolean>(true);
-  const [brandChecked, setBrandChecked] = useState<boolean>(true);
   // const debouncedSearchTerm = useDebounce(search, 600);
 
 
@@ -258,7 +257,7 @@ export default function PromoPage() {
                 "border border-gray-500 px-4 py-2 flex",
                 brand.name == filter.brand
                   ? "bg-[#063EB8] text-white"
-                  : "bg-white rounded",
+                  : "bg-[#567C8D] text-white rounded",
               ])}
               onClick={() => {
                 if (brand.name == filter.brand) {

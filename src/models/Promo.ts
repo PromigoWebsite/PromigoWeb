@@ -13,4 +13,5 @@ export interface Promo{
     terms?: Array<string>,
     type?: string,
     category?: string,
+    favorite_count?: number,
 }

@@ -1,92 +1,53 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Heart } from "lucide-react";
-import dapurcoklat from "../../assets/logodapurcokelat.jpg";
-import Hokben from "../../assets/HokbenFavoritepage.png";
-
-interface Promo {
-  id: number;
-  title: string;
-  imageUrl: string;
-  likes: number;
-}
+import { PromoAPI } from "../../apis/PromoAPI";
+import { Promo } from "../../models/Promo";
+import { User } from "../../models/User";
+import { useNavigate } from "react-router-dom";
+import { useDebounce } from "@uidotdev/usehooks";
+import Lucide from "../../basic_components/Lucide";
+import { FavoriteAPI } from "../../apis/FavoriteAPI";
 
 export default function FavoritePage() {
   const [promos, setPromos] = useState<Promo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User>();
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [orderBy, setOrderBy] = useState<string>("");
+  const navigate = useNavigate();
+  const debouncedSearchTerm = useDebounce(searchQuery, 600);
+
+  const fetchFavorite = () => {
+    setLoading(true);
+
+    FavoriteAPI.all({ search: searchQuery, orderBy: orderBy }).then((res) => {
+      // dd(res.data.user)
+      setPromos(res.data.favorite);
+      setUser(res.data.user);
+      setLoading(false);
+    });
+  };
 
   useEffect(() => {
-    // Temporary data
-    const tempPromos: Promo[] = [
-      {
-        id: 1,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 1332
-      },
-      {
-        id: 2,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 335
-      },
-      {
-        id: 3,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 193
-      },
-      {
-        id: 4,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 199
-      },
-      {
-        id: 5,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 233
-      },
-      {
-        id: 6,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 212
-      },
-      {
-        id: 7,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 166
-      },
-      {
-        id: 8,
-        title: "Promo Hokben Payday Deals Rp 50 Ribuan/Orang",
-        imageUrl: Hokben,
-        likes: 183
-      }
-    ];
-
-    setPromos(tempPromos);
-    setLoading(false);
-  }, []);
+    fetchFavorite();
+  }, [debouncedSearchTerm, orderBy]);
 
   return (
-    <div className="bg-[#e6e8ec] min-h-screen font-serif p-0">
+    <div className="bg-[#e6e8ec] rounded-2xl min-h-screen font-serif p-0">
       <div className="max-w-screen-xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-10 pt-8 pb-4">
           <div className="text-3xl font-extrabold tracking-wide text-gray-800 select-none">
-            PROMIGO
+            Favorite Promo
           </div>
-          <div className="flex items-center bg-white rounded-2xl shadow-lg px-6 py-3 border space-x-4 min-w-[420px]">
+          <div className="flex items-center justify-center bg-white rounded-2xl shadow-lg px-6 py-3 border space-x-4 min-w-[220px]">
             <img
-              src={dapurcoklat}
+              src={user?.profile_picture}
               alt="Avatar"
               className="w-12 h-12 rounded-full border object-cover"
             />
             <div className="text-2xl font-extrabold text-gray-900">
-              Llyod Frontera's Favorite Promo
+              {user?.username}
             </div>
           </div>
         </div>
@@ -96,14 +57,20 @@ export default function FavoritePage() {
           <div className="flex flex-1 bg-white rounded-xl shadow-md px-6 py-3 border items-center gap-4">
             <input
               type="text"
-              placeholder="Search by name"
+              placeholder="Cari berdasarkan nama"
               className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none bg-[#e6e8ec] text-lg"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <button className="px-6 py-2 bg-[#7b8fa1] text-white rounded-md text-base font-semibold shadow hover:bg-[#5a6b7a] transition">
-              Options
-            </button>
-            <select className="px-4 py-2 border border-gray-300 rounded-md text-base bg-[#e6e8ec]">
-              <option>Sort By : Name</option>
+            <div className="px-6 py-2 bg-[#7b8fa1] text-white rounded-md text-base font-semibold shadow hover:bg-[#5a6b7a] transition">
+              Urutkan
+            </div>
+            <select
+              className="px-4 py-2 border border-gray-300 rounded-md text-base bg-[#e6e8ec]"
+              onChange={(e) => setOrderBy(e.target.value)}
+            >
+              <option value="name">Nama</option>
+              <option value="newest">Favorit terbaru</option>
             </select>
           </div>
         </div>
@@ -119,22 +86,36 @@ export default function FavoritePage() {
                   <div
                     key={promo.id}
                     className="bg-white rounded-2xl border border-gray-300 shadow-lg overflow-hidden flex flex-col h-full relative"
+                    onClick={() => navigate(`/detail/${promo.id}`)}
                   >
                     <div className="w-full flex justify-center items-start pt-4 pb-2 bg-white">
                       <img
-                        src={promo.imageUrl}
-                        alt={promo.title}
+                        src={promo.path}
+                        alt={promo.name}
                         className="w-[90%] h-72 object-cover rounded-xl shadow-sm"
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-between px-4 pt-2 pb-6">
-                      <div className="text-lg font-serif font-medium text-gray-700 leading-tight mb-8 text-left">
-                        {promo.title}
+                      <div className="text-lg font-serif font-medium text-gray-500 leading-tight mb-8 text-left">
+                        {promo.name}
                       </div>
-                      <div className="absolute bottom-4 right-6 flex items-center text-gray-400 text-base">
-                        <Heart className="w-5 h-5 mr-2 text-gray-400" strokeWidth={2} fill="none" />
-                        <div className="font-light">{promo.likes.toLocaleString()} Like</div>
-                      </div>
+                      <button
+                        className="absolute bottom-4 right-6 flex items-center text-gray-400 text-base"
+                        onClick={(e) => {
+                          e.stopPropagation(); 
+                          FavoriteAPI.remove(promo.id).then(() => {
+                            fetchFavorite();
+                          });
+                        }}
+                      >
+                        <Lucide
+                          icon="Heart"
+                          className="size-5 mr-2 fill-red-500"
+                        />
+                        <div className="font-light">
+                          {promo.favorite_count} Like
+                        </div>
+                      </button>
                     </div>
                   </div>
                 ))}

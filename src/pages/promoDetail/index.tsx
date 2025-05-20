@@ -14,20 +14,22 @@ import Lucide from "../../basic_components/Lucide";
 import clsx from "clsx";
 import { ReportAPI } from "../../apis/reportAPI";
 import { toast } from "react-toastify";
-import { useAuth } from "../../hook/useAuth";
-import { AuthAPI } from "../../apis/authAPI";
 import { LoginModal } from "../../basic_components/LoginModal";
+import { FavoriteAPI } from "../../apis/FavoriteAPI";
+import { useUser } from "../../context";
+import { AxiosError } from "axios";
 
 export default function Main() {
   const params = useParams();
   const [promo, setPromo] = useState<Promo>();
-  const [isAuth, setIsAuth] = useState<boolean>(false);
+  // const [isAuth, setIsAuth] = useState<boolean>(false);
+  const { isAuth } = useUser();
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
   const [brand, setBrand] = useState<Brand>();
+  const [isLike, setIsLike] = useState<boolean>(false);
   const [reportModal, setReportModal] = useState<boolean>(false);
   const [reportValue, setReportValue] = useState<string>("");
   const [reportIndex, setReportIndex] = useState<number>();
-  
 
   const reportParameter = [
     {
@@ -53,36 +55,53 @@ export default function Main() {
   ];
 
   const getItems = () => {
-    PromoAPI.get(params?.id).then((res) => {
-      const promoData = res.data.promo;
-      setPromo({
-        ...promoData,
-        terms: promoData.terms ? JSON.parse(promoData.terms) : [],
+    PromoAPI.get(params?.id)
+      .then((res) => {
+        const promoData = res.data.promo;
+        setPromo({
+          ...promoData,
+          terms: promoData.terms ? JSON.parse(promoData.terms) : [],
+        });
+        setBrand(res.data.brandInfo);
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data?.message || err.message);
+        }
       });
+  };
 
-      setBrand(res.data.brandInfo);
-    });
+  const checkLike = () => {
+    if (params?.id) {
+      PromoAPI.checkLike(+params?.id)
+        .then((res) => {
+          setIsLike(res.data.isLike);
+        })
+        .catch((err) => {
+          if (err instanceof AxiosError) {
+            toast.error(err?.response?.data?.message || err.message);
+          }
+        });
+    }
   };
 
   const submitReport = (value: string) => {
     if (params?.id && !isNaN(+params.id)) {
-      ReportAPI.addReport(value, (+params.id));
+      ReportAPI.addReport(value, +params.id);
     }
   };
 
-  const authenticate = ()=>{
-    AuthAPI.user()
-    .then((res)=>{
-      setIsAuth(res.status === 200);
-    })
-  }
-
   useEffect(() => {
     if (params?.id && !isNaN(+params.id)) {
-      authenticate();
       getItems();
     }
   }, []);
+
+  useEffect(() => {
+    if (params?.id && !isNaN(+params.id)) {
+      checkLike();
+    }
+  }, [isLike]);
 
   useEffect(() => {
     console.log(reportValue);
@@ -142,10 +161,45 @@ export default function Main() {
           <div className="bg-gray-200 text-gray-700 px-4 py-1 rounded-full text-md flex items-center">
             {promo?.category}
           </div>
-          <div className="ml-auto text-sm text-gray-500 self-center">
-            175k Like
-          </div>
-          <Lucide icon="Heart" className="w-4 h-auto stroke-1 ml-1" />
+          <button
+            className="ml-auto text-sm text-gray-500 self-center"
+            onClick={() => {
+              if (isAuth && !isLike) {
+                FavoriteAPI.add(promo?.id);
+                if (promo) {
+                  setPromo({
+                    ...promo,
+                    favorite_count: (promo.favorite_count || 0) + 1,
+                  });
+                }
+                setIsLike(true);
+              } else if (isAuth && isLike) {
+                FavoriteAPI.remove(promo?.id);
+                if (promo) {
+                  setPromo({
+                    ...promo,
+                    favorite_count: Math.max(
+                      0,
+                      (promo.favorite_count || 0) - 1
+                    ),
+                  });
+                }
+                setIsLike(false);
+              } else {
+                setLoginModalOpen(true);
+              }
+            }}
+          >
+            {promo?.favorite_count} Like
+          </button>
+          {isLike ? (
+            <Lucide
+              icon="Heart"
+              className="w-4 h-auto fill-red-500 stroke-1 ml-1"
+            />
+          ) : (
+            <Lucide icon="Heart" className="w-4 h-auto stroke-1 ml-1" />
+          )}
         </div>
 
         <p className="mb-4 pr-11">{promo?.description}</p>
@@ -189,7 +243,7 @@ export default function Main() {
         </div>
       </div>
 
-      <LoginModal openModal={loginModalOpen} setOpenModal={setLoginModalOpen}/>
+      <LoginModal openModal={loginModalOpen} setOpenModal={setLoginModalOpen} />
 
       <Dialog open={reportModal} onClose={() => {}} className="relative z-50">
         <DialogBackdrop className="fixed inset-0 bg-black/30" />

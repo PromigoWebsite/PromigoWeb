@@ -5,27 +5,14 @@ import Lucide from "../basic_components/Lucide";
 import { Menu, MenuItem } from "../basic_components/FloatingMenu";
 import { AuthAPI } from "../apis/authAPI";
 import { toast } from "react-toastify";
+import { useUser } from "../context";
 
 export default function Main() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const [isAuth, setIsAuth] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { isAuth, refreshUser, loading } = useUser();
   const navigate = useNavigate();
-  
-  const authenticate = ()=>{
-    AuthAPI.user()
-    .then((res)=>{
-      setIsAuth(res.status === 200);
-    })
-  }
-  
-  useEffect(()=>{
-    authenticate();
-  },[]);
-  useEffect(() => {
-    console.log(isAuth);
-  }, [isAuth]);
 
   return (
     <div className="flex flex-col h-screen">
@@ -73,8 +60,13 @@ export default function Main() {
               <span className="whitespace-nowrap">Promo Page</span>
             </button>
             {/* FavoriteButton */}
-            <button className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10">
-              <Lucide icon="Star" className="min-w-[70px] h-[25px] relative" />
+            <button
+              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+              onClick={() => {
+                navigate(`/favorite`);
+              }}
+            >
+              <Lucide icon="Heart" className="min-w-[70px] h-[25px] relative" />
               <span className="whitespace-nowrap">Favorite Page</span>
             </button>
             {/* NewestButton */}
@@ -121,12 +113,11 @@ export default function Main() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
-                      if(searchQuery != ''){
+                      if (searchQuery != "") {
                         navigate(`/list/?search=${searchQuery}`);
-                      }else{
-                         navigate(`/list`);
+                      } else {
+                        navigate(`/list`);
                       }
-                      
                     }
                   }}
                   className="mr-4 pl-4 py-2 outline-none flex-1 bg-gray-300/30 rounded-full"
@@ -138,46 +129,48 @@ export default function Main() {
                 <button onClick={() => setIsSearchVisible(!isSearchVisible)}>
                   <Lucide
                     icon={isSearchVisible ? "CircleX" : "Search"}
-                    className="stroke-2 text-gray-500 size-6 "
-                  />
-                </button>
-                <button>
-                  <Lucide
-                    icon="Star"
                     className="stroke-2 text-gray-500 size-6"
                   />
                 </button>
+                {/* <button>
+                  <Lucide
+                    icon="Heart"
+                    className="stroke-2 text-gray-500 size-6"
+                  />
+                </button> */}
                 <Menu
                   label={
-                    isAuth ? (
-                      <div className="size-9 rounded-full overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center">
-                        <img
-                          src="https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/member/PhotoJason.jpg"
-                          className="object-contain size-"
-                        />
-                      </div>
-                    ) : (
+                    // isAuth ? (
+                    //   <div className="size-9 rounded-full overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center">
+                    //     <img
+                    //       src="https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/member/PhotoJason.jpg"
+                    //       className="object-contain size-"
+                    //     />
+                    //   </div>
+                    // ) : (
                       <Lucide
                         icon="CircleUserRound"
                         className="stroke-2 text-gray-500 size-6"
                       />
-                    )
+                    // )
                   }
                 >
-                  {isAuth ? (
+                  {isAuth && !loading ? (
                     <>
-                      <MenuItem label="Profil" onClick={()=>toast.success('dummy123')}/>
+                      <MenuItem
+                        label="Profil"
+                        onClick={() => toast.success("dummy123")}
+                      />
 
                       <MenuItem
                         label="Logout"
                         onClick={() => {
-                          AuthAPI.logout()
-                          .then((res)=>{
-                            if(res.status == 200){
-                              navigate('/login');
+                          AuthAPI.logout().then((res) => {
+                            if (res.status == 200) {
+                              refreshUser();
+                              navigate("/login");
                             }
-                          })
-
+                          });
                         }}
                       />
                     </>
