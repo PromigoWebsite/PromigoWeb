@@ -63,7 +63,7 @@ export const MenuItem: React.FC<MenuItemProps> = ({
     <button
       onClick={onClick}
       disabled={disabled}
-      className={`w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 rounded-sm ${
+      className={`w-full text-left px-3 py-1.5 text-sm hover:bg-gray-100 rounded-sm cursor-pointer ${
         disabled ? "opacity-50 cursor-not-allowed" : ""
       }`}
     >

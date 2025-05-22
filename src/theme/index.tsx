@@ -6,12 +6,13 @@ import { Menu, MenuItem } from "../basic_components/FloatingMenu";
 import { AuthAPI } from "../apis/authAPI";
 import { toast } from "react-toastify";
 import { useUser } from "../context";
+import api from "../apis/api";
 
 export default function Main() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { isAuth, refreshUser, loading } = useUser();
+  const { isAuth, refreshUser, loading, user} = useUser();
   const navigate = useNavigate();
 
   return (
@@ -60,18 +61,21 @@ export default function Main() {
               <span className="whitespace-nowrap">Promo Page</span>
             </button>
             {/* FavoriteButton */}
-            {isAuth && !loading && ( 
+            {isAuth && !loading && (
               <button
-              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
-              onClick={() => {
-                navigate(`/favorite`);
-              }}
-            >
-              <Lucide icon="Heart" className="min-w-[70px] h-[25px] relative" />
-              <span className="whitespace-nowrap">Favorite Page</span>
-            </button>
+                className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+                onClick={() => {
+                  navigate(`/favorite`);
+                }}
+              >
+                <Lucide
+                  icon="Heart"
+                  className="min-w-[70px] h-[25px] relative"
+                />
+                <span className="whitespace-nowrap">Favorite Page</span>
+              </button>
             )}
-            
+
             {/* NewestButton */}
             <button
               className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
@@ -108,7 +112,14 @@ export default function Main() {
               </button>
 
               {/* Input Pencarian */}
-              {isSearchVisible && (
+              <div
+                className={clsx(
+                  "overflow-hidden transition-all duration-300 ease-in-out",
+                  isSearchVisible
+                    ? "w-full opacity-100 translate-x-0 mr-2"
+                    : "w-0 opacity-0 translate-x-20"
+                )}
+              >
                 <input
                   type="text"
                   placeholder="Search..."
@@ -123,13 +134,16 @@ export default function Main() {
                       }
                     }
                   }}
-                  className="mr-4 pl-4 py-2 outline-none flex-1 bg-gray-300/30 rounded-full"
+                  className="mr-4 pl-4 py-2 outline-none w-full bg-gray-300/30 rounded-full"
                 />
-              )}
+              </div>
 
               {/* Ikon-ikon */}
               <div className="flex items-center space-x-3 ml-auto">
-                <button onClick={() => setIsSearchVisible(!isSearchVisible)}>
+                <button
+                  onClick={() => setIsSearchVisible(!isSearchVisible)}
+                  className="cursor-pointer"
+                >
                   <Lucide
                     icon={isSearchVisible ? "CircleX" : "Search"}
                     className="stroke-2 text-gray-500 size-6"
@@ -143,26 +157,26 @@ export default function Main() {
                 </button> */}
                 <Menu
                   label={
-                    // isAuth ? (
-                    //   <div className="size-9 rounded-full overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center">
-                    //     <img
-                    //       src="https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/member/PhotoJason.jpg"
-                    //       className="object-contain size-"
-                    //     />
-                    //   </div>
-                    // ) : (
+                    isAuth && !loading ? (
+                      <div className="size-9 rounded-full overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center cursor-pointer">
+                        <img
+                          src={api.baseCloudPath + user?.profile_picture}
+                          className="object-fill size-full"
+                        />
+                      </div>
+                    ) : (
                       <Lucide
                         icon="CircleUserRound"
-                        className="stroke-2 text-gray-500 size-6"
+                        className="stroke-2 text-gray-500 size-6 cursor-pointer"
                       />
-                    // )
+                    )
                   }
                 >
                   {isAuth && !loading ? (
                     <>
                       <MenuItem
                         label="Profil"
-                        onClick={() => toast.success("dummy123")}
+                        onClick={() => navigate(`/profile/${user?.id}`)}
                       />
 
                       <MenuItem
@@ -198,27 +212,54 @@ export default function Main() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-gray-100 text-gray-700 p-6 shadow-md z-1">
-        <div className="container mx-auto flex flex-col md:flex-row justify-between">
+      <footer className="bg-gray-100 text-gray-700 shadow-md z-1">
+        <div className="container mx-auto flex flex-col md:flex-row justify-around h-50 items-center">
           <div>
             <h2 className="font-bold text-lg">PROMIGO</h2>
             <div className="flex space-x-3 mt-2">
-              <button className="p-2 bg-gray-300 rounded-full">ⓕ</button>
-              <button className="p-2 bg-gray-300 rounded-full">ⓣ</button>
-              <button className="p-2 bg-gray-300 rounded-full">ⓘ</button>
-              <button className="p-2 bg-gray-300 rounded-full">Ⓨ</button>
+              <button className="p-2 bg-gray-300 rounded-full">
+                <Lucide icon="Facebook" className="size-6 stroke-2" />
+              </button>
+              <button className="p-2 bg-gray-300 rounded-full">
+                <Lucide icon="Instagram" className="size-6 stroke-2" />
+              </button>
+              <button className="p-2 bg-gray-300 rounded-full">
+                <Lucide icon="Twitter" className="size-6 stroke-2" />
+              </button>
+              <button className="p-2 bg-gray-300 rounded-full">
+                <Lucide icon="Youtube" className="size-6 stroke-2" />
+              </button>
             </div>
           </div>
           <div>
-            <h3 className="font-semibold">About us</h3>
             <ul className="space-y-1">
-              <li>About us</li>
-              <li>Terms and Conditions</li>
-              <li>Privacy Policy</li>
-              <li>Cookie Settings</li>
+              <li>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => navigate("/")}
+                >
+                  Halaman Utama
+                </button>
+              </li>
+              <li>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => navigate("/about")}
+                >
+                  About us
+                </button>
+              </li>
+              <li>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => navigate("/list")}
+                >
+                  Promo List
+                </button>
+              </li>
             </ul>
           </div>
-          <div>
+          {/* <div>
             <h3 className="font-semibold">Promo Interest</h3>
             <ul className="space-y-1">
               <li>Recommendation</li>
@@ -226,10 +267,11 @@ export default function Main() {
               <li>Food/Drink</li>
               <li>Service</li>
             </ul>
-          </div>
+          </div> */}
         </div>
-        <div className="text-center text-sm text-gray-500 mt-4">
-          Copyright © 2025 Promigo, designed by Fransisco. All Rights Reserved.
+        <div className="text-center text-sm text-white p-4 mt-4 bg-gray-500">
+          Copyright © 2025 Promigo, designed by Fransisco, developed by Arvin,
+          Jason, and Candra. All Rights Reserved.
         </div>
       </footer>
     </div>

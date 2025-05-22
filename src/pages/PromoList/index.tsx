@@ -216,7 +216,7 @@ export default function PromoPage() {
           )}
         </div> */}
         <button
-          className="mb-5 text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white"
+          className="mb-5 text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer"
           onClick={() => {
             setApplyChanges(!applyChanges);
           }}
@@ -224,7 +224,7 @@ export default function PromoPage() {
           Terapkan
         </button>
         <button
-          className="text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white"
+          className="text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer"
           onClick={() => {
             setFilter({
               type: "",

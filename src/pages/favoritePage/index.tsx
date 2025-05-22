@@ -41,11 +41,11 @@ export default function FavoritePage() {
             Favorite Promo
           </div>
           <div className="flex items-center justify-center bg-white rounded-2xl shadow-lg px-6 py-3 border space-x-4 min-w-[220px]">
-            <img
+            {/* <img
               src={user?.profile_picture}
               alt="Avatar"
               className="w-12 h-12 rounded-full border object-cover"
-            />
+            /> */}
             <div className="text-2xl font-extrabold text-gray-900">
               {user?.username}
             </div>
@@ -62,9 +62,9 @@ export default function FavoritePage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <div className="px-6 py-2 bg-[#7b8fa1] text-white rounded-md text-base font-semibold shadow hover:bg-[#5a6b7a] transition">
+            <label className="px-6 py-2 bg-[#7b8fa1] text-white rounded-md text-base font-semibold shadow">
               Urutkan
-            </div>
+            </label>
             <select
               className="px-4 py-2 border border-gray-300 rounded-md text-base bg-[#e6e8ec]"
               onChange={(e) => setOrderBy(e.target.value)}
@@ -85,7 +85,7 @@ export default function FavoritePage() {
                 {promos.map((promo) => (
                   <div
                     key={promo.id}
-                    className="bg-white rounded-2xl border border-gray-300 shadow-lg overflow-hidden flex flex-col h-full relative"
+                    className="bg-white rounded-2xl border border-gray-300 shadow-lg overflow-hidden flex flex-col h-full relative cursor-pointer hover:scale-105"
                     onClick={() => navigate(`/detail/${promo.id}`)}
                   >
                     <div className="w-full flex justify-center items-start pt-4 pb-2 bg-white">
@@ -100,7 +100,7 @@ export default function FavoritePage() {
                         {promo.name}
                       </div>
                       <button
-                        className="absolute bottom-4 right-6 flex items-center text-gray-400 text-base"
+                        className="absolute bottom-4 flex items-center text-gray-400 text-base cursor-pointer hover:scale-110"
                         onClick={(e) => {
                           e.stopPropagation(); 
                           FavoriteAPI.remove(promo.id).then(() => {
@@ -110,7 +110,7 @@ export default function FavoritePage() {
                       >
                         <Lucide
                           icon="Heart"
-                          className="size-5 mr-2 fill-red-500"
+                          className="size-6 mr-2 fill-red-500"
                         />
                         <div className="font-light">
                           {promo.favorite_count} Like

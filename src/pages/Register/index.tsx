@@ -31,11 +31,11 @@ const RegisterForm = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (form.password !== form.confirmPassword) {
-            toast.error('Passwords do not match!');
+            toast.error('Password harus sama');
             return;
         }
         if (!form.agree) {
-            toast.error("You must agree to the terms and conditions.");
+            toast.error("Kamu harus menyetujui syarat dan ketentuan yang berlaku.");
             return;
         }
         await AuthAPI.register(form)
@@ -119,7 +119,7 @@ const RegisterForm = () => {
                   <input
                     type="mobile"
                     name="mobile"
-                    placeholder="Nomor telfon"
+                    placeholder="Nomor telefon"
                     value={form.mobile}
                     onChange={handleChange}
                     className="bg-transparent w-full outline-none text-sm"

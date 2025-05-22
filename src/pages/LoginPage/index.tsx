@@ -131,7 +131,7 @@ const LoginForm = () => {
                 <div className="flex justify-center mb-6">
                     <button
                         type="submit"
-                        className="bg-green-600 text-white w-1/2 h-10 flex justify-center items-center text-sm rounded-full hover:bg-green-700 transition"
+                        className="bg-green-600 text-white w-1/2 h-10 flex justify-center items-center text-sm rounded-full hover:bg-green-700 transition cursor-pointer"
                     >
                         Sign In
                     </button>

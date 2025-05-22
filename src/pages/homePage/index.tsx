@@ -68,13 +68,16 @@ export default function Main() {
       <div className="p-6 bg-gray-50 flex justify-center">
         <div className="max-w-screen-xl w-full flex flex-col">
           {/* Promo Banner */}
-          <div className="w-full rounded-lg overflow-hidden shadow-md mt-2 self-center">
+          <button
+            className="w-full rounded-lg overflow-hidden shadow-md mt-2 self-center"
+            onClick={() => navigate("/detail/6")}
+          >
             <img
               src="https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/asset/promo/starbucks%20banner.png"
               alt="KFC Promo"
               className="object-cover"
             />
-          </div>
+          </button>
 
           {/* brand */}
           <div className="mt-6">
@@ -108,11 +111,16 @@ export default function Main() {
                 >
                   {brandExpanded ? (
                     <>
-                      Show less{" "}
-                      <Lucide icon="ChevronUp" className="ml-1 w-4 h-4" />
+                      <div className="flex justify-end cursor-pointer">
+                        Show less
+                        <Lucide
+                          icon="ChevronUp"
+                          className="ml-1 w-4 h-4 mt-1.5 cursor-pointer"
+                        />
+                      </div>
                     </>
                   ) : (
-                    <div className="flex justify-end">
+                    <div className="flex justify-end cursor-pointer">
                       See more ({brands.length - 4} more){" "}
                       <Lucide
                         icon="ChevronDown"
@@ -130,14 +138,14 @@ export default function Main() {
             <h2 className="text-2xl font-semibold mb-4">Rekomendasi</h2>
             <div className="flex gap-6">
               <button
-                className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105"
+                className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105 cursor-pointer"
                 onClick={() => {
                   navigate(`/detail/${reccomendations[0].id}`);
                 }}
               >
                 <img
                   src={reccomendations[0]?.path}
-                  alt="Starbucks Promo"
+                  alt="img"
                   className="rounded-md size-[400px]"
                 />
                 <h3 className="text-lg font-semibold mt-3 self-start">
@@ -146,7 +154,7 @@ export default function Main() {
                 <div className="flex items-center gap-2 mt-2">
                   <img
                     src={reccomendations[0]?.logo}
-                    alt="Starbucks"
+                    alt="logo"
                     className="w-6 h-6 rounded-full border border-gray-300"
                   />
                   <span className="text-sm text-gray-600">
@@ -155,17 +163,18 @@ export default function Main() {
                 </div>
                 <div className="flex justify-start mt-3 text-gray-500 text-sm">
                   <Lucide
-                    icon="Star"
-                    className="h-[18px] fill-yellow-300  mr-1"
+                    icon="Heart"
+                    className="h-[18px] fill-red-500  mr-1"
                   />
                   <button>Favorite</button>
                 </div>
               </button>
-              <div className="w-1/3 flex flex-col justify-between">
+              <div className=" flex flex-col justify-between">
                 {reccomendations.map(
                   (item, index) =>
                     index !== 0 && (
                       <button
+                        className="cursor-pointer hover:scale-105"
                         onClick={() => {
                           navigate(`/detail/${item.id}`);
                         }}
@@ -174,7 +183,7 @@ export default function Main() {
                           key={index}
                           src={item.path}
                           alt={item.name || "Promo Image"}
-                          className="h-40 w-36 rounded-lg shadow-md hover:scale-105"
+                          className="h-40 w-36 rounded-lg shadow-md "
                         />
                       </button>
                     )
@@ -185,11 +194,11 @@ export default function Main() {
           {/* Newest Promo Section */}
           <div className="w-full flex flex-col mt-10">
             <h2 className="text-2xl font-semibold mb-4">Promo Terbaru</h2>
-            <Carousel className="pb-2">
+            <Carousel className="pb-4">
               {newestPromos.map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 flex-grow-0"
+                  className="flex-shrink-0 flex-grow-0 hover:scale-105"
                   style={{
                     flex: "0 0 auto",
                     width: "auto",
@@ -197,20 +206,22 @@ export default function Main() {
                   }}
                 >
                   <button
-                    className="bg-white h-[350px] rounded-lg shadow-md p-3 hover:shadow-lg transition-all duration-300 flex flex-col"
+                    className="bg-white h-[320px] rounded-lg shadow-md p-3 hover:shadow-lg transition-all duration-300 flex flex-col cursor-pointer"
                     onClick={() => {
                       navigate(`/detail/${item.id}`);
                     }}
                   >
-                    <div className="flex justify-center max-w-[200px]">
+                    <div className="flex justify-center max-w-[200px] h-[250px]">
                       <img
                         src={item.path}
                         alt={item.name}
-                        className="object-fill rounded-md h-[250px]"
+                        className="object-fill rounded-md h-full"
                       />
                     </div>
-                    <div className="text-sm font-medium max-w-52 self-center">
-                      {item.name}
+                    <div className="flex flex-col justify-center h-[70px]">
+                      <div className="text-sm font-medium max-w-52 text-center line-clamp-2 overflow-hidden">
+                        {item.name}
+                      </div>
                     </div>
                   </button>
                 </div>

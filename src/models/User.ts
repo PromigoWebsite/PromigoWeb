@@ -1,7 +1,8 @@
 export interface User{
+    id?: number,
+    role?: string,
     username?: string,
     mobile?: string,
     email?: string,
-    role_id?: number,
     profile_picture?: string,
 }

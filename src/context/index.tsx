@@ -29,7 +29,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     AuthAPI.user()
     .then((res) => {
       if (res.status === 200) {
-        setUser(res.data); 
+        setUser(res.data.user); 
         setIsAuth(true);
         setLoading(false);
       }
