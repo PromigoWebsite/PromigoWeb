@@ -11,6 +11,7 @@ import LoginPage from "../pages/LoginPage";
 import Auth from "../theme/auth";
 import FavoritePage from "../pages/favoritePage";
 import BrandPage from "../pages/brandPage";
+import AddPromoPage from "../pages/addPromoPage";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +46,10 @@ export const router = createBrowserRouter([
       {
         path: "/brand",
         element: <BrandPage />,
+      },
+      {
+        path: "/add",
+        element: <AddPromoPage />,
       },
     ],
   },

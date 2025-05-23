@@ -7,12 +7,13 @@ import { AuthAPI } from "../apis/authAPI";
 import { toast } from "react-toastify";
 import { useUser } from "../context";
 import api from "../apis/api";
+import "../global.css";
 
 export default function Main() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { isAuth, refreshUser, loading, user} = useUser();
+  const { isAuth, refreshUser, loading, user } = useUser();
   const navigate = useNavigate();
 
   return (
@@ -92,7 +93,7 @@ export default function Main() {
         {/* Main Content */}
         <div className="flex flex-col flex-1">
           {/* Navbar */}
-          <nav className="flex justify-center p-3 z-1 bg-gray-50">
+          <nav className={clsx("flex justify-center p-3 z-1 bg-gray-50", "theme-navbar")}>
             <div
               className={clsx([
                 "flex items-center h-[60px] border bg-white border-gray-300 rounded-full pl-4 pr-8 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-300",
