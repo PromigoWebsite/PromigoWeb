@@ -1,0 +1,3 @@
+body.hide-theme-navbar .theme-navbar {
+    display: none !important;
+}
