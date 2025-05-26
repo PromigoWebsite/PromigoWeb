@@ -101,7 +101,7 @@ export default function Main() {
     if (params?.id && !isNaN(+params.id)) {
       checkLike();
     }
-  }, [isLike]);
+  }, []);
 
   useEffect(() => {
     console.log(reportValue);
@@ -162,7 +162,7 @@ export default function Main() {
             {promo?.category}
           </div>
           <button
-            className="ml-auto text-sm text-gray-500 self-center"
+            className="ml-auto text-sm text-gray-500 self-center flex"
             onClick={() => {
               if (isAuth && !isLike) {
                 FavoriteAPI.add(promo?.id);
@@ -191,15 +191,15 @@ export default function Main() {
             }}
           >
             {promo?.favorite_count} Like
+            {isLike ? (
+              <Lucide
+                icon="Heart"
+                className="w-4 h-auto fill-red-500 stroke-1 ml-1"
+              />
+            ) : (
+              <Lucide icon="Heart" className="w-4 h-auto stroke-1 ml-1" />
+            )}
           </button>
-          {isLike ? (
-            <Lucide
-              icon="Heart"
-              className="w-4 h-auto fill-red-500 stroke-1 ml-1"
-            />
-          ) : (
-            <Lucide icon="Heart" className="w-4 h-auto stroke-1 ml-1" />
-          )}
         </div>
 
         <p className="mb-4 pr-11">{promo?.description}</p>

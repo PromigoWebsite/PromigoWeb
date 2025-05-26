@@ -104,7 +104,7 @@ export default function PromoPage() {
 
   useEffect(()=>{
     getItems();
-  },[reset,applyChanges,search])
+  },[reset,applyChanges,search,sort])
 
 
   useEffect(() => {
@@ -241,6 +241,9 @@ export default function PromoPage() {
       <div className="flex-1">
         {/*  Sort */}
         <div className="flex justify-between items-center mb-4">
+          {/* <div>
+            Urut
+          </div> */}
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
@@ -254,7 +257,7 @@ export default function PromoPage() {
           {brands.map((brand) => (
             <button
               className={clsx([
-                "border border-gray-500 px-4 py-2 flex",
+                "border border-gray-500 px-4 py-2 flex hover:scale-105",
                 brand.name == filter.brand
                   ? "bg-[#063EB8] text-white"
                   : "bg-[#567C8D] text-white rounded",
@@ -286,7 +289,7 @@ export default function PromoPage() {
             {promos.map((product, index) => (
               <div
                 key={index}
-                className=" col-span-3 rounded-lg p-4 bg-white shadow hover:shadow-xl transition flex flex-col items-center border border-gray-300"
+                className=" col-span-3 rounded-lg p-4 bg-white shadow hover:scale-105 shadow-md transition flex flex-col items-center border border-gray-300"
                 onClick={() => {
                   navigate(`/detail/${product.id}`);
                 }}

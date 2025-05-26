@@ -476,7 +476,7 @@ export default function Main() {
                 }}
                 className={clsx(
                   "px-8 py-2 rounded text-lg text-white",
-                  "bg-gray-500 hover:bg-gray-600"
+                  "bg-gray-500 hover:bg-gray-600 cursor-pointer"
                 )}
               >
                 Cancel
@@ -487,7 +487,7 @@ export default function Main() {
                 type="submit"
                 className={clsx(
                   "px-8 py-2 rounded text-lg text-white",
-                  "bg-teal-700 hover:bg-teal-800"
+                  "bg-teal-700 hover:bg-teal-800 cursor-pointer"
                 )}
               >
                 Submit
@@ -499,7 +499,7 @@ export default function Main() {
                 onClick={() => setIsEditing(true)}
                 className={clsx(
                   "px-8 py-2 rounded text-lg text-white",
-                  "bg-teal-700 hover:bg-teal-800"
+                  "bg-teal-700 hover:bg-teal-800 cursor-pointer"
                 )}
               >
                 Edit

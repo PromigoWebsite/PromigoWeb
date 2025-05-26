@@ -2,8 +2,8 @@ import clsx from "clsx";
 import React, { useState, useRef, useEffect } from "react";
 
 interface MenuProps {
-  label: React.ReactNode;
-  children: React.ReactNode;
+  label?: React.ReactNode;
+  children?: React.ReactNode;
   buttonClassName?: string;
 }
 

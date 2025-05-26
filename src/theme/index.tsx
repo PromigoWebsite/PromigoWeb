@@ -39,7 +39,7 @@ export default function Main() {
           <div className="flex flex-col space-y-2 w-full">
             {/* homeButton */}
             <button
-              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10 cursor-pointer"
               onClick={() => {
                 navigate("/");
               }}
@@ -49,7 +49,7 @@ export default function Main() {
             </button>
             {/* PromoButton */}
             <button
-              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10 cursor-pointer"
               onClick={() => {
                 navigate("/list");
               }}
@@ -63,7 +63,7 @@ export default function Main() {
             {/* FavoriteButton */}
             {isAuth && !loading && (
               <button
-                className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+                className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10 cursor-pointer"
                 onClick={() => {
                   navigate(`/favorite`);
                 }}
@@ -78,7 +78,7 @@ export default function Main() {
 
             {/* NewestButton */}
             <button
-              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10"
+              className="flex rounded-2xl h-[50px] justify-start text-white items-center hover:bg-white/10 cursor-pointer"
               onClick={() => {
                 navigate("/about");
               }}
@@ -103,7 +103,7 @@ export default function Main() {
               ])}
             >
               <button
-                className="font-bold text-lg text-gray-700 pr-4 font-serif"
+                className="font-bold text-lg text-gray-700 pr-4 font-serif cursor-pointer"
                 onClick={() => {
                   navigate(`/`);
                 }}
@@ -157,11 +157,11 @@ export default function Main() {
                 </button> */}
                 <Menu
                   label={
-                    isAuth && !loading ? (
+                    isAuth && !loading && user?.profile_picture ? (
                       <div className="size-9 rounded-full overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center cursor-pointer">
                         <img
                           src={api.baseCloudPath + user?.profile_picture}
-                          className="object-fill size-full"
+                          className="object-contain size-full"
                         />
                       </div>
                     ) : (
@@ -193,7 +193,7 @@ export default function Main() {
                     </>
                   ) : (
                     <MenuItem
-                      label="Login"
+                      label="Daftar/Masuk"
                       onClick={() => {
                         navigate("/login");
                       }}

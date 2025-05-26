@@ -211,7 +211,7 @@ export default function Main() {
                       navigate(`/detail/${item.id}`);
                     }}
                   >
-                    <div className="flex justify-center max-w-[200px] h-[250px]">
+                    <div className="flex justify-center max-w-[200px] h-[225px]">
                       <img
                         src={item.path}
                         alt={item.name}
