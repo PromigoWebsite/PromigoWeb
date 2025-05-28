@@ -12,6 +12,8 @@ import Auth from "../theme/auth";
 import FavoritePage from "../pages/favoritePage";
 import BrandPage from "../pages/brandPage";
 import ExtendedPromoPage from "../pages/extendedPromoPage";
+import AddPromoPage from "../pages/addPromoPage";
+
 
 export const router = createBrowserRouter([
   {
@@ -50,6 +52,10 @@ export const router = createBrowserRouter([
       {
         path: "/extended/list",
         element: <ExtendedPromoPage />,
+      },
+      {
+        path: "/addPromo",
+        element: <AddPromoPage />,
       },
     ],
   },
