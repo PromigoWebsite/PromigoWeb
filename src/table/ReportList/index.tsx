@@ -97,16 +97,27 @@ export function ReportListTable(props: Props) {
                         label={<Lucide icon="Settings" className="w-5 h-5" />}
                       >
                         <MenuItem
-                          label="Delete"
+                          label="Hapus"
                           onClick={() => {
                             if (item.id != null && item.id != undefined) {
-                              ReportAPI.deleteById(item.id);
+                              ReportAPI.deleteById(item.id)
+                                .then(() => {
+                                  toast.success("Laporan Berhasil Dihapus");
+                                  fetchItems(1);
+                                })
+                                .catch((err) => {
+                                  if (err instanceof AxiosError) {
+                                    toast.error(
+                                      err?.response?.data?.message ||
+                                        err.message
+                                    );
+                                  }
+                                });
                             } else {
                               toast.error("Id Brand tidak dapat ditemukan");
                             }
                           }}
                         />
-                        <MenuItem label="Edit" />
                       </Menu>
                     </button>
                   </td>

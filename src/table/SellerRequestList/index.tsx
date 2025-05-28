@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
-import { AdminAPI } from "../../apis/adminAPI";
 import { Metadata } from "../../models/Metadata";
-import { Promo } from "../../models/Promo";
 import Lucide from "../../basic_components/Lucide";
 import Pagination from "../../basic_components/pagination";
-import { BrandAPI } from "../../apis/BrandAPI";
-import { Brand } from "../../models/Brand";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
-import { format } from "date-fns";
+import {format } from "date-fns";
+import { ReportAPI } from "../../apis/reportAPI";
+import { Report } from "../../models/Report";
+import { SellerAPI } from "../../apis/sellerAPI";
+import { RequestAPI } from "../../apis/sellerRequestAPI";
+import { SellerRequest } from "../../models/Seller_request";
 
 interface Props {
-  search: string,
+    search: string,
 };
 
-export function BrandListTable(props: Props) {
+export function RequestListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
-  const [items, setItems] = useState<Array<Brand>>();
+  const [items, setItems] = useState<Array<SellerRequest>>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -29,7 +30,7 @@ export function BrandListTable(props: Props) {
 
   const fetchItems = (page: number) => {
     setLoading(true);
-    BrandAPI.get({ page: page, per_page: 5, search: props.search })
+    RequestAPI.get({ page: page, per_page: 5, search: props.search })
       .then((res) => {
         console.log(res);
         setItems(res.data.data);
@@ -63,17 +64,25 @@ export function BrandListTable(props: Props) {
             <thead className="border-b border-gray-300">
               <tr className="text-gray-700 text-base font-semibold">
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
+                  Nama User
+                </th>
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
+                  Nomor Telfon
+                </th>
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
                   Nama Brand
                 </th>
-                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[30%]">
-                  Alamat
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[20%]">
+                  Alamat Brand
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Kategori
+                  Logo Brand
                 </th>
-
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Tanggal Dibuat
+                  Kategori Brand
+                </th>
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
+                  Tanggal permintaan
                 </th>
                 <th className="px-4 py-2 text-center border-b-3 border-gray-300 w-[10%]">
                   Aksi
@@ -85,8 +94,11 @@ export function BrandListTable(props: Props) {
               {items?.map((item, idx) => (
                 <tr key={idx} className="bg-white hover:bg-gray-50 rounded-xl">
                   <td className="px-4 py-2">{item.name}</td>
-                  <td className="px-4 py-2">{item.address}</td>
-                  <td className="px-4 py-2">{item.category}</td>
+                  <td className="px-4 py-2">{item.mobile}</td>
+                  <td className="px-4 py-2">{item.brand_name}</td>
+                  <td className="px-4 py-2">{item.brand_address}</td>
+                  <td className="px-4 py-2">{item.brand_image_path}</td>
+                  <td className="px-4 py-2">{item.brand_category}</td>
                   <td className="px-4 py-2">
                     {item.created_at ? formatTime(item.created_at) : "null"}
                   </td>
@@ -96,28 +108,47 @@ export function BrandListTable(props: Props) {
                         label={<Lucide icon="Settings" className="w-5 h-5" />}
                       >
                         <MenuItem
-                          label="Hapus"
+                          label="Tolak Permintaan"
                           onClick={() => {
                             if (item.id != null && item.id != undefined) {
-                              BrandAPI.deleteById(item.id)
-                                .then(() => {
-                                  toast.success("Penjual Berhasil Dihapus");
-                                  fetchItems(1);
-                                })
-                                .catch((err) => {
-                                  if (err instanceof AxiosError) {
-                                    toast.error(
-                                      err?.response?.data?.message ||
-                                        err.message
-                                    );
-                                  }
-                                });
+                              RequestAPI.deleteById(item.id)
+                              .then(()=>{
+                                toast.success("Penjual Berhasil Ditolak")
+                                fetchItems(1);
+                              })
+                              .catch((err) => {
+                                if (err instanceof AxiosError) {
+                                  toast.error(err?.response?.data?.message || err.message);
+                                }
+                              });
                             } else {
-                              toast.error("Id Brand tidak dapat ditemukan");
+                              toast.error(
+                                "Id permintaan tidak dapat ditemukan"
+                              );
                             }
                           }}
                         />
-                        <MenuItem label="Edit" />
+                        <MenuItem
+                          label="Terima Permintaan"
+                          onClick={() => {
+                            if (item.id != null && item.id != undefined) {
+                              RequestAPI.acceptById(item.id)
+                              .then(()=>{
+                                toast.success("Penjual Berhasil Diterima")
+                                fetchItems(1);
+                              })
+                              .catch((err) => {
+                                if (err instanceof AxiosError) {
+                                  toast.error(err?.response?.data?.message || err.message);
+                                }
+                              });
+                            } else {
+                              toast.error(
+                                "Id permintaan tidak dapat ditemukan"
+                              );
+                            }
+                          }}
+                        />
                       </Menu>
                     </button>
                   </td>
@@ -127,7 +158,7 @@ export function BrandListTable(props: Props) {
 
             <tfoot>
               <tr>
-                <td colSpan={7} className="px-4 py-3">
+                <td colSpan={8} className="px-4 py-3">
                   {metadata && (
                     <div className="flex items-center justify-between">
                       <div className="text-sm text-gray-500">

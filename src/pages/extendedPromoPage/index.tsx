@@ -1,18 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useState } from "react";
 import Lucide from "../../basic_components/Lucide";
 import { PromoListTable } from "../../table/PromoList";
 import { BrandListTable } from "../../table/BrandList";
 import { useUser } from "../../context";
 import { useDebounce } from "@uidotdev/usehooks";
-import { useNavigate, useParams } from "react-router-dom";
 import { ReportListTable } from "../../table/ReportList";
+import { RequestListTable } from "../../table/SellerRequestList";
+import { useNavigate } from "react-router-dom";
 
 export default function Main() {
     const [activeTab, setActiveTab] = useState("promo");
     const [search, setSearch] = useState("");   
-    const { isAuth, refreshUser, loading, user } = useUser();
+    const { isAuth, loading, user } = useUser();
     const debouncedSearchTerm = useDebounce(search, 600);
-    const params = useParams();
+    const navigate = useNavigate();
 
     // useEffect(() => {
     //     document.body.classList.add("hide-theme-navbar");
@@ -49,7 +50,10 @@ export default function Main() {
               </div>
             </div>
             {/* Kanan: Add Promo */}
-            <button className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-[#466273] transition-all">
+            <button
+              className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-[#466273] transition-all"
+              onClick={()=>navigate('/add/promo')}
+            >
               Tambah Promo
             </button>
           </div>
@@ -60,9 +64,7 @@ export default function Main() {
               {/* Promo Tab */}
               <button
                 className={`px-2 mx-2 py-2 font-semibold ${
-                  activeTab === "promo"
-                    ? "border-b-2 border-[#6b8c97]"
-                    : ""
+                  activeTab === "promo" ? "border-b-2 border-[#6b8c97]" : ""
                 }`}
                 onClick={() => setActiveTab("promo")}
               >
@@ -73,9 +75,7 @@ export default function Main() {
               {user?.role === "Admin" && (
                 <button
                   className={`px-2 mx-2 py-2 font-semibold ${
-                    activeTab === "brand"
-                      ? "border-b-2 border-[#6b8c97]"
-                      : ""
+                    activeTab === "brand" ? "border-b-2 border-[#6b8c97]" : ""
                   }`}
                   onClick={() => setActiveTab("brand")}
                 >
@@ -87,13 +87,25 @@ export default function Main() {
               {user?.role === "Admin" && (
                 <button
                   className={`px-2 mx-2 py-2 font-semibold ${
-                    activeTab === "report"
-                      ? "border-b-2 border-[#6b8c97]"
-                      : ""
+                    activeTab === "report" ? "border-b-2 border-[#6b8c97]" : ""
                   }`}
                   onClick={() => setActiveTab("report")}
                 >
                   Daftar Laporan Promo
+                </button>
+              )}
+
+              {/* Seller Request Tab */}
+              {user?.role === "Admin" && (
+                <button
+                  className={`px-2 mx-2 py-2 font-semibold ${
+                    activeTab === "sellerRequest"
+                      ? "border-b-2 border-[#6b8c97]"
+                      : ""
+                  }`}
+                  onClick={() => setActiveTab("sellerRequest")}
+                >
+                  Daftar Permintaan Penjual
                 </button>
               )}
             </div>
@@ -115,8 +127,15 @@ export default function Main() {
               }
             />
           )}
-          {activeTab === "brand" && !loading && isAuth && <BrandListTable search={debouncedSearchTerm} />}
-          {activeTab === "report" && !loading && isAuth && <ReportListTable search={debouncedSearchTerm}/>}
+          {activeTab === "brand" && !loading && isAuth && (
+            <BrandListTable search={debouncedSearchTerm} />
+          )}
+          {activeTab === "report" && !loading && isAuth && (
+            <ReportListTable search={debouncedSearchTerm} />
+          )}
+          {activeTab === "sellerRequest" && !loading && isAuth && (
+            <RequestListTable search={debouncedSearchTerm} />
+          )}
         </div>
       </div>
     );

@@ -139,10 +139,27 @@ export function PromoListTable(props : Props) {
                         label={<Lucide icon="Settings" className="w-5 h-5" />}
                       >
                         <MenuItem
-                          label="Delete"
+                          label="Hapus"
                           onClick={() => {
                             if (item.id != null && item.id != undefined) {
-                              AdminAPI.deleteById(item.id);
+                              AdminAPI.deleteById(item.id)
+                                .then(() => {
+                                  toast.success("Promo Berhasil Dihapus");
+                                  if (props.id && props.role == "Seller") {
+                                    fetchSellerItems(1);
+                                  } else {
+                                    fetchAdminItems(1);
+                                  }
+                                })
+                                .catch((err) => {
+                                  if (err instanceof AxiosError) {
+                                    toast.error(
+                                      err?.response?.data?.message ||
+                                        err.message
+                                    );
+
+                                  }
+                                });
                             } else {
                               toast.error("Id Promo tidak dapat ditemukan");
                             }

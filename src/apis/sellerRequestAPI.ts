@@ -1,36 +1,36 @@
-import { PromoSorting } from "../models/Promo_sorting";
 import axios from "./axios";
 
-export const SellerAPI = {
+export const RequestAPI = {
   get: async ({
     per_page,
     page,
     search,
-    sorting,
-    id,
   }: {
     per_page?: number;
     page?: number;
     search?: string;
-    sorting?: PromoSorting;
-    id: number;
   }) => {
     return await axios.request({
-      url: `/seller/list/${id}`,
+      url: `/request/list`,
       method: "GET",
       params: {
         per_page,
         page,
         search,
-        sorting,
       },
     });
   },
-
   deleteById: async (id: number) => {
     return await axios.request({
-      url: `/admin/delete/${id}`,
+      url: `/request/${id}/delete`,
       method: "DELETE",
+    });
+  },
+
+  acceptById: async (id: number) => {
+    return await axios.request({
+      url: `/request/${id}/accept`,
+      method: "POST",
     });
   },
 };
