@@ -30,4 +30,10 @@ export const BrandAPI = {
       },
     });
   },
+  deleteById: async (id: number) => {
+    return await axios.request({
+      url: `/brand/${id}/delete`,
+      method: "DELETE",
+    });
+  },
 };

@@ -99,7 +99,7 @@ export function BrandListTable(props: Props) {
                           label="Delete"
                           onClick={() => {
                             if (item.id != null && item.id != undefined) {
-                              // BrandAPI.deleteById(item.id);
+                              BrandAPI.deleteById(item.id);
                             } else {
                               toast.error("Id Brand tidak dapat ditemukan");
                             }
