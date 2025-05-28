@@ -70,6 +70,9 @@ export function ReportListTable(props: Props) {
                   Email User
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
+                  Deskripsi
+                </th>
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
                   Tanggal Laporan Dibuat
                 </th>
                 <th className="px-4 py-2 text-center border-b-3 border-gray-300 w-[10%]">
@@ -84,6 +87,7 @@ export function ReportListTable(props: Props) {
                   <td className="px-4 py-2">{item.promo_name}</td>
                   <td className="px-4 py-2">{item.brand_name}</td>
                   <td className="px-4 py-2">{item.email}</td>
+                  <td className="px-4 py-2">{item.description}</td>
                   <td className="px-4 py-2">
                     {item.created_at ? formatTime(item.created_at) : "null"}
                   </td>
