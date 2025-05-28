@@ -115,8 +115,8 @@ export default function Main() {
               }
             />
           )}
-          {activeTab === "brand" && !loading && isAuth && <BrandListTable />}
-          {activeTab === "report" && !loading && isAuth && <ReportListTable />}
+          {activeTab === "brand" && !loading && isAuth && <BrandListTable search={debouncedSearchTerm} />}
+          {activeTab === "report" && !loading && isAuth && <ReportListTable search={debouncedSearchTerm}/>}
         </div>
       </div>
     );

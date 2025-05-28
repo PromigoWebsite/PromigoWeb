@@ -1,36 +1,39 @@
 import { useEffect, useState } from "react";
-import { AdminAPI } from "../../apis/adminAPI";
 import { Metadata } from "../../models/Metadata";
-import { Promo } from "../../models/Promo";
 import Lucide from "../../basic_components/Lucide";
 import Pagination from "../../basic_components/pagination";
-import { BrandAPI } from "../../apis/BrandAPI";
-import { Brand } from "../../models/Brand";
 import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
 import {format } from "date-fns";
+import { ReportAPI } from "../../apis/reportAPI";
+import { Report } from "../../models/Report";
 
-export function ReportListTable() {
+interface Props {
+    search: string,
+};
+
+export function ReportListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
-  const [items, setItems] = useState<Array<Brand>>();
+  const [items, setItems] = useState<Array<Report>>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const formatTime = (dateString: string) =>{
+  const formatTime = (dateString: string) => {
     const date = format(new Date(dateString), "yyyy-MM-dd");
     return date;
-  } 
+  };
 
   const fetchItems = (page: number) => {
     setLoading(true);
-    BrandAPI.get({ page: page, per_page: 5 })
+    ReportAPI.get({ page: page, per_page: 5, search: props.search })
       .then((res) => {
         console.log(res);
         setItems(res.data.data);
         const { total, per_page, from, to, current_page, last_page } = res.data;
         setMetadata({ total, per_page, from, to, current_page, last_page });
+        setLoading(false);
       })
       .catch((err) => {
         if (err instanceof AxiosError) {
@@ -40,12 +43,11 @@ export function ReportListTable() {
           }
         }
       });
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchItems(1);
-  }, []);
+  }, [props.search]);
   return (
     <>
       <div className="mt-2 rounded-2xl shadow-lg bg-white p-4 pt-2 border border-gray-200">
@@ -58,18 +60,17 @@ export function ReportListTable() {
           <table className="min-w-full border-separate border-spacing-y-2">
             <thead className="border-b border-gray-300">
               <tr className="text-gray-700 text-base font-semibold">
-                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[13%]">
                   Nama Promo
                 </th>
-                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[30%]">
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
                   Nama Brand
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
                   Email User
                 </th>
-
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Tanggal Laporan Dibentuk
+                  Tanggal Laporan Dibuat
                 </th>
                 <th className="px-4 py-2 text-center border-b-3 border-gray-300 w-[10%]">
                   Aksi
@@ -80,10 +81,12 @@ export function ReportListTable() {
             <tbody>
               {items?.map((item, idx) => (
                 <tr key={idx} className="bg-white hover:bg-gray-50 rounded-xl">
-                  <td className="px-4 py-2">{item.name}</td>
-                  <td className="px-4 py-2">{item.address}</td>
-                  <td className="px-4 py-2">{item.category}</td>
-                  <td className="px-4 py-2">{item.created_at ? formatTime(item.created_at) : "null"}</td>
+                  <td className="px-4 py-2">{item.promo_name}</td>
+                  <td className="px-4 py-2">{item.brand_name}</td>
+                  <td className="px-4 py-2">{item.email}</td>
+                  <td className="px-4 py-2">
+                    {item.created_at ? formatTime(item.created_at) : "null"}
+                  </td>
                   <td className="px-4 py-2 text-center">
                     <button className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-gray-200 cursor-pointer">
                       <Menu
@@ -93,7 +96,7 @@ export function ReportListTable() {
                           label="Delete"
                           onClick={() => {
                             if (item.id != null && item.id != undefined) {
-                              // BrandAPI.deleteById(item.id);
+                              ReportAPI.deleteById(item.id);
                             } else {
                               toast.error("Id Brand tidak dapat ditemukan");
                             }

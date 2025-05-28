@@ -10,27 +10,32 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
-import { compareAsc, format } from "date-fns";
+import { format } from "date-fns";
 
-export function BrandListTable() {
+interface Props {
+  search: string,
+};
+
+export function BrandListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
   const [items, setItems] = useState<Array<Brand>>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const formatTime = (dateString: string) =>{
+  const formatTime = (dateString: string) => {
     const date = format(new Date(dateString), "yyyy-MM-dd");
     return date;
-  } 
+  };
 
   const fetchItems = (page: number) => {
     setLoading(true);
-    BrandAPI.get({ page: page, per_page: 5 })
+    BrandAPI.get({ page: page, per_page: 5, search: props.search })
       .then((res) => {
         console.log(res);
         setItems(res.data.data);
         const { total, per_page, from, to, current_page, last_page } = res.data;
         setMetadata({ total, per_page, from, to, current_page, last_page });
+        setLoading(false);
       })
       .catch((err) => {
         if (err instanceof AxiosError) {
@@ -40,12 +45,11 @@ export function BrandListTable() {
           }
         }
       });
-    setLoading(false);
   };
 
   useEffect(() => {
     fetchItems(1);
-  }, []);
+  }, [props.search]);
   return (
     <>
       <div className="mt-2 rounded-2xl shadow-lg bg-white p-4 pt-2 border border-gray-200">
@@ -83,7 +87,9 @@ export function BrandListTable() {
                   <td className="px-4 py-2">{item.name}</td>
                   <td className="px-4 py-2">{item.address}</td>
                   <td className="px-4 py-2">{item.category}</td>
-                  <td className="px-4 py-2">{item.created_at ? formatTime(item.created_at) : "null"}</td>
+                  <td className="px-4 py-2">
+                    {item.created_at ? formatTime(item.created_at) : "null"}
+                  </td>
                   <td className="px-4 py-2 text-center">
                     <button className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-gray-200 cursor-pointer">
                       <Menu
