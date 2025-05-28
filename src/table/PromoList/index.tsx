@@ -11,7 +11,12 @@ import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
 import { SellerAPI } from "../../apis/sellerAPI";
 import { format } from "date-fns";
 
-export function PromoListTable({role, search, id}:{role:string, search?:string, id?: number | undefined}) {
+interface Props {
+  role: string,
+  search: string,
+  id?: number | undefined,
+};
+export function PromoListTable(props : Props) {
   const [metadata, setMetadata] = useState<Metadata>();
   const [items, setItems] = useState<Array<Promo>>();
   const [isLoading,setLoading] = useState<boolean>(false);
@@ -24,7 +29,7 @@ export function PromoListTable({role, search, id}:{role:string, search?:string, 
 
   const fetchAdminItems = (page: number) => {
     setLoading(true);
-    AdminAPI.get({ page: page, per_page: 5,search: search})
+    AdminAPI.get({ page: page, per_page: 5,search: props.search})
     .then((res) => {
       setItems(res.data.list.data);
       const { total, per_page, from, to, current_page, last_page } = res.data.list;
@@ -43,8 +48,13 @@ export function PromoListTable({role, search, id}:{role:string, search?:string, 
 
   const fetchSellerItems = (page: number) => {
     setLoading(true);
-    if(id){
-      SellerAPI.get({ page: page, per_page: 5, search: search, id: id })
+    if(props.id){
+      SellerAPI.get({
+        page: page,
+        per_page: 5,
+        search: props.search,
+        id: props.id,
+      })
         .then((res) => {
           setItems(res.data.list.data);
           const { total, per_page, from, to, current_page, last_page } =
@@ -64,12 +74,12 @@ export function PromoListTable({role, search, id}:{role:string, search?:string, 
   };
 
   useEffect(() => {
-    if(id && role == "Seller"){
+    if (props.id && props.role == "Seller") {
       fetchSellerItems(1);
-    }else{
+    } else {
       fetchAdminItems(1);
     }
-  }, [search]);
+  }, [props.search]);
   return (
     <>
       <div className="mt-2 rounded-2xl shadow-lg bg-white p-4 pt-2 border border-gray-200">
@@ -85,7 +95,7 @@ export function PromoListTable({role, search, id}:{role:string, search?:string, 
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[20%]">
                   Nama Promo
                 </th>
-                {role == "Admin" && (
+                {props.role == "Admin" && (
                   <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[15%]">
                     Brand
                   </th>
@@ -112,7 +122,7 @@ export function PromoListTable({role, search, id}:{role:string, search?:string, 
               {items?.map((item, idx) => (
                 <tr key={idx} className="bg-white hover:bg-gray-50 rounded-xl">
                   <td className="px-4 py-2">{item.name}</td>
-                  {role == "Admin" && (
+                  {props.role == "Admin" && (
                     <td className="px-4 py-2">{item.brand_name}</td>
                   )}
                   <td className="px-4 py-2">{item.type}</td>
