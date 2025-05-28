@@ -199,16 +199,19 @@ export default function Main() {
                 onChange={handleFileChange}
               />
             )}
-
-            <img
-              src={
-                localUser?.profile_picture?.startsWith("blob:")
-                  ? localUser.profile_picture
-                  : api.baseCloudPath + localUser?.profile_picture
-              }
-              alt="Profile"
-              className="w-32 h-32 rounded-full object-cover"
-            />
+            {user?.profile_picture || localUser?.profile_picture ? (
+              <img
+                src={
+                  localUser?.profile_picture?.startsWith("blob:")
+                    ? localUser.profile_picture
+                    : api.baseCloudPath + localUser?.profile_picture
+                }
+                alt="Profile"
+                className="w-32 h-32 rounded-full object-cover"
+              />
+            ) : (
+              <Lucide icon="CircleUserRound" className="size-32 stroke-1" />
+            )}
 
             {isEditing && (
               <label

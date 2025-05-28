@@ -1,5 +1,3 @@
-
-import { User } from "../models/User";
 import axios from "./axios";
 export const ProfileAPI = {
   editProfile: async (formdata: FormData, id: number) => {

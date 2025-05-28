@@ -2,7 +2,6 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { AuthAPI } from "../apis/authAPI";
 import { User } from "../models/User";
 
-;
 type UserContextType = {
   user: User | null;
   isAuth: boolean;

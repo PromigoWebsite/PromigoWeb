@@ -5,4 +5,5 @@ export interface User{
     mobile?: string,
     email?: string,
     profile_picture?: string,
+    brand_id?: number,
 }

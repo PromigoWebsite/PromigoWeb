@@ -1,0 +1,123 @@
+import React, { useEffect, useState } from "react";
+import Lucide from "../../basic_components/Lucide";
+import { PromoListTable } from "../../table/PromoList";
+import { BrandListTable } from "../../table/BrandList";
+import { useUser } from "../../context";
+import { useDebounce } from "@uidotdev/usehooks";
+import { useNavigate, useParams } from "react-router-dom";
+import { ReportListTable } from "../../table/ReportList";
+
+export default function Main() {
+    const [activeTab, setActiveTab] = useState("promo");
+    const [search, setSearch] = useState("");   
+    const { isAuth, refreshUser, loading, user } = useUser();
+    const debouncedSearchTerm = useDebounce(search, 600);
+    const params = useParams();
+
+    // useEffect(() => {
+    //     document.body.classList.add("hide-theme-navbar");
+    //     return () => document.body.classList.remove("hide-theme-navbar");
+    // }, []);
+
+    return (
+      <div className="min-h-screen bg-[#fafbfc] py-8 px-8">
+        <div>
+          {/* Navbar custom */}
+          <div className="flex items-center justify-between mb-6">
+            {/* Kiri: Welcome */}
+            <div>
+              <div className="text-2xl font-bold font-serif leading-tight">
+                Selamat datang, {user?.username}
+              </div>
+              <div className="text-gray-400 text-base font-serif mt-1">
+                {user?.role}
+              </div>
+            </div>
+            {/* Tengah: Search */}
+            <div className="flex-1 flex justify-center">
+              <div className="relative w-full max-w-xl">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="w-full border border-gray-300 rounded-full px-4 py-2 pl-10 focus:outline-none bg-white"
+                />
+                <span className="absolute left-3 top-2.5 text-gray-400">
+                  <Lucide icon="Search" className="w-5 h-5" />
+                </span>
+              </div>
+            </div>
+            {/* Kanan: Add Promo */}
+            <button className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-[#466273] transition-all">
+              Tambah Promo
+            </button>
+          </div>
+
+          {/* Tab & Summary */}
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex gap-2 border rounded-2xl border-gray-300">
+              {/* Promo Tab */}
+              <button
+                className={`px-2 mx-2 py-2 font-semibold ${
+                  activeTab === "promo"
+                    ? "border-b-2 border-[#6b8c97]"
+                    : ""
+                }`}
+                onClick={() => setActiveTab("promo")}
+              >
+                Daftar Promo
+              </button>
+
+              {/* Brand Tab */}
+              {user?.role === "Admin" && (
+                <button
+                  className={`px-2 mx-2 py-2 font-semibold ${
+                    activeTab === "brand"
+                      ? "border-b-2 border-[#6b8c97]"
+                      : ""
+                  }`}
+                  onClick={() => setActiveTab("brand")}
+                >
+                  Daftar Brand
+                </button>
+              )}
+
+              {/* Report Tab */}
+              {user?.role === "Admin" && (
+                <button
+                  className={`px-2 mx-2 py-2 font-semibold ${
+                    activeTab === "report"
+                      ? "border-b-2 border-[#6b8c97]"
+                      : ""
+                  }`}
+                  onClick={() => setActiveTab("report")}
+                >
+                  Daftar Laporan Promo
+                </button>
+              )}
+            </div>
+            {/* <div className="text-xs text-gray-500 text-right space-y-1">
+              <div>Total Promo: 2000</div>
+              <div>Total Brand: 160</div>
+            </div> */}
+          </div>
+
+          {/* Table */}
+          {activeTab === "promo" && !loading && user?.role && (
+            <PromoListTable
+              role={user.role}
+              search={debouncedSearchTerm}
+              id={
+                user.brand_id && !isNaN(+user.brand_id)
+                  ? +user.brand_id
+                  : undefined
+              }
+            />
+          )}
+          {activeTab === "brand" && !loading && isAuth && <BrandListTable />}
+          {activeTab === "report" && !loading && isAuth && <ReportListTable />}
+        </div>
+      </div>
+    );
+}

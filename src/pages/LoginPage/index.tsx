@@ -140,7 +140,7 @@ const LoginForm = () => {
                 {/* Register Link */}
                 <div className="text-center text-sm text-gray-600">
                     Belum mempunyai akun?{' '}
-                    <a onClick={()=>{navigate('/register')}} className="text-blue-600 hover:text-blue-800">
+                    <a onClick={()=>{navigate('/register')}} className="text-blue-600 hover:text-blue-800 cursor-pointer">
                         Daftar disini
                     </a>
                 </div>
