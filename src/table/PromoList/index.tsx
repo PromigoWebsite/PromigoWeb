@@ -12,43 +12,56 @@ import { SellerAPI } from "../../apis/sellerAPI";
 import { format } from "date-fns";
 
 interface Props {
-  role: string,
-  search: string,
-  id?: number | undefined,
+  role: string;
+  search: string;
+  id?: number | undefined;
+  totalBrand?: number;
+  setTotalBrand?: (totalBrand: number) => void;
+  totalPromo: number;
+  setTotalPromo: (totalPromo: number) => void;
 };
-export function PromoListTable(props : Props) {
+export function PromoListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
   const [items, setItems] = useState<Array<Promo>>();
-  const [isLoading,setLoading] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
 
-  const formatTime = (dateString: string) =>{
+  const formatTime = (dateString: string) => {
     const date = format(new Date(dateString), "yyyy-MM-dd");
     return date;
-  } 
+  };
 
   const fetchAdminItems = (page: number) => {
     setLoading(true);
-    AdminAPI.get({ page: page, per_page: 5,search: props.search})
-    .then((res) => {
-      setItems(res.data.list.data);
-      const { total, per_page, from, to, current_page, last_page } = res.data.list;
-      setMetadata({ total, per_page, from, to, current_page, last_page });
-      setLoading(false);
-    })
-    .catch((err)=>{
-      if(err instanceof AxiosError){
-        toast.error(err?.response?.data?.message || err.message);
-        if(err.response?.status && err.response?.status == 403){
-          navigate('/');
-        }
+    AdminAPI.get({ page: page, per_page: 5, search: props.search })
+      .then((res) => {
+        setItems(res.data.list.data);
+        
+      if (props.setTotalPromo) {
+        props.setTotalPromo(res.data.total_promo);
       }
-    })
+      
+      if (props.setTotalBrand) {
+        props.setTotalBrand(res.data.total_brand);
+      }
+        const { total, per_page, from, to, current_page, last_page } =
+          res.data.list;
+        setMetadata({ total, per_page, from, to, current_page, last_page });
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data?.message || err.message);
+          if (err.response?.status && err.response?.status == 403) {
+            navigate("/");
+          }
+        }
+      });
   };
 
   const fetchSellerItems = (page: number) => {
     setLoading(true);
-    if(props.id){
+    if (props.id) {
       SellerAPI.get({
         page: page,
         per_page: 5,
@@ -57,6 +70,9 @@ export function PromoListTable(props : Props) {
       })
         .then((res) => {
           setItems(res.data.list.data);
+          if (props.setTotalPromo) {
+            props.setTotalPromo(res.data.total_promo);
+          }
           const { total, per_page, from, to, current_page, last_page } =
             res.data.list;
           setMetadata({ total, per_page, from, to, current_page, last_page });
@@ -134,7 +150,7 @@ export function PromoListTable(props : Props) {
                     {item.ended_at ? formatTime(item.ended_at) : "null"}
                   </td>
                   <td className="px-4 py-2 text-center">
-                    <button className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-gray-200 cursor-pointer">
+                    <div className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-gray-200 cursor-pointer">
                       <Menu
                         label={<Lucide icon="Settings" className="w-5 h-5" />}
                       >
@@ -157,7 +173,6 @@ export function PromoListTable(props : Props) {
                                       err?.response?.data?.message ||
                                         err.message
                                     );
-
                                   }
                                 });
                             } else {
@@ -165,9 +180,9 @@ export function PromoListTable(props : Props) {
                             }
                           }}
                         />
-                        <MenuItem label="Edit" />
+                        <MenuItem label="Edit" onClick={()=> navigate(`/edit/promo/${item.id}`)}/>
                       </Menu>
-                    </button>
+                    </div>
                   </td>
                 </tr>
               ))}

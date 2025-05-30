@@ -8,6 +8,7 @@ import { Promo } from "../../models/Promo";
 import { useNavigate } from "react-router-dom";
 import Lucide from "../../basic_components/Lucide";
 import Carousel from "../../basic_components/Carousel";
+import api from "../../apis/api";
 
 
 export default function Main() {
@@ -144,7 +145,7 @@ export default function Main() {
                 }}
               >
                 <img
-                  src={reccomendations[0]?.path}
+                  src={api.baseCloudPath + reccomendations[0]?.path}
                   alt="img"
                   className="rounded-md size-[400px]"
                 />
@@ -181,7 +182,7 @@ export default function Main() {
                       >
                         <img
                           key={index}
-                          src={item.path}
+                          src={api.baseCloudPath + item.path}
                           alt={item.name || "Promo Image"}
                           className="h-40 w-36 rounded-lg shadow-md "
                         />

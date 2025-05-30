@@ -27,8 +27,19 @@ export const AdminAPI = {
 
   deleteById: async (id: number) => {
     return await axios.request({
-      url: `/admin/delete/${id}`,
+      url: `/admin/${id}/delete`,
       method: "DELETE",
+    });
+  },
+
+  save: async function ({ id, data }: { id?: number; data: FormData }) {
+    return await axios.request({
+      url: !id ? "/admin/add" : `/admin/${id}/edit`,
+      method: "POST",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
     });
   },
 };

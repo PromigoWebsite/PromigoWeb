@@ -9,6 +9,7 @@ import { PromoFilter } from '../../models/Promo_filter';
 import { BrandAPI } from '../../apis/BrandAPI';
 import { Brand } from '../../models/Brand';
 import clsx from 'clsx';
+import api from '../../apis/api';
 
 
 export default function PromoPage() {
@@ -295,7 +296,7 @@ export default function PromoPage() {
                 }}
               >
                 <img
-                  src={product.path}
+                  src={api.baseCloudPath + product.path}
                   alt="promos"
                   className="w-56 h-[270px] object-fit rounded mb-2 self-center"
                 />

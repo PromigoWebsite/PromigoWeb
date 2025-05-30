@@ -18,6 +18,7 @@ import { LoginModal } from "../../basic_components/LoginModal";
 import { FavoriteAPI } from "../../apis/FavoriteAPI";
 import { useUser } from "../../context";
 import { AxiosError } from "axios";
+import api from "../../apis/api";
 
 export default function Main() {
   const params = useParams();
@@ -113,7 +114,7 @@ export default function Main() {
       <div className="flex flex-col mr-8">
         <div className="rounded-xl shadow-md p-8 mb-4 border border-gray-300">
           <img
-            src={promo?.path}
+            src={api.baseCloudPath + promo?.path}
             alt="Promo Ngabuburit"
             className="w-[500px] h-auto rounded-lg"
           />

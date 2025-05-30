@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useDebounce } from "@uidotdev/usehooks";
 import Lucide from "../../basic_components/Lucide";
 import { FavoriteAPI } from "../../apis/FavoriteAPI";
+import api from "../../apis/api";
 
 export default function FavoritePage() {
   const [promos, setPromos] = useState<Promo[]>([]);
@@ -90,7 +91,7 @@ export default function FavoritePage() {
                   >
                     <div className="w-full flex justify-center items-start pt-4 pb-2 bg-white">
                       <img
-                        src={promo.path}
+                        src={api.baseCloudPath + promo.path}
                         alt={promo.name}
                         className="w-[90%] h-72 object-cover rounded-xl shadow-sm"
                       />

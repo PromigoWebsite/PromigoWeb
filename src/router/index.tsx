@@ -54,7 +54,11 @@ export const router = createBrowserRouter([
         element: <ExtendedPromoPage />,
       },
       {
-        path: "/addPromo",
+        path: "/add/promo",
+        element: <AddPromoPage />,
+      },
+      {
+        path: "/edit/promo/:id",
         element: <AddPromoPage />,
       },
     ],

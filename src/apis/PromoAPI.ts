@@ -36,7 +36,7 @@ export const PromoAPI = {
       },
     });
   },
-  get: async (id?: string) => {
+  get: async (id?: number) => {
     return await axios.request({
       url: `/promo/${id}`,
       method: "GET",
@@ -59,7 +59,7 @@ export const PromoAPI = {
   },
   checkLike: async (id?: number) => {
     return await axios.request({
-      url: `/promo/liked/${id}`,
+      url: `/promo/${id}/liked`,
       method: "GET",
     });
   },

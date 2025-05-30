@@ -12,6 +12,8 @@ export default function Main() {
     const [activeTab, setActiveTab] = useState("promo");
     const [search, setSearch] = useState("");   
     const { isAuth, loading, user } = useUser();
+    const [totalPromo, setTotalPromo] = useState<number>(0);
+    const [totalBrand, setTotalBrand] = useState<number>(0);
     const debouncedSearchTerm = useDebounce(search, 600);
     const navigate = useNavigate();
 
@@ -52,7 +54,7 @@ export default function Main() {
             {/* Kanan: Add Promo */}
             <button
               className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-[#466273] transition-all"
-              onClick={()=>navigate('/add/promo')}
+              onClick={() => navigate("/add/promo")}
             >
               Tambah Promo
             </button>
@@ -109,10 +111,13 @@ export default function Main() {
                 </button>
               )}
             </div>
-            {/* <div className="text-xs text-gray-500 text-right space-y-1">
-              <div>Total Promo: 2000</div>
-              <div>Total Brand: 160</div>
-            </div> */}
+            <div className="text-xs text-gray-500 text-right space-y-1">
+              <div>Total Promo: {totalPromo}</div>
+              {!loading && user?.role === "Admin" &&(
+                <div>Total Brand: {totalBrand}</div>
+              )}
+              
+            </div>
           </div>
 
           {/* Table */}
@@ -125,6 +130,14 @@ export default function Main() {
                   ? +user.brand_id
                   : undefined
               }
+              totalPromo={totalPromo}
+              setTotalPromo={setTotalPromo}
+              {...(user.role === "Admin"
+                ? {
+                    totalBrand: totalBrand,
+                    setTotalBrand: setTotalBrand,
+                  }
+                : {})}
             />
           )}
           {activeTab === "brand" && !loading && isAuth && (
