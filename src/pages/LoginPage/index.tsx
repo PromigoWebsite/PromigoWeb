@@ -72,7 +72,7 @@ const LoginForm = () => {
                             <input
                                 type="text"
                                 name="email"
-                                placeholder="email"
+                                placeholder="Email"
                                 value={form.email}
                                 onChange={handleChange}
                                 className="bg-transparent w-full outline-none text-sm"

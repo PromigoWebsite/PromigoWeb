@@ -93,7 +93,7 @@ export default function Main() {
                   >
                     <div className="w-20 h-20 rounded-full border border-gray-300 overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center">
                       <img
-                        src={item.logo}
+                        src={api.baseCloudPath + item.logo}
                         alt={item.name}
                         className="object-contain"
                       />
@@ -137,7 +137,46 @@ export default function Main() {
           {/* Recommendation Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Rekomendasi</h2>
-            <div className="flex gap-6">
+            <Carousel className="pb-4">
+              {reccomendations.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 flex-grow-0 hover:scale-105"
+                  style={{
+                    flex: "0 0 auto",
+                    width: "auto",
+                    marginRight: "1rem",
+                  }}
+                >
+                  <button
+                    className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs cursor-pointer"
+                    onClick={() => {
+                      navigate(`/detail/${item.id}`);
+                    }}
+                  >
+                    <img
+                      src={api.baseCloudPath + item?.path}
+                      alt="img"
+                      className="rounded-md size-[400px]"
+                    />
+                    <h3 className="text-lg font-semibold mt-3 self-start">
+                      {item?.name}
+                    </h3>
+                    <div className="flex items-center gap-2 mt-2">
+                      <img
+                        src={api.baseCloudPath + item?.logo}
+                        alt="logo"
+                        className="w-6 h-6 rounded-full border border-gray-300"
+                      />
+                      <span className="text-sm text-gray-600">
+                        {item?.brand_name}
+                      </span>
+                    </div>
+                  </button>
+                </div>
+              ))}
+            </Carousel>
+            {/* <div className="flex gap-6">
               <button
                 className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105 cursor-pointer"
                 onClick={() => {
@@ -154,20 +193,13 @@ export default function Main() {
                 </h3>
                 <div className="flex items-center gap-2 mt-2">
                   <img
-                    src={reccomendations[0]?.logo}
+                    src={api.baseCloudPath + reccomendations[0]?.logo}
                     alt="logo"
                     className="w-6 h-6 rounded-full border border-gray-300"
                   />
                   <span className="text-sm text-gray-600">
                     {reccomendations[0]?.brand_name}
                   </span>
-                </div>
-                <div className="flex justify-start mt-3 text-gray-500 text-sm">
-                  <Lucide
-                    icon="Heart"
-                    className="h-[18px] fill-red-500  mr-1"
-                  />
-                  <button>Favorite</button>
                 </div>
               </button>
               <div className=" flex flex-col justify-between">
@@ -190,7 +222,7 @@ export default function Main() {
                     )
                 )}
               </div>
-            </div>
+            </div> */}
           </div>
           {/* Newest Promo Section */}
           <div className="w-full flex flex-col mt-10">
@@ -214,7 +246,7 @@ export default function Main() {
                   >
                     <div className="flex justify-center max-w-[200px] h-[225px]">
                       <img
-                        src={item.path}
+                        src={api.baseCloudPath + item.path}
                         alt={item.name}
                         className="object-fill rounded-md h-full"
                       />

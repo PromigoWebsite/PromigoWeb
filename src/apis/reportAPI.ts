@@ -1,3 +1,5 @@
+import { ExtendedReportFilter } from "../models/Extended_report_filter";
+import { ReportSorting } from "../models/Report_sorting";
 import axios from "./axios";
 
 export const ReportAPI = {
@@ -14,10 +16,14 @@ export const ReportAPI = {
     per_page,
     page,
     search,
+    sorting,
+    filter,
   }: {
     per_page?: number;
     page?: number;
     search?: string;
+    sorting?: ReportSorting;
+    filter?: ExtendedReportFilter;
   }) => {
     return await axios.request({
       url: `/report/list`,
@@ -26,6 +32,8 @@ export const ReportAPI = {
         per_page,
         page,
         search,
+        sorting,
+        filter,
       },
     });
   },

@@ -1,3 +1,4 @@
+import { AdminPromoFilter } from "../models/Admin_promo_filter";
 import { PromoSorting } from "../models/Promo_sorting";
 import axios from "./axios";
 
@@ -7,12 +8,14 @@ export const SellerAPI = {
     page,
     search,
     sorting,
+    filter,
     id,
   }: {
     per_page?: number;
     page?: number;
     search?: string;
     sorting?: PromoSorting;
+    filter?: AdminPromoFilter;
     id: number;
   }) => {
     return await axios.request({
@@ -23,6 +26,7 @@ export const SellerAPI = {
         page,
         search,
         sorting,
+        filter,
       },
     });
   },

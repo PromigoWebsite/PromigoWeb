@@ -7,9 +7,14 @@ import Pagination from "../../basic_components/pagination";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
+import { Menu, MenuItem, SubMenu } from "../../basic_components/FloatingMenu";
 import { SellerAPI } from "../../apis/sellerAPI";
 import { format } from "date-fns";
+import { PromoSorting } from "../../models/Promo_sorting";
+import { useDebounce } from "@uidotdev/usehooks";
+import { AdminPromoFilter } from "../../models/Admin_promo_filter";
+import { BrandAPI } from "../../apis/BrandAPI";
+import { Brand } from "../../models/Brand";
 
 interface Props {
   role: string;
@@ -19,13 +24,41 @@ interface Props {
   setTotalBrand?: (totalBrand: number) => void;
   totalPromo: number;
   setTotalPromo: (totalPromo: number) => void;
-};
+}
 export function PromoListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
   const [items, setItems] = useState<Array<Promo>>();
+  const [brands, setBrands] = useState<Array<Brand>>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const [sorting, setSorting] = useState<PromoSorting>({
+    name: "default",
+    type: "default",
+    category: "default",
+    brand_name: "default",
+  });
+  const [filter, setFilter] = useState<AdminPromoFilter>({
+    brand_name: "default",
+    type: "default",
+    category: "default",
+  });
+  const [activeFilter, setActiveFilter] = useState<string>("");
+  const promoTypes = ["Diskon", "Cashback", "Gratis Ongkir"];
+  const promoCategories = ["Makanan", "Minuman", "Elektronik"];
 
+  const fetchBrand = () => {
+    BrandAPI.all()
+      .then((res) => {
+        setBrands(res.data);
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data?.message || err.message);
+        }
+      });
+  };
+
+  const debouncedSortTerm = useDebounce(sorting, 200);
   const formatTime = (dateString: string) => {
     const date = format(new Date(dateString), "yyyy-MM-dd");
     return date;
@@ -33,17 +66,23 @@ export function PromoListTable(props: Props) {
 
   const fetchAdminItems = (page: number) => {
     setLoading(true);
-    AdminAPI.get({ page: page, per_page: 5, search: props.search })
+    AdminAPI.get({
+      page: page,
+      per_page: 5,
+      search: props.search,
+      sorting: sorting,
+      filter: filter,
+    })
       .then((res) => {
         setItems(res.data.list.data);
-        
-      if (props.setTotalPromo) {
-        props.setTotalPromo(res.data.total_promo);
-      }
-      
-      if (props.setTotalBrand) {
-        props.setTotalBrand(res.data.total_brand);
-      }
+
+        if (props.setTotalPromo) {
+          props.setTotalPromo(res.data.total_promo);
+        }
+
+        if (props.setTotalBrand) {
+          props.setTotalBrand(res.data.total_brand);
+        }
         const { total, per_page, from, to, current_page, last_page } =
           res.data.list;
         setMetadata({ total, per_page, from, to, current_page, last_page });
@@ -67,6 +106,8 @@ export function PromoListTable(props: Props) {
         per_page: 5,
         search: props.search,
         id: props.id,
+        sorting: sorting,
+        filter: filter
       })
         .then((res) => {
           setItems(res.data.list.data);
@@ -95,9 +136,102 @@ export function PromoListTable(props: Props) {
     } else {
       fetchAdminItems(1);
     }
-  }, [props.search]);
+  }, [props.search, debouncedSortTerm, filter]);
+
+  useEffect(() => {
+    fetchBrand();
+  }, []);
   return (
     <>
+      <div className="flex flex-col items-start bg-gray-300 rounded-2xl py-4 px-7">
+        <div className="flex justify-start items-center space-x-4 mb-2">
+          <div className="text-base font-semibold">Filter</div>
+          <Menu
+            label={
+              <>
+                <div className="rounded-2xl p-2 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
+                  <div>Pilih Filter</div>
+                  <Lucide icon="ChevronDown" className="pt-1 ml-1 stroke-2" />
+                </div>
+              </>
+            }
+          >
+            <MenuItem
+              label="Default"
+              onClick={() => {
+                setActiveFilter("");
+                setFilter({
+                  brand_name: "default",
+                  type: "default",
+                  category: "default",
+                });
+              }}
+            />
+            {props.id && props.role == "Admin" && (
+              <MenuItem
+                label="Brand"
+                onClick={() => setActiveFilter("brand")}
+              />
+            )}
+            <MenuItem label="Tipe" onClick={() => setActiveFilter("type")} />
+            <MenuItem
+              label="Kategori"
+              onClick={() => setActiveFilter("category")}
+            />
+          </Menu>
+        </div>
+        <div className="flex flex-wrap gap-2 justify-start items-center w-full">
+          {/* Filter Brand */}
+          {activeFilter === "brand" &&
+            brands?.map((item, index) => (
+              <div
+                key={index}
+                className={`rounded-2xl p-2 ${
+                  filter.brand_name === item.name
+                    ? "bg-[#395c68]"
+                    : "bg-[#567C8D]"
+                } text-white flex items-center justify-center px-4 mb-2 min-w-[120px] text-center h-[40px] hover:cursor-pointer`}
+                onClick={() => {
+                  setFilter((prev) => ({ ...prev, brand_name: item.name }));
+                }}
+              >
+                <span className="line-clamp-1">{item.name}</span>
+              </div>
+            ))}
+
+          {/* Filter Tipe */}
+          {activeFilter === "type" &&
+            promoTypes.map((type, index) => (
+              <div
+                key={index}
+                className={`rounded-2xl p-2 ${
+                  filter.type === type ? "bg-[#395c68]" : "bg-[#567C8D]"
+                } text-white flex items-center justify-center px-4 mb-2 min-w-[120px] text-center h-[40px] hover:cursor-pointer`}
+                onClick={() => {
+                  setFilter((prev) => ({ ...prev, type }));
+                }}
+              >
+                <span className="line-clamp-1">{type}</span>
+              </div>
+            ))}
+
+          {/* Filter Kategori */}
+          {activeFilter === "category" &&
+            promoCategories.map((category, index) => (
+              <div
+                key={index}
+                className={`rounded-2xl p-2 ${
+                  filter.category === category ? "bg-[#395c68]" : "bg-[#567C8D]"
+                } text-white flex items-center justify-center px-4 mb-2 min-w-[120px] text-center h-[40px] hover:cursor-pointer`}
+                onClick={() => {
+                  setFilter((prev) => ({ ...prev, category }));
+                }}
+              >
+                <span className="line-clamp-1">{category}</span>
+              </div>
+            ))}
+        </div>
+      </div>
       <div className="mt-2 rounded-2xl shadow-lg bg-white p-4 pt-2 border border-gray-200">
         {isLoading && (
           <div className="flex items-center justify-center h-full my-3">
@@ -109,18 +243,106 @@ export function PromoListTable(props: Props) {
             <thead className="border-b border-gray-300">
               <tr className="text-gray-700 text-base font-semibold">
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[20%]">
-                  Nama Promo
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        name:
+                          prev.name === "asc"
+                            ? "desc"
+                            : prev.name === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Nama Promo</div>
+                    {sorting.name === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.name === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 {props.role == "Admin" && (
                   <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[15%]">
-                    Brand
+                    <button
+                      className="flex items-center hover:cursor-pointer"
+                      onClick={() => {
+                        setSorting((prev) => ({
+                          ...prev,
+                          brand_name:
+                            prev.brand_name === "asc"
+                              ? "desc"
+                              : prev.brand_name === "desc"
+                              ? "default"
+                              : "asc",
+                        }));
+                      }}
+                    >
+                      <div className="mr-2">Nama Brand</div>
+                      {sorting.brand_name === "asc" ? (
+                        <Lucide icon="ArrowUp" />
+                      ) : sorting.brand_name === "desc" ? (
+                        <Lucide icon="ArrowDown" />
+                      ) : (
+                        ""
+                      )}
+                    </button>
                   </th>
                 )}
-                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Tipe
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[15%]">
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        type:
+                          prev.type === "asc"
+                            ? "desc"
+                            : prev.type === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Tipe</div>
+                    {sorting.type === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.type === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[15%]">
-                  Kategori
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        category:
+                          prev.category === "asc"
+                            ? "desc"
+                            : prev.category === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Kategori</div>
+                    {sorting.category === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.category === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[15%]">
                   Tanggal Mulai
@@ -180,7 +402,10 @@ export function PromoListTable(props: Props) {
                             }
                           }}
                         />
-                        <MenuItem label="Edit" onClick={()=> navigate(`/edit/promo/${item.id}`)}/>
+                        <MenuItem
+                          label="Edit"
+                          onClick={() => navigate(`/edit/promo/${item.id}`)}
+                        />
                       </Menu>
                     </div>
                   </td>

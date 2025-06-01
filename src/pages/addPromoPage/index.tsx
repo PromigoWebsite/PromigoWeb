@@ -156,7 +156,7 @@ export default function AddPromoPage() {
         setmediaErrors("Media tidak boleh kosong");
         return;
     }
-    if (!selectedBrand) {
+    if (!selectedBrand && user?.role === "Admin") {
       setBrandErrors("Brand tidak boleh kosong");
       return;
     }
@@ -165,7 +165,7 @@ export default function AddPromoPage() {
         navigate('/');
     }else if(user && user.role === "Seller"){
         form.append("brand_id", String(user?.brand_id));
-    }else if (user && user.role === "Admin"){
+    }else if (user && user.role === "Admin" && selectedBrand){
         form.append("brand_id", selectedBrand);
     }
       Object.entries(data).forEach(([key, value]) => {

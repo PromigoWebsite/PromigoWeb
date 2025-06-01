@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Lucide from "../../basic_components/Lucide";
 import { PromoListTable } from "../../table/PromoList";
 import { BrandListTable } from "../../table/BrandList";
@@ -7,6 +7,8 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { ReportListTable } from "../../table/ReportList";
 import { RequestListTable } from "../../table/SellerRequestList";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import clsx from "clsx";
 
 export default function Main() {
     const [activeTab, setActiveTab] = useState("promo");
@@ -16,7 +18,6 @@ export default function Main() {
     const [totalBrand, setTotalBrand] = useState<number>(0);
     const debouncedSearchTerm = useDebounce(search, 600);
     const navigate = useNavigate();
-
     // useEffect(() => {
     //     document.body.classList.add("hide-theme-navbar");
     //     return () => document.body.classList.remove("hide-theme-navbar");
@@ -37,7 +38,11 @@ export default function Main() {
               </div>
             </div>
             {/* Tengah: Search */}
-            <div className="flex-1 flex justify-center">
+            <div className={clsx(
+              "flex-1 flex",
+              activeTab === "promo" ? "justify-center" : "justify-end"
+
+              )}>
               <div className="relative w-full max-w-xl">
                 <input
                   type="text"
@@ -52,12 +57,14 @@ export default function Main() {
               </div>
             </div>
             {/* Kanan: Add Promo */}
-            <button
+            {activeTab === "promo" && (
+              <button
               className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-[#466273] transition-all"
               onClick={() => navigate("/add/promo")}
             >
               Tambah Promo
             </button>
+            )}
           </div>
 
           {/* Tab & Summary */}

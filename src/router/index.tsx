@@ -13,7 +13,8 @@ import FavoritePage from "../pages/favoritePage";
 import BrandPage from "../pages/brandPage";
 import ExtendedPromoPage from "../pages/extendedPromoPage";
 import AddPromoPage from "../pages/addPromoPage";
-
+import BrandProfilePage from "../pages/brandProfilePage";
+import RequestSellerPage from "../pages/requestSellerPage";
 
 export const router = createBrowserRouter([
   {
@@ -60,6 +61,14 @@ export const router = createBrowserRouter([
       {
         path: "/edit/promo/:id",
         element: <AddPromoPage />,
+      },
+      {
+        path: "/profile/brand/:id",
+        element: <BrandProfilePage />,
+      },
+      {
+        path: "/extended/request",
+        element: <RequestSellerPage />,
       },
     ],
   },

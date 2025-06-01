@@ -117,7 +117,7 @@ export default function PromoPage() {
   return (
     <div className="flex gap-4 p-4">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow p-4 rounded-lg">
+      <aside className="w-64 bg-white shadow p-4 rounded-2xl">
         <h2 className="text-xl font-bold mb-4">Filters</h2>
         <hr className="border-t border-gray-400 mt-2 mb-4" />
         <div className="mb-4">
@@ -217,7 +217,7 @@ export default function PromoPage() {
           )}
         </div> */}
         <button
-          className="mb-5 text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer"
+          className="mb-5 text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer rounded"
           onClick={() => {
             setApplyChanges(!applyChanges);
           }}
@@ -225,7 +225,7 @@ export default function PromoPage() {
           Terapkan
         </button>
         <button
-          className="text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer"
+          className="text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer rounded"
           onClick={() => {
             setFilter({
               type: "",
@@ -248,7 +248,7 @@ export default function PromoPage() {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
-            className="border p-2 rounded"
+            className="border p-2 rounded-md"
           >
             <option value="">Urutkan</option>
             <option value="DESC">Terbaru</option>
@@ -258,10 +258,10 @@ export default function PromoPage() {
           {brands.map((brand) => (
             <button
               className={clsx([
-                "border border-gray-500 px-4 py-2 flex hover:scale-105",
+                "px-4 py-2 flex hover:scale-105 rounded-md",
                 brand.name == filter.brand
                   ? "bg-[#063EB8] text-white"
-                  : "bg-[#567C8D] text-white rounded",
+                  : "bg-[#567C8D] text-white",
               ])}
               onClick={() => {
                 if (brand.name == filter.brand) {
@@ -290,7 +290,7 @@ export default function PromoPage() {
             {promos.map((product, index) => (
               <div
                 key={index}
-                className=" col-span-3 rounded-lg p-4 bg-white shadow hover:scale-105 shadow-md transition flex flex-col items-center border border-gray-300"
+                className=" col-span-3 rounded-md p-4 bg-white shadow hover:scale-105 shadow-md transition flex flex-col items-center border border-gray-300"
                 onClick={() => {
                   navigate(`/detail/${product.id}`);
                 }}
@@ -298,7 +298,7 @@ export default function PromoPage() {
                 <img
                   src={api.baseCloudPath + product.path}
                   alt="promos"
-                  className="w-56 h-[270px] object-fit rounded mb-2 self-center"
+                  className="w-56 h-[270px] object-fit rounded-md mb-2 self-center"
                 />
                 {/* <div className="text-sm font-semibold text-red-500">
                 {product.discount}%

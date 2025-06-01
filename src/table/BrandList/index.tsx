@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
-import { AdminAPI } from "../../apis/adminAPI";
 import { Metadata } from "../../models/Metadata";
-import { Promo } from "../../models/Promo";
 import Lucide from "../../basic_components/Lucide";
 import Pagination from "../../basic_components/pagination";
 import { BrandAPI } from "../../apis/BrandAPI";
@@ -11,17 +9,33 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
 import { format } from "date-fns";
+import { BrandSorting } from "../../models/brand_sorting";
+import { useDebounce } from "@uidotdev/usehooks";
+import { ExtendedBrandFilter } from "../../models/Extended_brand_filter";
 
 interface Props {
-  search: string,
-};
+  search: string;
+}
 
 export function BrandListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
   const [items, setItems] = useState<Array<Brand>>();
   const [isLoading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
 
+  const [sorting, setSorting] = useState<BrandSorting>({
+    name: "default",
+    category: "default",
+    address: "default",
+  });
+  const debouncedSortTerm = useDebounce(sorting, 200);
+
+  const [filter, setFilter] = useState<ExtendedBrandFilter>({
+    category: "default",
+  });
+  const [activeFilter, setActiveFilter] = useState<string>("");
+  const brandCategories = ["FnB", "Elektronik"]; // Hanya ada 2 kategori
+
+  const navigate = useNavigate();
   const formatTime = (dateString: string) => {
     const date = format(new Date(dateString), "yyyy-MM-dd");
     return date;
@@ -29,7 +43,13 @@ export function BrandListTable(props: Props) {
 
   const fetchItems = (page: number) => {
     setLoading(true);
-    BrandAPI.get({ page: page, per_page: 5, search: props.search })
+    BrandAPI.get({
+      page: page,
+      per_page: 5,
+      search: props.search,
+      sorting: sorting,
+      filter: filter,
+    })
       .then((res) => {
         console.log(res);
         setItems(res.data.data);
@@ -49,9 +69,54 @@ export function BrandListTable(props: Props) {
 
   useEffect(() => {
     fetchItems(1);
-  }, [props.search]);
+  }, [props.search, debouncedSortTerm, filter]);
   return (
     <>
+      <div className="flex flex-col items-start bg-gray-300 rounded-2xl py-4 px-7 mb-2">
+        <div className="flex justify-start items-center space-x-4 mb-2">
+          <div className="text-base font-semibold">Filter</div>
+          <Menu
+            label={
+              <>
+                <div className="rounded-2xl p-2 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
+                  <div>Pilih Filter</div>
+                  <Lucide icon="ChevronDown" className="pt-1 ml-1 stroke-2" />
+                </div>
+              </>
+            }
+          >
+            <MenuItem
+              label="Default"
+              onClick={() => {
+                setActiveFilter("");
+                setFilter({ category: "default" });
+              }}
+            />
+            <MenuItem
+              label="Kategori"
+              onClick={() => setActiveFilter("category")}
+            />
+          </Menu>
+        </div>
+
+        {/* Filter kategori */}
+        <div className="flex flex-wrap gap-2 justify-start items-center w-full">
+          {activeFilter === "category" &&
+            brandCategories.map((category, index) => (
+              <div
+                key={index}
+                className={`rounded-2xl p-2 ${
+                  filter.category === category ? "bg-[#395c68]" : "bg-[#567C8D]"
+                } text-white flex items-center justify-center px-4 mb-2 min-w-[120px] text-center h-[40px] hover:cursor-pointer`}
+                onClick={() => {
+                  setFilter({ category });
+                }}
+              >
+                <span className="line-clamp-1">{category}</span>
+              </div>
+            ))}
+        </div>
+      </div>
       <div className="mt-2 rounded-2xl shadow-lg bg-white p-4 pt-2 border border-gray-200">
         {isLoading && (
           <div className="flex items-center justify-center h-full my-3">
@@ -63,13 +128,79 @@ export function BrandListTable(props: Props) {
             <thead className="border-b border-gray-300">
               <tr className="text-gray-700 text-base font-semibold">
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Nama Brand
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        name:
+                          prev.name === "asc"
+                            ? "desc"
+                            : prev.name === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Nama Brand</div>
+                    {sorting.name === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.name === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[30%]">
-                  Alamat
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        address:
+                          prev.address === "asc"
+                            ? "desc"
+                            : prev.address === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Alamat</div>
+                    {sorting.address === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.address === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Kategori
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        category:
+                          prev.category === "asc"
+                            ? "desc"
+                            : prev.category === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Kategori</div>
+                    {sorting.category === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.category === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
 
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
@@ -117,7 +248,10 @@ export function BrandListTable(props: Props) {
                             }
                           }}
                         />
-                        <MenuItem label="Edit" />
+                        <MenuItem
+                          label="Edit"
+                          onClick={() => navigate(`/profile/brand/${item.id}`)}
+                        />
                       </Menu>
                     </button>
                   </td>

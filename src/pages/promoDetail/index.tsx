@@ -19,6 +19,7 @@ import { FavoriteAPI } from "../../apis/FavoriteAPI";
 import { useUser } from "../../context";
 import { AxiosError } from "axios";
 import api from "../../apis/api";
+import { useDebounce } from "@uidotdev/usehooks";
 
 export default function Main() {
   const params = useParams();
@@ -28,9 +29,13 @@ export default function Main() {
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
   const [brand, setBrand] = useState<Brand>();
   const [isLike, setIsLike] = useState<boolean>(false);
+  const [likeTrigger, setLikeTrigger] = useState<boolean>(false);
+  const debounceLike = useDebounce(likeTrigger, 600);
+  const [unLikeTrigger, setUnLikeTrigger] = useState<boolean>(false);
+  const debounceUnLike = useDebounce(unLikeTrigger, 600);
   const [reportModal, setReportModal] = useState<boolean>(false);
   const [reportValue, setReportValue] = useState<string>("");
-  const [reportIndex, setReportIndex] = useState<number>();
+  const [reportIndex, setReportIndex] = useState<number>(); 
 
   const reportParameter = [
     {
@@ -56,20 +61,22 @@ export default function Main() {
   ];
 
   const getItems = () => {
-    PromoAPI.get(params?.id)
-      .then((res) => {
-        const promoData = res.data.promo;
-        setPromo({
-          ...promoData,
-          terms: promoData.terms ? JSON.parse(promoData.terms) : [],
+    if (params?.id && !isNaN(+params.id)) {
+      PromoAPI.get(+params.id)
+        .then((res) => {
+          const promoData = res.data.promo;
+          setPromo({
+            ...promoData,
+            terms: promoData.terms ? JSON.parse(promoData.terms) : [],
+          });
+          setBrand(res.data.brandInfo);
+        })
+        .catch((err) => {
+          if (err instanceof AxiosError) {
+            toast.error(err?.response?.data?.message || err.message);
+          }
         });
-        setBrand(res.data.brandInfo);
-      })
-      .catch((err) => {
-        if (err instanceof AxiosError) {
-          toast.error(err?.response?.data?.message || err.message);
-        }
-      });
+    }
   };
 
   const checkLike = () => {
@@ -95,18 +102,22 @@ export default function Main() {
   useEffect(() => {
     if (params?.id && !isNaN(+params.id)) {
       getItems();
-    }
-  }, []);
-
-  useEffect(() => {
-    if (params?.id && !isNaN(+params.id)) {
       checkLike();
     }
   }, []);
 
   useEffect(() => {
-    console.log(reportValue);
-  }, [reportValue]);
+    if(promo){
+      FavoriteAPI.add(promo?.id);
+    }
+  }, [debounceLike]);
+
+  useEffect(() => {
+    if(promo){
+      FavoriteAPI.remove(promo?.id);
+    }    
+  }, [debounceUnLike]);
+
   return (
     <div className="flex flex-col md:flex-row p-6 md:justify-center">
       {/* Left Section */}
@@ -145,10 +156,10 @@ export default function Main() {
             <div className="text-[40px] mt-4 pr-9 font-bold mb-7 ">
               {promo?.name}
             </div>
-            <div className="text-gray-700 text-xl">{brand?.name}</div>
+            <div className="text-gray-700 text-2xl">{brand?.name}</div>
           </div>
           <img
-            src={brand?.logo}
+            src={api.baseCloudPath + brand?.logo}
             alt="Brand Logo"
             className="size-32 borderobject-contain"
           />
@@ -166,7 +177,7 @@ export default function Main() {
             className="ml-auto text-sm text-gray-500 self-center flex"
             onClick={() => {
               if (isAuth && !isLike) {
-                FavoriteAPI.add(promo?.id);
+                setLikeTrigger((prev)=>(!prev));
                 if (promo) {
                   setPromo({
                     ...promo,
@@ -175,7 +186,7 @@ export default function Main() {
                 }
                 setIsLike(true);
               } else if (isAuth && isLike) {
-                FavoriteAPI.remove(promo?.id);
+                setUnLikeTrigger((prev)=>(!prev));
                 if (promo) {
                   setPromo({
                     ...promo,

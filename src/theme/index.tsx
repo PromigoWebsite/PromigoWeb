@@ -184,6 +184,14 @@ export default function Main() {
                         label="Profil"
                         onClick={() => navigate(`/profile/${user?.id}`)}
                       />
+                      {user?.role === "Seller" && (
+                        <MenuItem
+                          label="Profil Brand"
+                          onClick={() =>
+                            navigate(`/profile/brand/${user?.brand_id}`)
+                          }
+                        />
+                      )}
                       {(user?.role === "Admin" || user?.role === "Seller") && (
                         <MenuItem
                           label="Menu Detail"
@@ -267,6 +275,16 @@ export default function Main() {
                 >
                   Promo List
                 </button>
+              </li>
+              <li>
+                {user?.role === "User" && (
+                  <>
+                    <label>Tertarik menjadi mitra penjual? </label>
+                    <button onClick={() => navigate(`/extended/request`)} className="text-blue-500 hover:text-blue-700 hover:cursor-pointer">
+                      Klik Disini
+                    </button>
+                  </>
+                )}
               </li>
             </ul>
           </div>

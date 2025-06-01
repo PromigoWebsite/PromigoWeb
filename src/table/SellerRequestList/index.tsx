@@ -6,21 +6,28 @@ import { AxiosError } from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
-import {format } from "date-fns";
-import { ReportAPI } from "../../apis/reportAPI";
-import { Report } from "../../models/Report";
-import { SellerAPI } from "../../apis/sellerAPI";
+import { format } from "date-fns";
 import { RequestAPI } from "../../apis/sellerRequestAPI";
 import { SellerRequest } from "../../models/Seller_request";
+import api from "../../apis/api";
+import { RequestSorting } from "../../models/Request_sorting";
+import { useDebounce } from "@uidotdev/usehooks";
 
 interface Props {
-    search: string,
-};
+  search: string;
+}
 
 export function RequestListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
   const [items, setItems] = useState<Array<SellerRequest>>();
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [sorting, setSorting] = useState<RequestSorting>({
+    name: "default",
+    brand_name: "default",
+    brand_address: "default",
+    brand_category: "default",
+  });
+  const debouncedSortTerm = useDebounce(sorting, 200);
   const navigate = useNavigate();
 
   const formatTime = (dateString: string) => {
@@ -50,7 +57,7 @@ export function RequestListTable(props: Props) {
 
   useEffect(() => {
     fetchItems(1);
-  }, [props.search]);
+  }, [props.search, debouncedSortTerm]);
   return (
     <>
       <div className="mt-2 rounded-2xl shadow-lg bg-white p-4 pt-2 border border-gray-200">
@@ -64,22 +71,110 @@ export function RequestListTable(props: Props) {
             <thead className="border-b border-gray-300">
               <tr className="text-gray-700 text-base font-semibold">
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Nama User
+                  Logo Brand
+                </th>
+                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        name:
+                          prev.name === "asc"
+                            ? "desc"
+                            : prev.name === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Nama User</div>
+                    {sorting.name === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.name === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
                   Nomor Telfon
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Nama Brand
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        brand_name:
+                          prev.brand_name === "asc"
+                            ? "desc"
+                            : prev.brand_name === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Nama Brand</div>
+                    {sorting.brand_name === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.brand_name === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[20%]">
-                  Alamat Brand
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        brand_address:
+                          prev.brand_address === "asc"
+                            ? "desc"
+                            : prev.brand_address === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Alamat Brand</div>
+                    {sorting.brand_address === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.brand_address === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Logo Brand
-                </th>
-                <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
-                  Kategori Brand
+                  <button
+                    className="flex items-center hover:cursor-pointer"
+                    onClick={() => {
+                      setSorting((prev) => ({
+                        ...prev,
+                        brand_category:
+                          prev.brand_category === "asc"
+                            ? "desc"
+                            : prev.brand_category === "desc"
+                            ? "default"
+                            : "asc",
+                      }));
+                    }}
+                  >
+                    <div className="mr-2">Kategori Brand</div>
+                    {sorting.brand_category === "asc" ? (
+                      <Lucide icon="ArrowUp" />
+                    ) : sorting.brand_category === "desc" ? (
+                      <Lucide icon="ArrowDown" />
+                    ) : (
+                      ""
+                    )}
+                  </button>
                 </th>
                 <th className="px-4 py-2 text-left border-b-3 border-gray-300 w-[10%]">
                   Tanggal permintaan
@@ -93,11 +188,23 @@ export function RequestListTable(props: Props) {
             <tbody>
               {items?.map((item, idx) => (
                 <tr key={idx} className="bg-white hover:bg-gray-50 rounded-xl">
+                  <td className="px-4 py-2">
+                    <div className="rounded-full size-12">
+                      {item.brand_image_path ? (
+                        <img
+                          src={api.baseCloudPath + item.brand_image_path}
+                          className="object-cover size-full rounded-full"
+                          alt={`${item.brand_name} logo`}
+                        />
+                      ) : (
+                        <Lucide icon="CircleUserRound" className="size-full" />
+                      )}
+                    </div>
+                  </td>
                   <td className="px-4 py-2">{item.name}</td>
                   <td className="px-4 py-2">{item.mobile}</td>
                   <td className="px-4 py-2">{item.brand_name}</td>
                   <td className="px-4 py-2">{item.brand_address}</td>
-                  <td className="px-4 py-2">{item.brand_image_path}</td>
                   <td className="px-4 py-2">{item.brand_category}</td>
                   <td className="px-4 py-2">
                     {item.created_at ? formatTime(item.created_at) : "null"}
@@ -112,15 +219,18 @@ export function RequestListTable(props: Props) {
                           onClick={() => {
                             if (item.id != null && item.id != undefined) {
                               RequestAPI.deleteById(item.id)
-                              .then(()=>{
-                                toast.success("Penjual Berhasil Ditolak")
-                                fetchItems(1);
-                              })
-                              .catch((err) => {
-                                if (err instanceof AxiosError) {
-                                  toast.error(err?.response?.data?.message || err.message);
-                                }
-                              });
+                                .then(() => {
+                                  toast.success("Penjual Berhasil Ditolak");
+                                  fetchItems(1);
+                                })
+                                .catch((err) => {
+                                  if (err instanceof AxiosError) {
+                                    toast.error(
+                                      err?.response?.data?.message ||
+                                        err.message
+                                    );
+                                  }
+                                });
                             } else {
                               toast.error(
                                 "Id permintaan tidak dapat ditemukan"
@@ -133,15 +243,18 @@ export function RequestListTable(props: Props) {
                           onClick={() => {
                             if (item.id != null && item.id != undefined) {
                               RequestAPI.acceptById(item.id)
-                              .then(()=>{
-                                toast.success("Penjual Berhasil Diterima")
-                                fetchItems(1);
-                              })
-                              .catch((err) => {
-                                if (err instanceof AxiosError) {
-                                  toast.error(err?.response?.data?.message || err.message);
-                                }
-                              });
+                                .then(() => {
+                                  toast.success("Penjual Berhasil Diterima");
+                                  fetchItems(1);
+                                })
+                                .catch((err) => {
+                                  if (err instanceof AxiosError) {
+                                    toast.error(
+                                      err?.response?.data?.message ||
+                                        err.message
+                                    );
+                                  }
+                                });
                             } else {
                               toast.error(
                                 "Id permintaan tidak dapat ditemukan"
