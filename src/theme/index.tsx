@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { Outlet, useLoaderData, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
 import clsx from "clsx";
 import Lucide from "../basic_components/Lucide";
 import { Menu, MenuItem } from "../basic_components/FloatingMenu";
 import { AuthAPI } from "../apis/authAPI";
-import { toast } from "react-toastify";
 import { useUser } from "../context";
 import api from "../apis/api";
 import "../global.css";

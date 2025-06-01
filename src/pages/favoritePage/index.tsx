@@ -1,6 +1,4 @@
 import { useState, useEffect } from "react";
-import { Heart } from "lucide-react";
-import { PromoAPI } from "../../apis/PromoAPI";
 import { Promo } from "../../models/Promo";
 import { User } from "../../models/User";
 import { useNavigate } from "react-router-dom";

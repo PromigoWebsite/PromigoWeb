@@ -4,7 +4,6 @@ import Registerbg from '../../assets/Registerbg.png';
 import api from '../../apis/api';
 import axios from '../../apis/axios';
 import { useNavigate } from 'react-router-dom';
-import { AuthAPI } from '../../apis/authAPI';
 import { toast } from 'react-toastify';
 import { useUser } from '../../context';
 

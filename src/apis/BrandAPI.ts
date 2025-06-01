@@ -1,6 +1,5 @@
 import { BrandSorting } from "../models/brand_sorting";
 import { ExtendedBrandFilter } from "../models/Extended_brand_filter";
-import { PromoSorting } from "../models/Promo_sorting";
 import axios from "./axios";
 
 export const BrandAPI = {

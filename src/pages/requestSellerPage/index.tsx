@@ -3,7 +3,6 @@ import { useUser } from "../../context";
 import { toast } from "react-toastify";
 import clsx from "clsx";
 import Lucide from "../../basic_components/Lucide";
-import { useParams } from "react-router-dom";
 import { AxiosError } from "axios";
 import api from "../../apis/api";
 import { BrandAPI } from "../../apis/BrandAPI";
@@ -19,8 +18,7 @@ interface FormErrors {
 }
 
 export default function Main() {
-  const params = useParams();
-  const { user, refreshUser } = useUser();
+  const { user } = useUser();
   const [localBrand, setLocalBrand] = useState<Brand>();
   const [errors, setErrors] = useState<FormErrors>({});
   const [profilePhoto, setProfilePhoto] = useState<File>();

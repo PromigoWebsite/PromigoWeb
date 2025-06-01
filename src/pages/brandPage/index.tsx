@@ -1,4 +1,3 @@
-import React from 'react';
 import starbucksLogo from "../../assets/Starbucks.png";
 import cappuccino from "../../assets/Capucino.png";
 import americano from "../../assets/Americano.png";
@@ -7,7 +6,6 @@ import milkChocolate from "../../assets/MilkChocolate.png";
 import hokbenPromo from "../../assets/HokbenFavoritepage.png";
 
 const BrandPage = () => {
-    // Data bisa diganti dari props atau API
     const brand = {
         logo: starbucksLogo,
         name: 'STARBUCKS',

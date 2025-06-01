@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Lucide from "../../basic_components/Lucide";
 import { PromoListTable } from "../../table/PromoList";
 import { BrandListTable } from "../../table/BrandList";
@@ -7,7 +7,6 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { ReportListTable } from "../../table/ReportList";
 import { RequestListTable } from "../../table/SellerRequestList";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import clsx from "clsx";
 
 export default function Main() {

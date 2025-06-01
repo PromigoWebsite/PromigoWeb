@@ -1,6 +1,5 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react";
 import Lucide from "../Lucide";
-import { SetStateAction } from "react";
 import { useNavigate } from "react-router-dom";
 interface MainProps {
     openModal: boolean,

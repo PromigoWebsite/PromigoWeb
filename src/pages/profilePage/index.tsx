@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useUser } from "../../context";
 import { User } from "../../models/User";
 import { toast } from "react-toastify";
-import { Eye, EyeOff } from "lucide-react";
 import clsx from "clsx";
 import Lucide from "../../basic_components/Lucide";
 import { ProfileAPI } from "../../apis/profileAPI";

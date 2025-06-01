@@ -7,7 +7,7 @@ import Pagination from "../../basic_components/pagination";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuItem, SubMenu } from "../../basic_components/FloatingMenu";
+import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
 import { SellerAPI } from "../../apis/sellerAPI";
 import { format } from "date-fns";
 import { PromoSorting } from "../../models/Promo_sorting";

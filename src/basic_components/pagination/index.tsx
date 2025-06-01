@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import ReactPaginate from "react-paginate";
 
 interface PaginationProps {
@@ -16,9 +15,8 @@ export default function Pagination({
   marginPages = 1,
   pageRangeDisplayed = 5,
 }: PaginationProps) {
-  // Handle page click event
   const handlePageClick = (data: { selected: number }) => {
-    onPageChange(data.selected + 1); // +1 because react-paginate is 0-indexed but our API is 1-indexed
+    onPageChange(data.selected + 1); 
   };
 
   return (
