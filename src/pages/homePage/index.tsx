@@ -157,7 +157,7 @@ export default function Main() {
                     <img
                       src={api.baseCloudPath + item?.path}
                       alt="img"
-                      className="rounded-md size-[400px]"
+                      className="rounded-md size-[300px]"
                     />
                     <h3 className="text-lg font-semibold mt-3 self-start">
                       {item?.name}
@@ -176,56 +176,9 @@ export default function Main() {
                 </div>
               ))}
             </Carousel>
-            {/* <div className="flex gap-6">
-              <button
-                className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs hover:scale-105 cursor-pointer"
-                onClick={() => {
-                  navigate(`/detail/${reccomendations[0].id}`);
-                }}
-              >
-                <img
-                  src={api.baseCloudPath + reccomendations[0]?.path}
-                  alt="img"
-                  className="rounded-md size-[400px]"
-                />
-                <h3 className="text-lg font-semibold mt-3 self-start">
-                  {reccomendations[0]?.name}
-                </h3>
-                <div className="flex items-center gap-2 mt-2">
-                  <img
-                    src={api.baseCloudPath + reccomendations[0]?.logo}
-                    alt="logo"
-                    className="w-6 h-6 rounded-full border border-gray-300"
-                  />
-                  <span className="text-sm text-gray-600">
-                    {reccomendations[0]?.brand_name}
-                  </span>
-                </div>
-              </button>
-              <div className=" flex flex-col justify-between">
-                {reccomendations.map(
-                  (item, index) =>
-                    index !== 0 && (
-                      <button
-                        className="cursor-pointer hover:scale-105"
-                        onClick={() => {
-                          navigate(`/detail/${item.id}`);
-                        }}
-                      >
-                        <img
-                          key={index}
-                          src={api.baseCloudPath + item.path}
-                          alt={item.name || "Promo Image"}
-                          className="h-40 w-36 rounded-lg shadow-md "
-                        />
-                      </button>
-                    )
-                )}
-              </div>
-            </div> */}
           </div>
           {/* Newest Promo Section */}
-          <div className="w-full flex flex-col mt-10">
+          <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Promo Terbaru</h2>
             <Carousel className="pb-4">
               {newestPromos.map((item, index) => (
@@ -239,20 +192,18 @@ export default function Main() {
                   }}
                 >
                   <button
-                    className="bg-white h-[320px] rounded-lg shadow-md p-3 hover:shadow-lg transition-all duration-300 flex flex-col cursor-pointer"
+                    className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs cursor-pointer"
                     onClick={() => {
                       navigate(`/detail/${item.id}`);
                     }}
                   >
-                    <div className="flex justify-center max-w-[200px] h-[225px]">
-                      <img
-                        src={api.baseCloudPath + item.path}
-                        alt={item.name}
-                        className="object-fill rounded-md h-full"
-                      />
-                    </div>
+                    <img
+                      src={api.baseCloudPath + item.path}
+                      alt="img"
+                      className="w-[250px] h-[275px]"
+                    />
                     <div className="flex flex-col justify-center h-[70px]">
-                      <div className="text-sm font-medium max-w-52 text-center line-clamp-2 overflow-hidden">
+                      <div className="text-sm font-medium max-w-52 text-center line-clamp-2 ">
                         {item.name}
                       </div>
                     </div>

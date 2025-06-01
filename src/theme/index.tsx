@@ -101,10 +101,8 @@ export default function Main() {
             <div
               className={clsx([
                 "flex items-center h-[60px] border bg-white border-gray-300 rounded-full pl-4 pr-8 py-2 shadow-[0_4px_12px_rgba(0,0,0,0.15)] transition-all duration-300",
-                isSidebarOpen
-                  ? "w-full md:max-w-[1050px]"
-                  : "w-full md:max-w-[1300px]",
-                "max-w-[320px]",
+                isSidebarOpen ? "w-full md:max-w-4/5" : "w-full",
+                "md:max-w-12/13",
               ])}
             >
               <button
@@ -279,7 +277,10 @@ export default function Main() {
                 {user?.role === "User" && (
                   <>
                     <label>Tertarik menjadi mitra penjual? </label>
-                    <button onClick={() => navigate(`/extended/request`)} className="text-blue-500 hover:text-blue-700 hover:cursor-pointer">
+                    <button
+                      onClick={() => navigate(`/extended/request`)}
+                      className="text-blue-500 hover:text-blue-700 hover:cursor-pointer"
+                    >
                       Klik Disini
                     </button>
                   </>

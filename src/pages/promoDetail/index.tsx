@@ -161,7 +161,7 @@ export default function Main() {
           <img
             src={api.baseCloudPath + brand?.logo}
             alt="Brand Logo"
-            className="size-32 borderobject-contain"
+            className="size-32 rounded-full object-fill"
           />
         </div>
         <hr className="border-t border-black mt-2 mb-4" />

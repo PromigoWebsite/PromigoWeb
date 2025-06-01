@@ -462,7 +462,7 @@ export default function AddPromoPage() {
                 <select
                   id="promoCategory"
                   className={`w-full border ${
-                    errors.promoType ? "border-red-500" : "border-gray-300"
+                    errors.promoCategory ? "border-red-500" : "border-gray-300"
                   } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                   {...register("promoCategory")}
                 >
@@ -471,9 +471,9 @@ export default function AddPromoPage() {
                   <option value="Minuman">Minuman</option>
                   <option value="Elektronik">Elektronik</option>
                 </select>
-                {errors.status && (
+                {errors.promoCategory && (
                   <p className="text-red-500 text-xs mt-1">
-                    {errors.status.message as string}
+                    {errors.promoCategory.message as string}
                   </p>
                 )}
               </div>

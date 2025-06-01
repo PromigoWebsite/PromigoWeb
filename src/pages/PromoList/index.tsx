@@ -286,11 +286,11 @@ export default function PromoPage() {
 
         {/* Products */}
         {!isLoading && (
-          <div className="grid grid-cols-3 sm:grid-cols-6 md:grid-cols-12 gap-4">
+          <div className="grid grid-cols-3 lg:grid-cols-6 xl:grid-cols-12 gap-4">
             {promos.map((product, index) => (
               <div
                 key={index}
-                className=" col-span-3 rounded-md p-4 bg-white shadow hover:scale-105 shadow-md transition flex flex-col items-center border border-gray-300"
+                className=" col-span-3 rounded-md p-4 bg-white hover:scale-105 shadow-md transition flex flex-col items-center border border-gray-300"
                 onClick={() => {
                   navigate(`/detail/${product.id}`);
                 }}
