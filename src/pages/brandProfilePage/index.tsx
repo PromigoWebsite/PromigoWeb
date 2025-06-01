@@ -139,7 +139,7 @@ export default function Main() {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="bg-white shadow rounded-lg p-6 w-full max-w-7xl">
+      <div className="bg-white shadow rounded-2xl  border border-gray-300 p-6 w-full max-w-7xl">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
           <div className="relative">
@@ -202,7 +202,7 @@ export default function Main() {
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={clsx(
-                    "w-full px-4 py-2 border rounded text-gray-700",
+                    "w-full px-4 py-2 border rounded-md text-gray-700",
                     {
                       "border-red-500": errors.name,
                       "border-gray-300": !errors.name,
@@ -228,7 +228,7 @@ export default function Main() {
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={clsx(
-                    "w-full px-4 py-2 border rounded text-gray-700",
+                    "w-full px-4 py-2 border rounded-md text-gray-700",
                     {
                       "border-red-500": errors.address,
                       "border-gray-300": !errors.address,
@@ -253,7 +253,7 @@ export default function Main() {
                 <select
                   id="category"
                   className={clsx(
-                    "w-full px-4 py-2 border rounded text-gray-700",
+                    "w-full px-4 py-2 border rounded-md text-gray-700",
                     {
                       "border-red-500": errors.category,
                       "border-gray-300": !errors.category,
@@ -292,7 +292,7 @@ export default function Main() {
                   setErrors({});
                 }}
                 className={clsx(
-                  "px-8 py-2 rounded text-lg text-white",
+                  "px-8 py-2 rounded-md text-lg text-white",
                   "bg-gray-500 hover:bg-gray-600 cursor-pointer"
                 )}
               >
@@ -303,7 +303,7 @@ export default function Main() {
               <button
                 type="submit"
                 className={clsx(
-                  "px-8 py-2 rounded text-lg text-white",
+                  "px-8 py-2 rounded-md text-lg text-white",
                   "bg-teal-700 hover:bg-teal-800 cursor-pointer"
                 )}
               >
@@ -315,7 +315,7 @@ export default function Main() {
                 type="button"
                 onClick={() => setIsEditing(true)}
                 className={clsx(
-                  "px-8 py-2 rounded text-lg text-white",
+                  "px-8 py-2 rounded-md text-lg text-white",
                   "bg-teal-700 hover:bg-teal-800 cursor-pointer"
                 )}
               >

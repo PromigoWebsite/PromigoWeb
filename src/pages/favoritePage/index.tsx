@@ -32,11 +32,11 @@ export default function FavoritePage() {
   }, [debouncedSearchTerm, orderBy]);
 
   return (
-    <div className="bg-[#e6e8ec] rounded-2xl min-h-screen font-serif p-0">
+    <div className="bg-[#e6e8ec] rounded-2xl min-h-screen p-0">
       <div className="max-w-screen-xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between px-10 pt-8 pb-4">
-          <div className="text-3xl font-extrabold tracking-wide text-gray-800 select-none">
+          <div className="text-3xl font-bold  text-black select-none">
             Favorite Promo
           </div>
           <div className="flex items-center justify-center bg-white rounded-2xl shadow-lg px-6 py-3 border space-x-4 min-w-[220px]">
@@ -45,7 +45,7 @@ export default function FavoritePage() {
               alt="Avatar"
               className="w-12 h-12 rounded-full border object-cover"
             /> */}
-            <div className="text-2xl font-extrabold text-gray-900">
+            <div className="text-2xl font-bold text-gray-900">
               {user?.username}
             </div>
           </div>
@@ -53,11 +53,11 @@ export default function FavoritePage() {
 
         {/* Search and Filter Bar */}
         <div className="flex items-center gap-4 px-10">
-          <div className="flex flex-1 bg-white rounded-xl shadow-md px-6 py-3 border items-center gap-4">
+          <div className="flex flex-1 bg-white rounded-2xl shadow-md px-6 py-3 border-1 border-gray-500 items-center gap-4">
             <input
               type="text"
               placeholder="Cari berdasarkan nama"
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none bg-[#e6e8ec] text-lg"
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-2xl focus:outline-none bg-[#e6e8ec] text-lg"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -95,11 +95,11 @@ export default function FavoritePage() {
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-between px-4 pt-2 pb-6">
-                      <div className="text-lg font-serif font-medium text-gray-500 leading-tight mb-8 text-left">
+                      <div className="text-lg font-bold text-black mb-8 text-left">
                         {promo.name}
                       </div>
                       <button
-                        className="absolute bottom-4 flex items-center text-gray-400 text-base cursor-pointer hover:scale-110"
+                        className="absolute bottom-4 flex items-center text-black text-base cursor-pointer hover:scale-110"
                         onClick={(e) => {
                           e.stopPropagation(); 
                           FavoriteAPI.remove(promo.id).then(() => {
@@ -111,7 +111,7 @@ export default function FavoritePage() {
                           icon="Heart"
                           className="size-6 mr-2 fill-red-500"
                         />
-                        <div className="font-light">
+                        <div className="">
                           {promo.favorite_count} Like
                         </div>
                       </button>

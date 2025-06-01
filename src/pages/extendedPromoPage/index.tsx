@@ -48,7 +48,7 @@ export default function Main() {
                   placeholder="Search..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  className="w-full border border-gray-300 rounded-full px-4 py-2 pl-10 focus:outline-none bg-white"
+                  className="w-full border border-gray-300 rounded-2xl px-4 py-2 pl-10 focus:outline-none bg-white"
                 />
                 <span className="absolute left-3 top-2.5 text-gray-400">
                   <Lucide icon="Search" className="w-5 h-5" />
@@ -58,7 +58,7 @@ export default function Main() {
             {/* Kanan: Add Promo */}
             {activeTab === "promo" && (
               <button
-              className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-[#466273] transition-all"
+              className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-2xl shadow hover:bg-[#466273] transition-all"
               onClick={() => navigate("/add/promo")}
             >
               Tambah Promo

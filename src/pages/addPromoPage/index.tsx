@@ -210,7 +210,7 @@ export default function AddPromoPage() {
               Anda akan menambahkan promo baru ke situs web
             </div>
           </div>
-          <button className="text-gray-500 hover:text-gray-700">
+          <button className="text-gray-500 hover:text-gray-700" onClick={()=>navigate(`/extended/list`)}>
             <Lucide icon="X" className="w-6 h-6" />
           </button>
         </div>
@@ -233,7 +233,7 @@ export default function AddPromoPage() {
                   id="promoName"
                   className={`w-full border ${
                     errors.promoName ? "border-red-500" : "border-gray-300"
-                  } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
+                  } rounded-2xl px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                   {...register("promoName")}
                 />
                 {errors.promoName && (
@@ -254,7 +254,7 @@ export default function AddPromoPage() {
                   id="promoType"
                   className={`w-full border ${
                     errors.promoType ? "border-red-500" : "border-gray-300"
-                  } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
+                  } rounded-2xl px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                   {...register("promoType")}
                 >
                   <option value="">Pilih jenis promo</option>
@@ -393,7 +393,7 @@ export default function AddPromoPage() {
                   id="promoStatus"
                   className={`w-full border ${
                     errors.promoType ? "border-red-500" : "border-gray-300"
-                  } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
+                  } rounded-2xl px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                   {...register("status")}
                 >
                   <option value="">Pilih Status Promo</option>
@@ -420,7 +420,7 @@ export default function AddPromoPage() {
                     id="started_at"
                     className={`w-full border ${
                       errors.started_at ? "border-red-500" : "border-gray-300"
-                    } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
+                    } rounded-2xl px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                     {...register("started_at")}
                   />
                   {errors.started_at && (
@@ -441,7 +441,7 @@ export default function AddPromoPage() {
                     id="ended_at"
                     className={`w-full border ${
                       errors.ended_at ? "border-red-500" : "border-gray-300"
-                    } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
+                    } rounded-2xl px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                     {...register("ended_at")}
                   />
                   {errors.ended_at && (
@@ -463,7 +463,7 @@ export default function AddPromoPage() {
                   id="promoCategory"
                   className={`w-full border ${
                     errors.promoCategory ? "border-red-500" : "border-gray-300"
-                  } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
+                  } rounded-2xl px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                   {...register("promoCategory")}
                 >
                   <option value="">Pilih Kategori produk</option>
@@ -490,7 +490,7 @@ export default function AddPromoPage() {
                   {terms.map((term, index) => (
                     <div
                       key={index}
-                      className="flex justify-between bg-gray-100 rounded-full px-3 py-2 mb-2 w-full border-1 border-gray-300"
+                      className="flex justify-between bg-gray-100 rounded-2xl px-3 py-2 mb-2 w-full border-1 border-gray-300"
                     >
                       <div
                         className="flex-1 mr-2"
@@ -552,7 +552,7 @@ export default function AddPromoPage() {
                     id="promoType"
                     className={`w-full border ${
                       errors.promoType ? "border-red-500" : "border-gray-300"
-                    } rounded-full px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
+                    } rounded-2xl px-3 py-2 focus:outline-none focus:border-[#6b8c97]`}
                     value={selectedBrand}
                     onChange={(e) => {
                       if (brandErrors != "") {
@@ -580,13 +580,13 @@ export default function AddPromoPage() {
           <div className="flex justify-end mt-6">
             <button
               type="submit"
-              className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-[#466273] transition-all mr-4"
+              className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-2xl shadow hover:bg-[#466273] transition-all mr-4"
             >
               Simpan Promo
             </button>
             <button
               type="button"
-              className="bg-gray-300 text-gray-800 font-bold text-lg px-8 py-2 rounded-full shadow hover:bg-gray-400 transition-all"
+              className="bg-gray-300 text-gray-800 font-bold text-lg px-8 py-2 rounded-2xl shadow hover:bg-gray-400 transition-all"
             >
               Batal
             </button>

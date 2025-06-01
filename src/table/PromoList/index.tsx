@@ -7,7 +7,7 @@ import Pagination from "../../basic_components/pagination";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
-import { Menu, MenuItem } from "../../basic_components/FloatingMenu";
+import { Menu, MenuItem, SubMenu } from "../../basic_components/FloatingMenu";
 import { SellerAPI } from "../../apis/sellerAPI";
 import { format } from "date-fns";
 import { PromoSorting } from "../../models/Promo_sorting";
@@ -149,7 +149,7 @@ export function PromoListTable(props: Props) {
           <Menu
             label={
               <>
-                <div className="rounded-2xl p-2 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
+                <div className="rounded-2xl py-2 px-4 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
                   <div>Pilih Filter</div>
                   <Lucide icon="ChevronDown" className="pt-1 ml-1 stroke-2" />
                 </div>
@@ -358,7 +358,7 @@ export function PromoListTable(props: Props) {
 
             <tbody>
               {items?.map((item, idx) => (
-                <tr key={idx} className="bg-white hover:bg-gray-50 rounded-xl">
+                <tr key={idx} className="bg-white hover:bg-gray-50">
                   <td className="px-4 py-2">{item.name}</td>
                   {props.role == "Admin" && (
                     <td className="px-4 py-2">{item.brand_name}</td>

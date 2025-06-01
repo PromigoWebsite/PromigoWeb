@@ -200,7 +200,7 @@ export default function Main() {
                     <img
                       src={api.baseCloudPath + item.path}
                       alt="img"
-                      className="w-[250px] h-[275px]"
+                      className="w-[250px] h-[275px] rounded-md"
                     />
                     <div className="flex flex-col justify-center h-[70px]">
                       <div className="text-sm font-medium max-w-52 text-center line-clamp-2 ">

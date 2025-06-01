@@ -185,7 +185,7 @@ export default function Main() {
 
   return (
     <div className="flex justify-center items-center">
-      <div className="bg-white shadow rounded-lg p-6 w-full max-w-7xl">
+      <div className="bg-white shadow rounded-2xl border border-gray-300 p-8 w-full max-w-7xl">
         {/* Profile Header */}
         <div className="flex flex-col md:flex-row items-center gap-6 mb-6">
           <div className="relative">
@@ -250,7 +250,7 @@ export default function Main() {
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={clsx(
-                    "w-full px-4 py-2 border rounded text-gray-700",
+                    "w-full px-4 py-2 border rounded-md text-gray-700",
                     {
                       "border-red-500": errors.username,
                       "border-gray-300": !errors.username,
@@ -276,7 +276,7 @@ export default function Main() {
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={clsx(
-                    "w-full px-4 py-2 border rounded text-gray-700",
+                    "w-full px-4 py-2 border rounded-md-md text-gray-700",
                     {
                       "border-red-500": errors.mobile,
                       "border-gray-300": !errors.mobile,
@@ -302,7 +302,7 @@ export default function Main() {
                   onChange={handleChange}
                   disabled={!isEditing}
                   className={clsx(
-                    "w-full px-4 py-2 border rounded text-gray-700",
+                    "w-full px-4 py-2 border rounded-md text-gray-700",
                     {
                       "border-red-500": errors.email,
                       "border-gray-300": !errors.email,
@@ -325,7 +325,7 @@ export default function Main() {
                   Password
                 </label>
                 <div
-                  className={clsx("border flex rounded items-center", {
+                  className={clsx("border flex rounded-md items-center", {
                     "border-red-500": errors.password,
                     "border-gray-300": !errors.password,
                     "bg-white": isEditing,
@@ -339,7 +339,9 @@ export default function Main() {
                     value={password || ""}
                     onChange={handleChange}
                     disabled={!isEditing}
-                    className={clsx("w-full px-4 py-2 rounded text-gray-700")}
+                    className={clsx(
+                      "w-full px-4 py-2 rounded-md text-gray-700"
+                    )}
                     placeholder={
                       isEditing ? "Kosongkan jika tidak ingin mengubah" : ""
                     }
@@ -373,7 +375,7 @@ export default function Main() {
                   Konfirmasi Password
                 </label>
                 <div
-                  className={clsx("border flex rounded items-center", {
+                  className={clsx("border flex rounded-md items-center", {
                     "border-red-500": errors.confirmPassword,
                     "border-gray-300": !errors.confirmPassword,
                     "bg-white": isEditing && password?.trim() !== "",
@@ -387,7 +389,9 @@ export default function Main() {
                     value={confirmPassword || ""}
                     onChange={handleChange}
                     disabled={!isEditing || password?.trim() === ""}
-                    className={clsx("w-full px-4 py-2 rounded text-gray-700")}
+                    className={clsx(
+                      "w-full px-4 py-2 rounded-md text-gray-700"
+                    )}
                   />
                   <div
                     className={clsx("mx-2", {
@@ -419,7 +423,7 @@ export default function Main() {
                   Masukkan Password Lama
                 </label>
                 <div
-                  className={clsx("border flex rounded items-center", {
+                  className={clsx("border flex rounded-md items-center", {
                     "border-red-500": errors.oldPassword,
                     "border-gray-300": !errors.oldPassword,
                     "bg-white": isEditing && password?.trim() !== "",
@@ -433,7 +437,9 @@ export default function Main() {
                     value={oldPassword || ""}
                     onChange={handleChange}
                     disabled={!isEditing || password?.trim() === ""}
-                    className={clsx("w-full px-4 py-2 rounded text-gray-700")}
+                    className={clsx(
+                      "w-full px-4 py-2 rounded-md text-gray-700"
+                    )}
                   />
                   <div
                     className={clsx("mx-2", {
@@ -477,7 +483,7 @@ export default function Main() {
                   setOldPassword("");
                 }}
                 className={clsx(
-                  "px-8 py-2 rounded text-lg text-white",
+                  "px-8 py-2 rounded-md text-lg text-white",
                   "bg-gray-500 hover:bg-gray-600 cursor-pointer"
                 )}
               >
@@ -488,7 +494,7 @@ export default function Main() {
               <button
                 type="submit"
                 className={clsx(
-                  "px-8 py-2 rounded text-lg text-white",
+                  "px-8 py-2 rounded-md text-lg text-white",
                   "bg-teal-700 hover:bg-teal-800 cursor-pointer"
                 )}
               >
@@ -500,7 +506,7 @@ export default function Main() {
                 type="button"
                 onClick={() => setIsEditing(true)}
                 className={clsx(
-                  "px-8 py-2 rounded text-lg text-white",
+                  "px-8 py-2 rounded-md text-lg text-white",
                   "bg-teal-700 hover:bg-teal-800 cursor-pointer"
                 )}
               >
