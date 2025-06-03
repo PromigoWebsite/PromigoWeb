@@ -229,78 +229,108 @@ export default function Main() {
 
       {/* Footer */}
       <footer className="bg-gray-100 text-gray-700 shadow-md z-1">
-        <div className="container mx-auto flex flex-col md:flex-row justify-around h-50 items-center">
-          <div>
-            <h2 className="font-bold text-lg">PROMIGO</h2>
-            <div className="flex space-x-3 mt-2">
-              <button className="p-2 bg-gray-300 rounded-full">
-                <Lucide icon="Facebook" className="size-6 stroke-2" />
-              </button>
-              <button className="p-2 bg-gray-300 rounded-full">
-                <Lucide icon="Instagram" className="size-6 stroke-2" />
-              </button>
-              <button className="p-2 bg-gray-300 rounded-full">
-                <Lucide icon="Twitter" className="size-6 stroke-2" />
-              </button>
-              <button className="p-2 bg-gray-300 rounded-full">
-                <Lucide icon="Youtube" className="size-6 stroke-2" />
-              </button>
+        <div className="container mx-auto px-6 py-8">
+          {/* Main Footer Content */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+            {/* Brand Section */}
+            <div className="flex flex-col items-center md:items-center">
+              <h2 className="font-bold text-xl mb-4">PROMIGO</h2>
+              <div className="flex space-x-3">
+                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded-full transition-colors">
+                  <Lucide icon="Instagram" className="size-5 stroke-2" />
+                </button>
+                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded-full transition-colors">
+                  <Lucide icon="Twitter" className="size-5 stroke-2" />
+                </button>
+              </div>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <h3 className="font-semibold text-lg mb-3">Menu Utama</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <button
+                      className="text-gray-600 hover:text-blue-500 transition-colors text-left"
+                      onClick={() => navigate("/")}
+                    >
+                      Halaman Utama
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="text-gray-600 hover:text-blue-500 transition-colors text-left"
+                      onClick={() => navigate("/about")}
+                    >
+                      About Us
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      className="text-gray-600 hover:text-blue-500 transition-colors text-left"
+                      onClick={() => navigate("/list")}
+                    >
+                      Promo List
+                    </button>
+                  </li>
+                  {isAuth && (
+                    <li>
+                      <button
+                        className="text-gray-600 hover:text-blue-500 transition-colors text-left"
+                        onClick={() => navigate("/favorite")}
+                      >
+                        Halaman Favorit
+                      </button>
+                    </li>
+                  )}
+                </ul>
+              </div>
+
+              <div>
+                <h3 className="font-semibold text-lg mb-3">Menu Lainnya</h3>
+                <ul className="space-y-2">
+                  {(user?.role === "Admin" || user?.role === "Seller") && (
+                    <li>
+                      <button
+                        className="text-gray-600 hover:text-blue-500 transition-colors text-left"
+                        onClick={() => navigate("/extended/list")}
+                      >
+                        Menu Detail
+                      </button>
+                    </li>
+                  )}
+                  {user?.role === "User" && (
+                    <li className="text-sm">
+                      <span className="text-gray-600">Tertarik menjadi mitra penjual? </span>
+                      <button
+                        onClick={() => navigate(`/extended/request`)}
+                        className="text-blue-500 hover:text-blue-700 font-medium transition-colors"
+                      >
+                        Klik Disini
+                      </button>
+                    </li>
+                  )}
+                </ul>
+              </div>
+            </div>
+
+            {/* Contact or Additional Info */}
+            <div className="flex flex-col items-center md:items-start">
+              <h3 className="font-semibold text-lg mb-3">Kontak</h3>
+              <div className="text-sm text-gray-600 space-y-1 text-center md:text-left">
+                <p>Email: info@promigo.com</p>
+                <p>Phone: +62 813 1764 4690</p>
+              </div>
             </div>
           </div>
-          <div>
-            <ul className="space-y-1">
-              <li>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => navigate("/")}
-                >
-                  Halaman Utama
-                </button>
-              </li>
-              <li>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => navigate("/about")}
-                >
-                  About us
-                </button>
-              </li>
-              <li>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => navigate("/list")}
-                >
-                  Promo List
-                </button>
-              </li>
-              <li>
-                {user?.role === "User" && (
-                  <>
-                    <label>Tertarik menjadi mitra penjual? </label>
-                    <button
-                      onClick={() => navigate(`/extended/request`)}
-                      className="text-blue-500 hover:text-blue-700 hover:cursor-pointer"
-                    >
-                      Klik Disini
-                    </button>
-                  </>
-                )}
-              </li>
-            </ul>
-          </div>
-          {/* <div>
-            <h3 className="font-semibold">Promo Interest</h3>
-            <ul className="space-y-1">
-              <li>Recommendation</li>
-              <li>Newest Promo</li>
-              <li>Food/Drink</li>
-              <li>Service</li>
-            </ul>
-          </div> */}
         </div>
-        <div className="text-center text-sm text-white p-4 mt-4 bg-gray-500">
-          Copyright © 2025 Promigo, designed by Fransisco, developed by Arvin,
-          Jason, and Candra. All Rights Reserved.
+        
+        {/* Copyright Section */}
+        <div className="bg-gray-500 text-white text-center text-sm py-4">
+          <p>
+            Copyright © 2025 Promigo, designed by Fransisco, developed by Arvin, Jason, and Candra. All Rights Reserved.
+          </p>
         </div>
       </footer>
     </div>

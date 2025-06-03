@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { User, Lock, Eye, EyeOff } from 'lucide-react';
-import Registerbg from '../../assets/Registerbg.png';
 import api from '../../apis/api';
 import axios from '../../apis/axios';
 import { useNavigate } from 'react-router-dom';
@@ -156,28 +155,28 @@ const LoginForm = () => {
 
 export default function Main() {
     return (
-        <div className="relative">
-            {/* Background Layer */}
-            <div
-                className="fixed inset-0 w-screen h-screen bg-cover bg-center bg-no-repeat"
-                style={{
-                    backgroundImage: `url(${Registerbg})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    backgroundRepeat: 'no-repeat',
-                    position: 'fixed',
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    zIndex: -1
-                }}
-            />
+      <div className="relative">
+        {/* Background Layer */}
+        <div
+          className="fixed inset-0 w-screen h-screen bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url(https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/asset/etc/Registerbg.png)`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: -1,
+          }}
+        />
 
-            {/* Content Layer */}
-            <div className="relative z-10 min-h-screen flex justify-center items-center">
-                <LoginForm />
-            </div>
+        {/* Content Layer */}
+        <div className="relative z-10 min-h-screen flex justify-center items-center">
+          <LoginForm />
         </div>
+      </div>
     );
 }

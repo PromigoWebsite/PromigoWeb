@@ -15,6 +15,8 @@ export default function Main() {
     const navigate = useNavigate();
     const [brands,setBrands] = useState<Array<Brand>>([]);
     const [newestPromos, setNewestPromos] = useState<Array<Promo>>([]);
+    const [newestFood, setNewestFood] = useState<Array<Promo>>([]);
+    const [newestDrink, setNewestDrink] = useState<Array<Promo>>([]);
     const [reccomendations, setReccomendations] = useState<Array<Promo>>([]);
     const [brandExpanded, setBrandExpanded] = useState(false);
 
@@ -31,16 +33,40 @@ export default function Main() {
       })
     };  
 
-    const fetchNewestPromo = ()=>{
-      PromoAPI.newest()
-      .then((res)=>{
-        setNewestPromos(res.data);
-      })
-      .catch((err)=>{
-        if(err instanceof AxiosError){
-          toast.error(err?.response?.data?.message || err.message);
-        }
-      })
+    const fetchNewestPromo = () => {
+      PromoAPI.newest() // Tanpa parameter category, untuk semua promo
+        .then((res) => {
+          setNewestPromos(res.data);
+        })
+        .catch((err) => {
+          if (err instanceof AxiosError) {
+            toast.error(err?.response?.data?.message || err.message);
+          }
+        });
+    };
+
+    const fetchNewestFood = () => {
+      PromoAPI.newest("Makanan") // Dengan parameter category 'Food'
+        .then((res) => {
+          setNewestFood(res.data);
+        })
+        .catch((err) => {
+          if (err instanceof AxiosError) {
+            toast.error(err?.response?.data?.message || err.message);
+          }
+        });
+    };
+
+    const fetchNewestDrink = () => {
+      PromoAPI.newest("Minuman") // Dengan parameter category 'Drink'
+        .then((res) => {
+          setNewestDrink(res.data);
+        })
+        .catch((err) => {
+          if (err instanceof AxiosError) {
+            toast.error(err?.response?.data?.message || err.message);
+          }
+        });
     };
 
     const fetchReccomendation = () => {
@@ -58,6 +84,8 @@ export default function Main() {
     useEffect(()=>{
       fetchBrand();
       fetchNewestPromo();
+      fetchNewestDrink();
+      fetchNewestFood();
       fetchReccomendation();
     },[]);
 
@@ -89,9 +117,10 @@ export default function Main() {
                 .map((item, index) => (
                   <div
                     key={index}
-                    className="bg-white rounded-xl p-4 shadow-lg flex flex-col items-center transition-transform transition-duration-300 ease-in-out transform hover:scale-105"
+                    onClick={() => navigate(`/brand/${item.id}`)}
+                    className="bg-white rounded-2xl p-4 shadow-lg flex flex-col items-center transition-transform transition-duration-300 ease-in-out transform hover:scale-105"
                   >
-                    <div className="w-20 h-20 rounded-full border border-gray-300 overflow-hidden border-gray-300 bg-gray-100 flex items-center justify-center">
+                    <div className="w-20 h-20 rounded-full border border-gray-300 overflow-hidden bg-gray-100 flex items-center justify-center">
                       <img
                         src={api.baseCloudPath + item.logo}
                         alt={item.name}
@@ -137,77 +166,179 @@ export default function Main() {
           {/* Recommendation Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Rekomendasi</h2>
-            <Carousel className="pb-4">
+            <Carousel className="pb-4 pt-4" slideSize="350px" slideGap="1rem">
               {reccomendations.map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 flex-grow-0 hover:scale-105"
+                  className="transition-transform duration-300 ease-in-out hover:scale-105"
                   style={{
-                    flex: "0 0 auto",
-                    width: "auto",
-                    marginRight: "1rem",
+                    flex: "0 0 var(--slide-size, auto)",
+                    marginRight: "var(--slide-gap, 1rem)",
+                    minWidth: 0,
                   }}
                 >
-                  <button
-                    className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs cursor-pointer"
-                    onClick={() => {
-                      navigate(`/detail/${item.id}`);
-                    }}
-                  >
-                    <img
-                      src={api.baseCloudPath + item?.path}
-                      alt="img"
-                      className="rounded-md size-[300px]"
-                    />
-                    <h3 className="text-lg font-semibold mt-3 self-start">
-                      {item?.name}
-                    </h3>
-                    <div className="flex items-center gap-2 mt-2">
+                  <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
+                    <button
+                      className="flex flex-col cursor-pointer w-full h-full p-4"
+                      onClick={() => navigate(`/detail/${item.id}`)}
+                    >
                       <img
-                        src={api.baseCloudPath + item?.logo}
-                        alt="logo"
-                        className="w-6 h-6 rounded-full border border-gray-300"
+                        src={api.baseCloudPath + item?.path}
+                        alt="img"
+                        className="w-full aspect-[6/7] rounded-md"
                       />
-                      <span className="text-sm text-gray-600">
-                        {item?.brand_name}
-                      </span>
-                    </div>
-                  </button>
+                      <h3 className="text-lg font-semibold mt-3 text-left line-clamp-2 min-h-[2.8em]">
+                        {item?.name}
+                      </h3>
+                      <div className="flex items-center gap-2 mt-2">
+                        <img
+                          src={api.baseCloudPath + item?.logo}
+                          alt="logo"
+                          className="w-7 h-7 rounded-full border border-gray-300 flex-shrink-0"
+                        />
+                        <span className="text-base text-gray-600 truncate font-medium">
+                          {item?.brand_name}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
                 </div>
               ))}
             </Carousel>
           </div>
+
           {/* Newest Promo Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Promo Terbaru</h2>
-            <Carousel className="pb-4">
+            <Carousel className="pb-4 pt-4" slideSize="280px" slideGap="1rem">
               {newestPromos.map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 flex-grow-0 hover:scale-105"
+                  className="transition-transform duration-300 ease-in-out hover:scale-105"
                   style={{
-                    flex: "0 0 auto",
-                    width: "auto",
-                    marginRight: "1rem",
+                    flex: "0 0 var(--slide-size, auto)",
+                    marginRight: "var(--slide-gap, 1rem)",
+                    minWidth: 0, 
                   }}
                 >
-                  <button
-                    className="flex flex-col bg-white rounded-lg shadow-lg p-4  inset-shadow-2xs cursor-pointer"
-                    onClick={() => {
-                      navigate(`/detail/${item.id}`);
-                    }}
-                  >
-                    <img
-                      src={api.baseCloudPath + item.path}
-                      alt="img"
-                      className="w-[250px] h-[275px] rounded-md"
-                    />
-                    <div className="flex flex-col justify-center h-[70px]">
-                      <div className="text-sm font-medium max-w-52 text-center line-clamp-2 ">
+                  <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
+                    <button
+                      className="flex flex-col cursor-pointer w-full h-full p-4"
+                      onClick={() => {
+                        navigate(`/detail/${item.id}`);
+                      }}
+                    >
+                      <img
+                        src={api.baseCloudPath + item.path}
+                        alt="img"
+                        className="w-full aspect-[10/11] rounded-md"
+                      />
+                      <div className="text-sm font-semibold text-left line-clamp-1 mt-3 min-h-[1.5em]">
                         {item.name}
                       </div>
-                    </div>
-                  </button>
+                      <div className="flex items-center gap-2 mt-2">
+                        <img
+                          src={api.baseCloudPath + item?.logo}
+                          alt="logo"
+                          className="w-6 h-6 rounded-full border border-gray-300 flex-shrink-0"
+                        />
+                        <span className="text-sm text-gray-600 truncate">
+                          {item?.brand_name}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </Carousel>
+          </div>
+          {/* Newest Food Section */}
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-4">Makanan Terbaru</h2>
+            <Carousel className="pb-4 pt-4" slideSize="280px" slideGap="1rem">
+              {newestFood.map((item, index) => (
+                <div
+                  key={index}
+                  className="transition-transform duration-300 ease-in-out hover:scale-105"
+                  style={{
+                    flex: "0 0 var(--slide-size, auto)",
+                    marginRight: "var(--slide-gap, 1rem)",
+                    minWidth: 0,
+                  }}
+                >
+                  <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
+                    <button
+                      className="flex flex-col cursor-pointer w-full h-full p-4"
+                      onClick={() => {
+                        navigate(`/detail/${item.id}`);
+                      }}
+                    >
+                      <img
+                        src={api.baseCloudPath + item.path}
+                        alt="img"
+                        className="w-full aspect-[10/11] rounded-md"
+                      />
+                      <div className="text-sm font-semibold text-left line-clamp-1 mt-3 min-h-[1.5em]">
+                        {item.name}
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <img
+                          src={api.baseCloudPath + item?.logo}
+                          alt="logo"
+                          className="w-6 h-6 rounded-full border border-gray-300 flex-shrink-0"
+                        />
+                        <span className="text-sm text-gray-600 truncate">
+                          {item?.brand_name}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </Carousel>
+          </div>
+
+          {/* Newest Drink Section */}
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-4">Minuman Terbaru</h2>
+            <Carousel className="pb-4 pt-4" slideSize="280px" slideGap="1rem">
+              {newestDrink.map((item, index) => (
+                <div
+                  key={index}
+                  className="transition-transform duration-300 ease-in-out hover:scale-105"
+                  style={{
+                    flex: "0 0 var(--slide-size, auto)",
+                    marginRight: "var(--slide-gap, 1rem)",
+                    minWidth: 0,
+                  }}
+                >
+                  <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
+                    <button
+                      className="flex flex-col cursor-pointer w-full h-full p-4"
+                      onClick={() => {
+                        navigate(`/detail/${item.id}`);
+                      }}
+                    >
+                      <img
+                        src={api.baseCloudPath + item.path}
+                        alt="img"
+                        className="w-full aspect-[10/11] rounded-md"
+                      />
+                      <div className="text-sm font-semibold text-left line-clamp-1 mt-3 min-h-[1.5em]">
+                        {item.name}
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <img
+                          src={api.baseCloudPath + item?.logo}
+                          alt="logo"
+                          className="w-6 h-6 rounded-full border border-gray-300 flex-shrink-0"
+                        />
+                        <span className="text-sm text-gray-600 truncate">
+                          {item?.brand_name}
+                        </span>
+                      </div>
+                    </button>
+                  </div>
                 </div>
               ))}
             </Carousel>

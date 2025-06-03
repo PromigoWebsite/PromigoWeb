@@ -21,6 +21,7 @@ export default function AddPromoPage() {
   const [brands, setBrands] = useState<Array<Brand>>([]);
   const [selectedBrand, setSelectedBrand] = useState<string>();
   const [brandErrors, setBrandErrors] = useState("");
+  const [loading,setLoading] = useState(false);
   const [file, setFile] = useState<File>();
   const {user} = useUser();
   const params = useParams();
@@ -178,10 +179,10 @@ export default function AddPromoPage() {
 
     form.append("Media",file);
 
-    console.log(form);
-
+    setLoading(true);
     AdminAPI.save({ id: +(params.id ?? 0), data: form })
       .then(() => {
+        setLoading(false);
         toast.success("Promo Berhasil Ditambahkan/Diubah")
         navigate('/extended/list');
       })
@@ -210,9 +211,6 @@ export default function AddPromoPage() {
               Anda akan menambahkan promo baru ke situs web
             </div>
           </div>
-          <button className="text-gray-500 hover:text-gray-700" onClick={()=>navigate(`/extended/list`)}>
-            <Lucide icon="X" className="w-6 h-6" />
-          </button>
         </div>
 
         {/* Form */}
@@ -580,13 +578,18 @@ export default function AddPromoPage() {
           <div className="flex justify-end mt-6">
             <button
               type="submit"
-              className="bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-2xl shadow hover:bg-[#466273] transition-all mr-4"
+              disabled={loading}
+              className={clsx(
+                "bg-[#6b8c97] text-white font-bold text-lg px-8 py-2 rounded-2xl shadow hover:bg-[#466273] transition-all mr-4",
+                loading ? "cursor-not-allowed" : ""
+              )}
             >
               Simpan Promo
             </button>
             <button
               type="button"
               className="bg-gray-300 text-gray-800 font-bold text-lg px-8 py-2 rounded-2xl shadow hover:bg-gray-400 transition-all"
+              onClick={() => navigate(`/extended/list`)}
             >
               Batal
             </button>

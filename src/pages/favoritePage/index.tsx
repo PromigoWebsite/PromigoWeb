@@ -95,8 +95,8 @@ export default function FavoritePage() {
                       />
                     </div>
                     <div className="flex-1 flex flex-col justify-between px-4 pt-2 pb-6">
-                      <div className="text-lg font-bold text-black mb-8 text-left">
-                        {promo.name}
+                      <div className="text-lg font-bold text-black mb-8 text-left line-clamp-2">
+                        {promo.name} 
                       </div>
                       <button
                         className="absolute bottom-4 flex items-center text-black text-base cursor-pointer hover:scale-110"

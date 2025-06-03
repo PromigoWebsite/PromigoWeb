@@ -47,7 +47,7 @@ export const router = createBrowserRouter([
         element: <FavoritePage />,
       },
       {
-        path: "/brand",
+        path: "/brand/:id",
         element: <BrandPage />,
       },
       {

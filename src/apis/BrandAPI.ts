@@ -69,4 +69,13 @@ export const BrandAPI = {
       },
     });
   },
+  getRelatedPromo: async ({ page, id }: { page?: number; id: number }) => {
+    return await axios.request({
+      url: `/brand/${id}/promo`,
+      method: "GET",
+      params: {
+        page,
+      },
+    });
+  },
 };

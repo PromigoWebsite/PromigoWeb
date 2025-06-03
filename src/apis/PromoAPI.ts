@@ -45,10 +45,13 @@ export const PromoAPI = {
       },
     });
   },
-  newest: async () => {
+  newest: async (category?: string) => {
     return await axios.request({
       url: `/promo/newest`,
       method: "GET",
+      params: {
+        category,
+      }
     });
   },
   reccomendation: async () => {

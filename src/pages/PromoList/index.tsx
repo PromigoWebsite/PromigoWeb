@@ -1,52 +1,45 @@
-import { useEffect, useState } from 'react';
-import { Promo } from '../../models/Promo';
-import { PromoAPI } from '../../apis/PromoAPI';
-import Lucide from '../../basic_components/Lucide';
-import { AxiosError } from 'axios';
+import { useEffect, useState } from "react";
+import { Promo } from "../../models/Promo";
+import { PromoAPI } from "../../apis/PromoAPI";
+import Lucide from "../../basic_components/Lucide";
+import { AxiosError } from "axios";
 import { toast } from "react-toastify";
-import {  useNavigate, useSearchParams } from 'react-router-dom';
-import { PromoFilter } from '../../models/Promo_filter';
-import { BrandAPI } from '../../apis/BrandAPI';
-import { Brand } from '../../models/Brand';
-import clsx from 'clsx';
-import api from '../../apis/api';
-
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { BrandAPI } from "../../apis/BrandAPI";
+import { Brand } from "../../models/Brand";
+import clsx from "clsx";
+import api from "../../apis/api";
 
 export default function PromoPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const search = searchParams.get("search") || '';
-  const [isLoading,setIsLoading] = useState<boolean>(false);
+  const search = searchParams.get("search") || "";
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [sort, setSort] = useState('');
-  const [filter, setFilter] = useState<PromoFilter>({
-    type:"",
-    category:'',
-    brand:'',
+  const [sort, setSort] = useState("");
+  // Updated filter to support arrays for multiple selection
+  const [filter, setFilter] = useState<{
+    type: string[];
+    category: string[];
+    brand: string[];
+  }>({
+    type: [],
+    category: [],
+    brand: [],
   });
 
-  const [promos,setPromo] = useState<Array<Promo>>([]);
+  const [promos, setPromo] = useState<Array<Promo>>([]);
   const [brands, setBrands] = useState<Array<Brand>>([]);
-  const promoTypes = [
-    'Diskon',
-    'Cashback',
-    'Gratis Ongkir'
-  ];
+  const promoTypes = ["Diskon", "Cashback", "Gratis Ongkir"];
 
-  const promoCategories = [
-    'Makanan',
-    'Minuman',
-    'Elektronik',
-  ]; 
+  const promoCategories = ["Makanan", "Minuman", "Elektronik"];
 
   const [reset, setReset] = useState<boolean>(false);
   const [applyChanges, setApplyChanges] = useState<boolean>(false);
-  const [categoryChecked,setCategoryChecked] = useState<boolean>(true);
+  const [categoryChecked, setCategoryChecked] = useState<boolean>(true);
   const [promoTypeChecked, setPromoTypeChecked] = useState<boolean>(true);
-  // const debouncedSearchTerm = useDebounce(search, 600);
 
-
-  const getBrands = ()=>{
+  const getBrands = () => {
     BrandAPI.all()
       .then((res) => {
         setBrands(res?.data);
@@ -56,13 +49,18 @@ export default function PromoPage() {
           toast.error(e?.response?.data?.message || e?.message);
         }
       });
-  }
+  };
 
-  const getItems = ()=>{
-    setIsLoading(true)
-    PromoAPI.all({ search: search, sort: sort ,filter: filter})
+  const getItems = () => {
+    setIsLoading(true);
+    const filterForAPI = {
+      type: filter.type.join(","),
+      category: filter.category.join(","),
+      brand: filter.brand.join(","),
+    };
+
+    PromoAPI.all({ search: search, sort: sort, filter: filterForAPI })
       .then((res) => {
-        // console.log(res.data.data);
         setPromo(res?.data);
         setIsLoading(false);
       })
@@ -74,20 +72,23 @@ export default function PromoPage() {
   };
 
   const checkBox = (
-    filterCategory: keyof PromoFilter,
-    filterValue: string | undefined,
+    filterCategory: "type" | "category" | "brand",
+    filterValue: string
   ) => {
+    const isChecked = filter[filterCategory].includes(filterValue);
+
     return (
       <>
         <label>
           <input
             type="checkbox"
-            checked={filter[filterCategory] === filterValue}
+            checked={isChecked}
             onChange={() => {
               setFilter((prev) => ({
                 ...prev,
-                [filterCategory]:
-                  prev[filterCategory] === filterValue ? "" : filterValue,
+                [filterCategory]: isChecked
+                  ? prev[filterCategory].filter((item) => item !== filterValue)
+                  : [...prev[filterCategory], filterValue],
               }));
             }}
             className="mr-1"
@@ -103,16 +104,13 @@ export default function PromoPage() {
     getBrands();
   }, []);
 
-  useEffect(()=>{
+  useEffect(() => {
     getItems();
-  },[reset,applyChanges,search,sort])
-
+  }, [reset, applyChanges, search, sort]);
 
   useEffect(() => {
     console.log(filter);
   }, [filter]);
-  
-  
 
   return (
     <div className="flex gap-4 p-4">
@@ -120,6 +118,42 @@ export default function PromoPage() {
       <aside className="w-64 bg-white shadow p-4 rounded-2xl">
         <h2 className="text-xl font-bold mb-4">Filters</h2>
         <hr className="border-t border-gray-400 mt-2 mb-4" />
+
+        {/* Display selected filters */}
+        {(filter.type.length > 0 ||
+          filter.category.length > 0 ||
+          filter.brand.length > 0) && (
+          <div className="mb-4 p-2 bg-gray-50 rounded">
+            <h3 className="text-sm font-semibold mb-2">Filter Aktif:</h3>
+            <div className="flex flex-wrap gap-1">
+              {filter.type.map((type) => (
+                <span
+                  key={type}
+                  className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded"
+                >
+                  {type}
+                </span>
+              ))}
+              {filter.category.map((category) => (
+                <span
+                  key={category}
+                  className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded"
+                >
+                  {category}
+                </span>
+              ))}
+              {filter.brand.map((brand) => (
+                <span
+                  key={brand}
+                  className="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded"
+                >
+                  {brand}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="mb-4">
           <button
             className="font-semibold flex"
@@ -151,6 +185,7 @@ export default function PromoPage() {
             </div>
           )}
         </div>
+
         <div className="mb-4">
           <button
             className="font-semibold flex"
@@ -185,37 +220,6 @@ export default function PromoPage() {
           )}
         </div>
 
-        {/* <div className="mb-4">
-          <button
-            className="font-semibold flex"
-            onClick={() => {
-              setBrandChecked(!brandChecked);
-            }}
-          >
-            Brand
-            {brandChecked ? (
-              <div>
-                <Lucide
-                  icon="ChevronUp"
-                  className="ml-2 h-[25px] stroke-2 relative pt-1"
-                />
-              </div>
-            ) : (
-              <div>
-                <Lucide
-                  icon="ChevronDown"
-                  className="ml-2 h-[25px] stroke-2 relative"
-                />
-              </div>
-            )}
-          </button>
-
-          {brandChecked && (
-            <div className="space-y-1 mt-2">
-              {brands.map((brand) => checkBox("brand", brand.name))}
-            </div>
-          )}
-        </div> */}
         <button
           className="mb-5 text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer rounded"
           onClick={() => {
@@ -228,8 +232,9 @@ export default function PromoPage() {
           className="text-[#567C8D] w-32 align-middle border-2 flex justify-center border-[#567C8D] hover:bg-[#567C8D] hover:text-white cursor-pointer rounded"
           onClick={() => {
             setFilter({
-              type: "",
-              category: "",
+              type: [],
+              category: [],
+              brand: [],
             });
             setReset(!reset);
           }}
@@ -242,9 +247,6 @@ export default function PromoPage() {
       <div className="flex-1">
         {/*  Sort */}
         <div className="flex justify-between items-center mb-4">
-          {/* <div>
-            Urut
-          </div> */}
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value)}
@@ -254,34 +256,34 @@ export default function PromoPage() {
             <option value="DESC">Terbaru</option>
           </select>
         </div>
-        <div className="flex mb-3 gap-2 flex-wrap">
-          {brands.map((brand) => (
-            <button
-              className={clsx([
-                "px-4 py-2 flex hover:scale-105 rounded-md",
-                brand.name == filter.brand
-                  ? "bg-[#063EB8] text-white"
-                  : "bg-[#567C8D] text-white",
-              ])}
-              onClick={() => {
-                if (brand.name == filter.brand) {
-                  setFilter((prev) => ({
-                    ...prev,
-                    brand: "",
-                  }));
-                } else {
-                  setFilter((prev) => ({
-                    ...prev,
-                    brand: brand.name,
-                  }));
-                }
 
-                setApplyChanges(!applyChanges);
-              }}
-            >
-              {brand.name}
-            </button>
-          ))}
+        <div className="flex mb-3 gap-2 flex-wrap">
+          {brands
+            .filter((brand) => brand.name)
+            .map((brand) => (
+              <button
+                key={brand.name}
+                className={clsx([
+                  "px-4 py-2 flex hover:scale-105 rounded-md",
+                  filter.brand.includes(brand.name!)
+                    ? "bg-[#063EB8] text-white"
+                    : "bg-[#567C8D] text-white",
+                ])}
+                onClick={() => {
+                  const brandName = brand.name!;
+                  const isSelected = filter.brand.includes(brandName);
+                  setFilter((prev) => ({
+                    ...prev,
+                    brand: isSelected
+                      ? prev.brand.filter((b) => b !== brandName)
+                      : [...prev.brand, brandName],
+                  }));
+                  setApplyChanges(!applyChanges);
+                }}
+              >
+                {brand.name}
+              </button>
+            ))}
         </div>
 
         {/* Products */}
@@ -300,9 +302,6 @@ export default function PromoPage() {
                   alt="promos"
                   className="w-56 h-[270px] object-fit rounded-md mb-2 self-center"
                 />
-                {/* <div className="text-sm font-semibold text-red-500">
-                {product.discount}%
-              </div> */}
                 <div className="text-lg font-bold mt-1 text-center">
                   {product.name}
                 </div>

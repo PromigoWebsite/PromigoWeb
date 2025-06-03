@@ -7,11 +7,19 @@ import { AxiosError } from "axios";
 import api from "../../apis/api";
 import { BrandAPI } from "../../apis/BrandAPI";
 import { Brand } from "../../models/Brand";
+import {
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/react";
+import { useNavigate } from "react-router-dom";
 
 interface FormErrors {
   name?: string;
   address?: string;
   category?: string;
+  description?: string;
   terms1?: boolean;
   terms2?: boolean;
   logo?: string;
@@ -23,11 +31,15 @@ export default function Main() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [profilePhoto, setProfilePhoto] = useState<File>();
   const [termsCheck, setTermsCheck] = useState({
-      terms1: false,
-      terms2: false
+    terms1: false,
+    terms2: false,
   });
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
+  const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
 
     setLocalBrand((prev) => ({
@@ -77,6 +89,12 @@ export default function Main() {
       isValid = false;
     }
 
+    // Brand Description validation
+    if (!localBrand?.description || localBrand.description.trim() === "") {
+      newErrors.description = "Deskripsi brand tidak boleh kosong";
+      isValid = false;
+    }
+
     if (!termsCheck.terms1) {
       newErrors.terms1 = true;
       isValid = false;
@@ -88,7 +106,7 @@ export default function Main() {
     }
 
     if (!localBrand?.logo) {
-      newErrors.logo = 'Logo Brand tidak boleh kosong';
+      newErrors.logo = "Logo Brand tidak boleh kosong";
       isValid = false;
     }
 
@@ -98,42 +116,44 @@ export default function Main() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
-      if (profilePhoto) {
-        if (user?.id) {
-          
-          const formData = new FormData();
-
-          formData.append("name", localBrand?.name || "");
-          formData.append("address", localBrand?.address || "");
-          formData.append("category", localBrand?.category || "");
-          formData.append("user_id", String(user.id) || "");
-
-          if (profilePhoto) {
-            formData.append("logo", profilePhoto);
-          }
-
-          BrandAPI.addProfile(formData)
-            .then(() => {
-              toast.success("Pengajuan berhasil");
-            })
-            .catch((err) => {
-              if (err instanceof AxiosError) {
-                toast.error(err?.response?.data?.message || err.message);
-              }
-            });
-        }
-      }
+      setConfirmModal(true);
     }
   };
 
+  const submitSellerRequest = () => {
+    if (profilePhoto && user?.id) {
+      const formData = new FormData();
+
+      formData.append("name", localBrand?.name || "");
+      formData.append("address", localBrand?.address || "");
+      formData.append("category", localBrand?.category || "");
+      formData.append("description", localBrand?.description || "");
+      formData.append("user_id", String(user.id) || "");
+
+      if (profilePhoto) {
+        formData.append("logo", profilePhoto);
+      }
+
+      BrandAPI.addProfile(formData)
+        .then(() => {
+          toast.success("Pengajuan berhasil");
+          setConfirmModal(false);
+          navigate(`/`);
+        })
+        .catch((err) => {
+          if (err instanceof AxiosError) {
+            toast.error(err?.response?.data?.message || err.message);
+          }
+          setConfirmModal(false);
+        });
+    }
+  };
 
   return (
     <div className="flex justify-center items-center">
       <div className="bg-white shadow rounded-lg p-6 w-full max-w-7xl">
-        {/* Profile Header */}
-
         {/* Form */}
         <form onSubmit={handleSubmit}>
           <div className="flex text-2xl font-bold mb-15">
@@ -270,13 +290,49 @@ export default function Main() {
                   <p className="text-red-500 text-xs mt-1">{errors.category}</p>
                 )}
               </div>
+              {/* BRAND DESCRIPTION */}
+              <div className="flex flex-col">
+                <label htmlFor="description" className="text-gray-700 mb-1">
+                  Deskripsi Brand
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  rows={6}
+                  value={localBrand?.description || ""}
+                  onChange={handleChange}
+                  placeholder="Masukkan deskripsi brand Anda..."
+                  className={clsx(
+                    "w-full px-4 py-2 border rounded text-gray-700 bg-white",
+                    {
+                      "border-red-500": errors.description,
+                      "border-gray-300": !errors.description,
+                    }
+                  )}
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.description}
+                  </p>
+                )}
+              </div>
             </div>
             <div className="col-span-12 flex items-center mt-8">
               <input
                 type="checkbox"
                 className="size-5 mr-3"
-                onClick={() => {
-                  setTermsCheck((prev) => ({ ...prev, terms1: true }));
+                checked={termsCheck.terms1}
+                onChange={(e) => {
+                  setTermsCheck((prev) => ({
+                    ...prev,
+                    terms1: e.target.checked,
+                  }));
+                  if (errors.terms1) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      terms1: undefined,
+                    }));
+                  }
                 }}
               />
               <div className={clsx(errors.terms1 ? "text-red-500" : "")}>
@@ -288,11 +344,21 @@ export default function Main() {
               <input
                 type="checkbox"
                 className="size-5 mr-3"
-                onClick={() => {
-                  setTermsCheck((prev) => ({ ...prev, terms2: true }));
+                checked={termsCheck.terms2}
+                onChange={(e) => {
+                  setTermsCheck((prev) => ({
+                    ...prev,
+                    terms2: e.target.checked,
+                  }));
+                  if (errors.terms2) {
+                    setErrors((prev) => ({
+                      ...prev,
+                      terms2: undefined,
+                    }));
+                  }
                 }}
               />
-              <div className={clsx(errors.terms1 ? "text-red-500" : "")}>
+              <div className={clsx(errors.terms2 ? "text-red-500" : "")}>
                 Saya bersedia mengikuti peraturan di website Promigo
               </div>
             </div>
@@ -309,6 +375,46 @@ export default function Main() {
           </div>
         </form>
       </div>
+
+      {/* Confirmation Dialog */}
+      <Dialog open={confirmModal} onClose={() => {}} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/30" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel className="max-w-md bg-white p-6 rounded-2xl shadow-lg">
+            {/* Close Button */}
+            <div className="flex justify-end">
+              <button
+                onClick={() => setConfirmModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <Lucide icon="X" className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Content */}
+            <div className="text-center px-4 pb-4">
+              <DialogTitle className="text-lg font-medium mb-4">
+                Apakah kamu yakin dengan informasi yang diberikan?
+              </DialogTitle>
+
+              <div className="flex justify-center gap-4">
+                <button
+                  onClick={submitSellerRequest}
+                  className="px-6 py-2 bg-teal-600 text-white rounded hover:bg-teal-700 transition"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setConfirmModal(false)}
+                  className="px-6 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </DialogPanel>
+        </div>
+      </Dialog>
     </div>
   );
 }

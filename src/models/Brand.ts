@@ -7,4 +7,5 @@ export interface Brand {
     category?: string,
     mobile?: string,
     created_at?: string,
+    description?: string,
 }

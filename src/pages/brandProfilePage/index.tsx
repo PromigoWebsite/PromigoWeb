@@ -81,10 +81,12 @@ export default function Main() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      if (
-        JSON.stringify(brand) !== JSON.stringify(localBrand) ||
-        profilePhoto
-      ) {
+      const hasDataChanged =
+        brand?.name !== localBrand?.name ||
+        brand?.address !== localBrand?.address ||
+        brand?.category !== localBrand?.category;
+
+      if (hasDataChanged || profilePhoto) {
         if (params.id) {
           const formData = new FormData();
 
@@ -95,8 +97,9 @@ export default function Main() {
           if (profilePhoto) {
             formData.append("logo", profilePhoto);
           }
-          if(user?.brand_id){
-            BrandAPI.editProfile(formData, user?.brand_id)
+
+          if (params.id) {
+            BrandAPI.editProfile(formData, +params.id)
               .then(() => {
                 refreshUser();
                 toast.success("Profile berhasil diperbarui");
@@ -110,6 +113,7 @@ export default function Main() {
           }
         }
       } else {
+        // No changes detected
         setIsEditing(false);
       }
     }
@@ -120,8 +124,8 @@ export default function Main() {
       BrandAPI.getById(+params.id)
         .then((res) => {
           console.log(res.data);
-          setBrand(res.data);
-          setLocalBrand(res.data);
+          setBrand(res.data.brand);
+          setLocalBrand(res.data.brand);
         })
         .catch((err) => {
           if (err instanceof AxiosError) {
