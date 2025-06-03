@@ -78,7 +78,7 @@ export function BrandListTable(props: Props) {
           <Menu
             label={
               <>
-                <div className="rounded-2xl p-2 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
+                <div className="rounded-2xl py-2 px-4 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
                   <div>Pilih Filter</div>
                   <Lucide icon="ChevronDown" className="pt-1 ml-1 stroke-2" />
                 </div>

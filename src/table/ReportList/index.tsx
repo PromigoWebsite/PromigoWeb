@@ -22,7 +22,7 @@ interface Props {
 export function ReportListTable(props: Props) {
   const [metadata, setMetadata] = useState<Metadata>();
   const [items, setItems] = useState<Array<Report>>();
-   const [brands, setBrands] = useState<Array<Brand>>();
+  const [brands, setBrands] = useState<Array<Brand>>();
   const [isLoading, setLoading] = useState<boolean>(false);
   const [sorting, setSorting] = useState<ReportSorting>({
     promo_name: "default",
@@ -42,16 +42,16 @@ export function ReportListTable(props: Props) {
   };
 
   const fetchBrand = () => {
-      BrandAPI.all()
-        .then((res) => {
-          setBrands(res.data);
-        })
-        .catch((err) => {
-          if (err instanceof AxiosError) {
-            toast.error(err?.response?.data?.message || err.message);
-          }
-        });
-    };
+    BrandAPI.all()
+      .then((res) => {
+        setBrands(res.data);
+      })
+      .catch((err) => {
+        if (err instanceof AxiosError) {
+          toast.error(err?.response?.data?.message || err.message);
+        }
+      });
+  };
 
   const fetchItems = (page: number) => {
     setLoading(true);
@@ -81,62 +81,58 @@ export function ReportListTable(props: Props) {
 
   useEffect(() => {
     fetchItems(1);
-  }, [props.search, debouncedSortTerm,filter]);
+  }, [props.search, debouncedSortTerm, filter]);
 
   useEffect(() => {
     fetchBrand();
   }, []);
   return (
     <>
-    <div className="flex flex-col items-start bg-gray-300 rounded-2xl py-4 px-7">
-            <div className="flex justify-start items-center space-x-4 mb-2">
-              <div className="text-base font-semibold">Filter</div>
-              <Menu
-                label={
-                  <>
-                    <div className="rounded-2xl p-2 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
-                      <div>Pilih Filter</div>
-                      <Lucide icon="ChevronDown" className="pt-1 ml-1 stroke-2" />
-                    </div>
-                  </>
-                }
+      <div className="flex flex-col items-start bg-gray-300 rounded-2xl py-4 px-7">
+        <div className="flex justify-start items-center space-x-4 mb-2">
+          <div className="text-base font-semibold">Filter</div>
+          <Menu
+            label={
+              <>
+                <div className="rounded-2xl py-2 px-4 bg-[#567C8D] text-white flex items-center hover:cursor-pointer">
+                  <div>Pilih Filter</div>
+                  <Lucide icon="ChevronDown" className="pt-1 ml-1 stroke-2" />
+                </div>
+              </>
+            }
+          >
+            <MenuItem
+              label="Default"
+              onClick={() => {
+                setActiveFilter("");
+                setFilter({
+                  brand_name: "default",
+                });
+              }}
+            />
+            <MenuItem label="Brand" onClick={() => setActiveFilter("brand")} />
+          </Menu>
+        </div>
+        <div className="flex flex-wrap gap-2 justify-start items-center w-full">
+          {/* Filter Brand */}
+          {activeFilter === "brand" &&
+            brands?.map((item, index) => (
+              <div
+                key={index}
+                className={`rounded-2xl p-2 ${
+                  filter.brand_name === item.name
+                    ? "bg-[#395c68]"
+                    : "bg-[#567C8D]"
+                } text-white flex items-center justify-center px-4 mb-2 min-w-[120px] text-center h-[40px] hover:cursor-pointer`}
+                onClick={() => {
+                  setFilter((prev) => ({ ...prev, brand_name: item.name }));
+                }}
               >
-                <MenuItem
-                  label="Default"
-                  onClick={() => {
-                    setActiveFilter("");
-                    setFilter({
-                      brand_name: "default",
-                    });
-                  }}
-                />
-                <MenuItem
-                  label="Brand"
-                  onClick={() => setActiveFilter("brand")}
-                />
-              </Menu>
-            </div>
-            <div className="flex flex-wrap gap-2 justify-start items-center w-full">
-              {/* Filter Brand */}
-              {activeFilter === "brand" &&
-                brands?.map((item, index) => (
-                  <div
-                    key={index}
-                    className={`rounded-2xl p-2 ${
-                      filter.brand_name === item.name
-                        ? "bg-[#395c68]"
-                        : "bg-[#567C8D]"
-                    } text-white flex items-center justify-center px-4 mb-2 min-w-[120px] text-center h-[40px] hover:cursor-pointer`}
-                    onClick={() => {
-                      setFilter((prev) => ({ ...prev, brand_name: item.name }));
-                    }}
-                  >
-                    <span className="line-clamp-1">{item.name}</span>
-                  </div>
-                ))}
-    
-            </div>
-          </div>
+                <span className="line-clamp-1">{item.name}</span>
+              </div>
+            ))}
+        </div>
+      </div>
       <div className="mt-2 rounded-2xl shadow-lg bg-white p-4 pt-2 border border-gray-200">
         {isLoading && (
           <div className="flex items-center justify-center h-full my-3">
