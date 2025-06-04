@@ -25,7 +25,7 @@ export default function Main() {
   const params = useParams();
   const [promo, setPromo] = useState<Promo>();
   // const [isAuth, setIsAuth] = useState<boolean>(false);
-  const { isAuth } = useUser();
+  const { isAuth, user, loading } = useUser();
   const [loginModalOpen, setLoginModalOpen] = useState<boolean>(false);
   const [brand, setBrand] = useState<Brand>();
   const [isLike, setIsLike] = useState<boolean>(false);
@@ -93,9 +93,9 @@ export default function Main() {
     }
   };
 
-  const submitReport = (value: string) => {
+  const submitReport = (value: string, userId: number) => {
     if (params?.id && !isNaN(+params.id)) {
-      ReportAPI.addReport(value, +params.id);
+      ReportAPI.addReport({value:value, id:+params.id, userId: userId});
     }
   };
 
@@ -156,7 +156,7 @@ export default function Main() {
             <div className="text-[40px] mt-4 pr-9 font-bold mb-7 ">
               {promo?.name}
             </div>
-            <div className="text-gray-700 text-2xl">{brand?.name}</div>
+            <div className="text-[#A8972A] text-2xl">{brand?.name}</div>
           </div>
           <img
             src={api.baseCloudPath + brand?.logo}
@@ -167,17 +167,17 @@ export default function Main() {
         <hr className="border-t border-black mt-2 mb-4" />
 
         <div className="flex mb-4">
-          <div className="bg-gray-200 text-gray-700 px-4 py-1 rounded-full text-md mr-4 flex items-center">
+          <div className="bg-blue-100 text-blue-800 px-4 py-1 rounded-full text-md mr-4 flex items-center">
             {promo?.type}
           </div>
-          <div className="bg-gray-200 text-gray-700 px-4 py-1 rounded-full text-md flex items-center">
+          <div className="bg-green-100 text-green-800 px-4 py-1 rounded-full text-md flex items-center">
             {promo?.category}
           </div>
           <button
             className="ml-auto text-sm text-gray-500 self-center flex"
             onClick={() => {
               if (isAuth && !isLike) {
-                setLikeTrigger((prev)=>(!prev));
+                setLikeTrigger((prev) => !prev);
                 if (promo) {
                   setPromo({
                     ...promo,
@@ -186,7 +186,7 @@ export default function Main() {
                 }
                 setIsLike(true);
               } else if (isAuth && isLike) {
-                setUnLikeTrigger((prev)=>(!prev));
+                setUnLikeTrigger((prev) => !prev);
                 if (promo) {
                   setPromo({
                     ...promo,
@@ -221,9 +221,11 @@ export default function Main() {
           <ul className="list-disc pl-5 text-md">
             <li>
               Berlaku hingga{" "}
-              {promo?.ended_at
-                ? dayjs(promo.ended_at).format("MMMM D, YYYY")
-                : "Undefined"}
+              <label className="text-red-500">
+                {promo?.ended_at
+                  ? dayjs(promo.ended_at).format("MMMM D, YYYY")
+                  : "Undefined"}
+              </label>
             </li>
           </ul>
         </div>
@@ -325,11 +327,14 @@ export default function Main() {
                   )}
                   disabled={!reportValue}
                   onClick={() => {
-                    submitReport(reportValue);
-                    setReportValue("");
-                    setReportIndex(-1);
-                    setReportModal(false);
-                    toast.success("Promo berhasil di laporkan");
+                    if(!loading && user?.id){
+                      submitReport(reportValue, user.id);
+                      setReportValue("");
+                      setReportIndex(-1);
+                      setReportModal(false);
+                      toast.success("Promo berhasil di laporkan");
+                    }
+                    
                   }}
                 >
                   Report

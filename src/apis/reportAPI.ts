@@ -3,12 +3,13 @@ import { ReportSorting } from "../models/Report_sorting";
 import axios from "./axios";
 
 export const ReportAPI = {
-  addReport: async (value?: string, id?: number) => {
+  addReport: async ({value,id,userId}:{value?: string, id?: number, userId?: number}) => {
     return await axios.request({
       url: `/report/${id}`,
       method: "POST",
       params: {
         value,
+        userId,
       },
     });
   },
