@@ -15,6 +15,7 @@ import ExtendedPromoPage from "../pages/extendedPromoPage";
 import AddPromoPage from "../pages/addPromoPage";
 import BrandProfilePage from "../pages/brandProfilePage";
 import RequestSellerPage from "../pages/requestSellerPage";
+import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 
 export const router = createBrowserRouter([
   {
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
       {
         path: "/register",
         element: <RegisterPage />,
+      },
+      {
+        path: "/forgot",
+        element: <ForgotPasswordPage />,
       },
     ],
   },

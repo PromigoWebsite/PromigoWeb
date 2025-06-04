@@ -120,9 +120,9 @@ const LoginForm = () => {
                         />
                         <label className="text-sm text-gray-600">Remember me</label>
                     </div>
-                    <a href="#" className="text-sm text-blue-600 hover:text-blue-800">
+                    <div onClick={()=>navigate('/forgot')} className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer">
                         Forgot Password?
-                    </a>
+                    </div>
                 </div>
 
                 {/* Submit Button */}
