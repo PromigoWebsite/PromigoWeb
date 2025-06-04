@@ -95,7 +95,7 @@ export default function Main() {
 
     return (
       <div className="p-6 bg-gray-50 flex justify-center">
-        <div className="max-w-screen-xl w-full flex flex-col">
+        <div className="max-w-5/6 w-full flex flex-col">
           {/* Promo Banner */}
           <button
             className="w-full rounded-lg overflow-hidden shadow-md mt-2 self-center"
@@ -111,14 +111,14 @@ export default function Main() {
           {/* brand */}
           <div className="mt-6">
             <h2 className="text-2xl font-semibold mb-4">Rekan Brand</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-6 sm:grid-cols-12 gap-6">
               {brands
                 .slice(0, brandExpanded ? brands.length : 4)
                 .map((item, index) => (
                   <div
                     key={index}
                     onClick={() => navigate(`/brand/${item.id}`)}
-                    className="bg-white rounded-2xl p-4 shadow-lg flex flex-col items-center transition-transform transition-duration-300 ease-in-out transform hover:scale-105"
+                    className="bg-white rounded-2xl p-4 shadow-lg flex flex-col items-center transition-transform transition-duration-300 ease-in-out transform hover:scale-105 col-span-3"
                   >
                     <div className="w-20 h-20 rounded-full border border-gray-300 overflow-hidden bg-gray-100 flex items-center justify-center">
                       <img
@@ -166,16 +166,11 @@ export default function Main() {
           {/* Recommendation Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Rekomendasi</h2>
-            <Carousel className="pb-4 pt-4" slideSize="350px" slideGap="1rem">
+            <Carousel slideSize="300px">
               {reccomendations.map((item, index) => (
                 <div
                   key={index}
-                  className="transition-transform duration-300 ease-in-out hover:scale-105"
-                  style={{
-                    flex: "0 0 var(--slide-size, auto)",
-                    marginRight: "var(--slide-gap, 1rem)",
-                    minWidth: 0,
-                  }}
+                  className="transition-transform duration-300 ease-in-out hover:scale-105 py-4"
                 >
                   <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
                     <button
@@ -210,16 +205,11 @@ export default function Main() {
           {/* Newest Promo Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Promo Terbaru</h2>
-            <Carousel className="pb-4 pt-4" slideSize="280px" slideGap="1rem">
+            <Carousel slideSize="280px">
               {newestPromos.map((item, index) => (
                 <div
                   key={index}
-                  className="transition-transform duration-300 ease-in-out hover:scale-105"
-                  style={{
-                    flex: "0 0 var(--slide-size, auto)",
-                    marginRight: "var(--slide-gap, 1rem)",
-                    minWidth: 0, 
-                  }}
+                  className="transition-transform duration-300 ease-in-out hover:scale-105 py-4"
                 >
                   <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
                     <button
@@ -255,16 +245,11 @@ export default function Main() {
           {/* Newest Food Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Makanan Terbaru</h2>
-            <Carousel className="pb-4 pt-4" slideSize="280px" slideGap="1rem">
+            <Carousel className="pb-4 pt-4" slideSize="280px">
               {newestFood.map((item, index) => (
                 <div
                   key={index}
-                  className="transition-transform duration-300 ease-in-out hover:scale-105"
-                  style={{
-                    flex: "0 0 var(--slide-size, auto)",
-                    marginRight: "var(--slide-gap, 1rem)",
-                    minWidth: 0,
-                  }}
+                  className="transition-transform duration-300 ease-in-out hover:scale-105 py-4"
                 >
                   <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
                     <button
@@ -301,16 +286,11 @@ export default function Main() {
           {/* Newest Drink Section */}
           <div className="mt-10">
             <h2 className="text-2xl font-semibold mb-4">Minuman Terbaru</h2>
-            <Carousel className="pb-4 pt-4" slideSize="280px" slideGap="1rem">
+            <Carousel className="pb-4 pt-4" slideSize="280px">
               {newestDrink.map((item, index) => (
                 <div
                   key={index}
-                  className="transition-transform duration-300 ease-in-out hover:scale-105"
-                  style={{
-                    flex: "0 0 var(--slide-size, auto)",
-                    marginRight: "var(--slide-gap, 1rem)",
-                    minWidth: 0,
-                  }}
+                  className="transition-transform duration-300 ease-in-out hover:scale-105 py-4"
                 >
                   <div className="border border-gray-300 rounded-2xl overflow-hidden shadow-lg bg-white h-full">
                     <button

@@ -90,11 +90,11 @@ export default function Main() {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col flex-1 min-w-0">
           {/* Navbar */}
           <nav
             className={clsx(
-              "flex justify-center p-3 z-1 bg-gray-50",
+              "flex justify-center p-3 z-1 bg-gray-50 flex-shrink-0",
               "theme-navbar"
             )}
           >
@@ -221,7 +221,7 @@ export default function Main() {
           </nav>
 
           {/* Main Content Area */}
-          <div className="flex-1 p-4 bg-gray-50 z-0">
+          <div className="flex-1 bg-gray-50 z-0 min-w-0 overflow-x-hidden">
             <Outlet />
           </div>
         </div>
@@ -286,7 +286,16 @@ export default function Main() {
                   )}
                 </ul>
               </div>
-
+              {/* Contact or Additional Info */}
+              <div className="flex flex-col items-end md:items-start">
+                <h3 className="font-semibold text-lg mb-3">Kontak</h3>
+                <div className="text-sm text-gray-600 space-y-1 text-center md:text-left">
+                  <p>Email: info@promigo.com</p>
+                  <p>Phone: +62 813 1764 4690</p>
+                </div>
+              </div>
+            </div>
+            {user?.role && (
               <div>
                 <h3 className="font-semibold text-lg mb-3">Menu Lainnya</h3>
                 <ul className="space-y-2">
@@ -302,7 +311,9 @@ export default function Main() {
                   )}
                   {user?.role === "User" && (
                     <li className="text-sm">
-                      <span className="text-gray-600">Tertarik menjadi mitra penjual? </span>
+                      <span className="text-gray-600">
+                        Tertarik menjadi mitra penjual?{" "}
+                      </span>
                       <button
                         onClick={() => navigate(`/extended/request`)}
                         className="text-blue-500 hover:text-blue-700 font-medium transition-colors"
@@ -313,23 +324,15 @@ export default function Main() {
                   )}
                 </ul>
               </div>
-            </div>
-
-            {/* Contact or Additional Info */}
-            <div className="flex flex-col items-center md:items-start">
-              <h3 className="font-semibold text-lg mb-3">Kontak</h3>
-              <div className="text-sm text-gray-600 space-y-1 text-center md:text-left">
-                <p>Email: info@promigo.com</p>
-                <p>Phone: +62 813 1764 4690</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
-        
+
         {/* Copyright Section */}
         <div className="bg-gray-500 text-white text-center text-sm py-4">
           <p>
-            Copyright © 2025 Promigo, designed by Fransisco, developed by Arvin, Jason, and Candra. All Rights Reserved.
+            Copyright © 2025 Promigo, designed by Fransisco, developed by Arvin,
+            Jason, and Candra. All Rights Reserved.
           </p>
         </div>
       </footer>

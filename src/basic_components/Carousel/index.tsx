@@ -1,41 +1,61 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
+import { EmblaOptionsType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
-import type { EmblaOptionsType } from "embla-carousel";
 
-type CarouselProps = {
-  options?: EmblaOptionsType;
+type PropType = {
   children: ReactNode;
+  options?: EmblaOptionsType;
   className?: string;
-  slideSize?: string; // Untuk mengatur ukuran slide secara uniform
-  slideGap?: string; // Untuk mengatur gap antar slide
+  slideSize?: string;
+  slideSpacing?: string;
 };
 
-const Carousel = ({
-  options,
-  children,
-  className = "",
-  slideSize = "auto", // Default auto, atau bisa "50%", "300px", etc.
-  slideGap = "1rem",
-}: CarouselProps) => {
+const Carousel: React.FC<PropType> = (props) => {
+  const { 
+    children, 
+    options, 
+    className = "",
+    slideSize = "100%",
+    slideSpacing = "1rem"
+  } = props;
+  
   const [emblaRef] = useEmblaCarousel({
-    align: "start",
+    align: "center",
     containScroll: "trimSnaps",
     dragFree: true,
     ...options,
   });
 
-  // Generate CSS custom properties untuk slide sizing
   const containerStyle = {
-    "--slide-size": slideSize,
-    "--slide-gap": slideGap,
+    '--slide-size': slideSize,
+    '--slide-spacing': slideSpacing,
   } as React.CSSProperties;
 
   return (
-    <div className={`overflow-hidden ${className}`} ref={emblaRef}>
-      <div className="flex" style={containerStyle}>
-        {children}
+      <section className={`max-w-full mx-auto ${className}`}>
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div 
+          className="flex touch-pan-y touch-pinch-zoom"
+          style={{
+            marginLeft: `calc(${slideSpacing} * -1)`,
+            ...containerStyle
+          }}
+        >
+          {React.Children.map(children, (child, index) => (
+            <div 
+              key={index}
+              className="transform-gpu flex-shrink-0 min-w-0"
+              style={{
+                flex: `0 0 var(--slide-size, ${slideSize})`,
+                paddingLeft: `var(--slide-spacing, ${slideSpacing})`,
+              }}
+            >
+              {child}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
