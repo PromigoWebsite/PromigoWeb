@@ -118,7 +118,7 @@ export default function Main() {
                   <div
                     key={index}
                     onClick={() => navigate(`/brand/${item.id}`)}
-                    className="bg-white rounded-2xl p-4 shadow-lg flex flex-col items-center transition-transform transition-duration-300 ease-in-out transform hover:scale-105 col-span-3"
+                    className="bg-white rounded-2xl p-4 shadow-lg flex flex-col items-center transition-transform transition-duration-300 ease-in-out transform hover:scale-105 col-span-3 cursor-pointer"
                   >
                     <div className="w-20 h-20 rounded-full border border-gray-300 overflow-hidden bg-gray-100 flex items-center justify-center">
                       <img
