@@ -104,7 +104,7 @@ export default function Main() {
       getItems();
       checkLike();
     }
-  }, []);
+  }, [loading]);
 
   useEffect(() => {
     if(promo){
