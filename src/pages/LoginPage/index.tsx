@@ -100,7 +100,7 @@ const LoginForm = () => {
                             />
                             <div
                                 className="text-black cursor-pointer"
-                                onClick={() => setShowPassword(!showPassword)}
+                                onClick={() => setShowPassword(!showPassword)}  
                             >
                                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                             </div>
@@ -118,10 +118,10 @@ const LoginForm = () => {
                             onChange={handleChange}
                             className="mr-2"
                         />
-                        <label className="text-sm text-gray-600">Remember me</label>
+                        <label className="text-sm text-gray-600">Ingat saya</label>
                     </div>
                     <div onClick={()=>navigate('/forgot')} className="text-sm text-blue-600 hover:text-blue-800 cursor-pointer">
-                        Forgot Password?
+                        Lupa Password?
                     </div>
                 </div>
 
