@@ -236,10 +236,14 @@ export default function Main() {
             <div className="flex flex-col items-center md:items-center">
               <h2 className="font-bold text-xl mb-4">PROMIGO</h2>
               <div className="flex space-x-3">
-                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded-full transition-colors">
+                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded-full transition-colors" onClick={()=>{
+                  window.open("https://www.instagram.com/promigoo/", "_blank");
+                }}>
                   <Lucide icon="Instagram" className="size-5 stroke-2" />
                 </button>
-                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded-full transition-colors">
+                <button className="p-2 bg-gray-300 hover:bg-gray-400 rounded-full transition-colors" onClick={()=>{
+                  window.open("https://x.com/Promigo", "_blank");
+                }}>
                   <Lucide icon="Twitter" className="size-5 stroke-2" />
                 </button>
               </div>
