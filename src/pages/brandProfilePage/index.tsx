@@ -13,6 +13,7 @@ interface FormErrors {
   name?: string;
   address?: string;
   category?: string;
+  description?: string;
 }
 
 export default function Main() {
@@ -24,7 +25,9 @@ export default function Main() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [profilePhoto, setProfilePhoto] = useState<File>();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
 
     setLocalBrand((prev) => ({
@@ -74,6 +77,11 @@ export default function Main() {
       isValid = false;
     }
 
+    if (!localBrand?.description || localBrand.description.trim() === "") {
+      newErrors.description = "Deskripsi brand tidak boleh kosong";
+      isValid = false;
+    }
+
     setErrors(newErrors);
     return isValid;
   };
@@ -84,7 +92,8 @@ export default function Main() {
       const hasDataChanged =
         brand?.name !== localBrand?.name ||
         brand?.address !== localBrand?.address ||
-        brand?.category !== localBrand?.category;
+        brand?.category !== localBrand?.category ||
+        brand?.description !== localBrand?.description;
 
       if (hasDataChanged || profilePhoto) {
         if (params.id) {
@@ -93,6 +102,7 @@ export default function Main() {
           formData.append("name", localBrand?.name || "");
           formData.append("address", localBrand?.address || "");
           formData.append("category", localBrand?.category || "");
+          formData.append("description", localBrand?.description || "");
 
           if (profilePhoto) {
             formData.append("logo", profilePhoto);
@@ -280,6 +290,35 @@ export default function Main() {
                 </select>
                 {errors.category && (
                   <p className="text-red-500 text-xs mt-1">{errors.category}</p>
+                )}
+              </div>
+              {/* BRAND DESCRIPTION */}
+              <div className="flex flex-col">
+                <label htmlFor="description" className="text-gray-700 mb-1">
+                  Deskripsi Brand
+                </label>
+                <textarea
+                  id="description"
+                  name="description"
+                  rows={1}
+                  value={localBrand?.description || ""}
+                  onChange={handleChange}
+                  disabled={!isEditing}
+                  placeholder="Masukkan deskripsi brand Anda..."
+                  className={clsx(
+                    "w-full px-4 py-2 border rounded text-gray-700",
+                    {
+                      "border-red-500": errors.description,
+                      "border-gray-300": !errors.description,
+                      "bg-white": isEditing,
+                      "bg-gray-100": !isEditing,
+                    }
+                  )}
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.description}
+                  </p>
                 )}
               </div>
             </div>
