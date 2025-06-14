@@ -45,12 +45,13 @@ export default function AddPromoPage() {
       PromoAPI.get(+params?.id)
         .then((res) => {
           const data = res.data.promo;
-          console.log(res.data.promo);
+          const formattedStartDate = formatDateForInput(data.started_at);
+          const formattedEndDate = formatDateForInput(data.ended_at);
           setValue('promoName',data.name);
           setValue('promoCategory',data.category);
           setValue("promoType", data.type);
-          setValue("started_at", data.started_at);
-          setValue("ended_at", data.ended_at);
+          setValue("started_at", formattedStartDate);
+          setValue("ended_at", formattedEndDate);
           setValue("description",data.description);
           setValue("status",data.status);
           setValue("terms", JSON.parse(data.terms));
@@ -89,6 +90,18 @@ export default function AddPromoPage() {
     }
    
   }
+
+  const formatDateForInput = (dateString: string) => {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return "";
+      return date.toISOString().split("T")[0];
+    } catch (error) {
+      console.error("Error formatting date:", error);
+      return "";
+    }
+  };
   const schema = z.object({
     promoName: z.string().min(1, { message: "Nama Promo tidak boleh kosong" }),
     promoType: z.string().min(1, { message: "Tipe Promo tidak boleh kosong" }),
