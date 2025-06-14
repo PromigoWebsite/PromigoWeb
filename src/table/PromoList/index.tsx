@@ -45,6 +45,7 @@ export function PromoListTable(props: Props) {
   const [activeFilter, setActiveFilter] = useState<string>("");
   const promoTypes = ["Diskon", "Cashback", "Gratis Ongkir"];
   const promoCategories = ["Makanan", "Minuman", "Elektronik"];
+  const [perPage, setPerPage] = useState<number>(5);
 
   const fetchBrand = () => {
     BrandAPI.all()
@@ -68,7 +69,7 @@ export function PromoListTable(props: Props) {
     setLoading(true);
     AdminAPI.get({
       page: page,
-      per_page: 5,
+      per_page: perPage,
       search: props.search,
       sorting: sorting,
       filter: filter,
@@ -107,7 +108,7 @@ export function PromoListTable(props: Props) {
         search: props.search,
         id: props.id,
         sorting: sorting,
-        filter: filter
+        filter: filter,
       })
         .then((res) => {
           setItems(res.data.list.data);
@@ -136,7 +137,7 @@ export function PromoListTable(props: Props) {
     } else {
       fetchAdminItems(1);
     }
-  }, [props.search, debouncedSortTerm, filter]);
+  }, [props.search, debouncedSortTerm, filter, perPage]);
 
   useEffect(() => {
     fetchBrand();
@@ -423,11 +424,26 @@ export function PromoListTable(props: Props) {
                         {metadata.to || 0} dari {metadata.total || 0} data
                       </div>
 
-                      <Pagination
-                        pageCount={metadata.last_page || 1}
-                        currentPage={metadata.current_page || 1}
-                        onPageChange={(page) => fetchAdminItems(page)}
-                      />
+                      <div className="flex">
+                        <Pagination
+                          pageCount={metadata.last_page || 1}
+                          currentPage={metadata.current_page || 1}
+                          onPageChange={(page) => fetchAdminItems(page)}
+                        />
+                        <Menu
+                          label={
+                            <div className="flex items-center justify-around">
+                              {perPage} <Lucide icon="ChevronDown" />
+                            </div>
+                          }
+                          buttonClassName="border rounded-md p-2 border-gray-300"
+                        >
+                          <MenuItem label="5" onClick={() => setPerPage(5)} />
+                          <MenuItem label="10" onClick={() => setPerPage(10)} />
+                          <MenuItem label="15" onClick={() => setPerPage(15)} />
+                          <MenuItem label="20" onClick={() => setPerPage(20)} />
+                        </Menu>
+                      </div>
                     </div>
                   )}
                 </td>

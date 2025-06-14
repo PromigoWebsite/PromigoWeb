@@ -35,6 +35,7 @@ export function ReportListTable(props: Props) {
   });
   const [activeFilter, setActiveFilter] = useState<string>("");
   const navigate = useNavigate();
+  const [perPage, setPerPage] = useState<number>(5);
 
   const formatTime = (dateString: string) => {
     const date = format(new Date(dateString), "yyyy-MM-dd");
@@ -57,7 +58,7 @@ export function ReportListTable(props: Props) {
     setLoading(true);
     ReportAPI.get({
       page: page,
-      per_page: 5,
+      per_page: perPage,
       search: props.search,
       sorting: sorting,
       filter: filter,
@@ -81,7 +82,7 @@ export function ReportListTable(props: Props) {
 
   useEffect(() => {
     fetchItems(1);
-  }, [props.search, debouncedSortTerm, filter]);
+  }, [props.search, debouncedSortTerm, filter,perPage]);
 
   useEffect(() => {
     fetchBrand();
@@ -284,11 +285,26 @@ export function ReportListTable(props: Props) {
                         {metadata.to || 0} dari {metadata.total || 0} data
                       </div>
 
-                      <Pagination
-                        pageCount={metadata.last_page || 1}
-                        currentPage={metadata.current_page || 1}
-                        onPageChange={(page) => fetchItems(page)}
-                      />
+                      <div className="flex">
+                        <Pagination
+                          pageCount={metadata.last_page || 1}
+                          currentPage={metadata.current_page || 1}
+                          onPageChange={(page) => fetchItems(page)}
+                        />
+                        <Menu
+                          label={
+                            <div className="flex items-center justify-around">
+                              {perPage} <Lucide icon="ChevronDown" />
+                            </div>
+                          }
+                          buttonClassName="border rounded-md p-2 border-gray-300"
+                        >
+                          <MenuItem label="5" onClick={() => setPerPage(5)} />
+                          <MenuItem label="10" onClick={() => setPerPage(10)} />
+                          <MenuItem label="15" onClick={() => setPerPage(15)} />
+                          <MenuItem label="20" onClick={() => setPerPage(20)} />
+                        </Menu>
+                      </div>
                     </div>
                   )}
                 </td>

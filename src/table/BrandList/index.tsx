@@ -34,6 +34,7 @@ export function BrandListTable(props: Props) {
   });
   const [activeFilter, setActiveFilter] = useState<string>("");
   const brandCategories = ["FnB", "Elektronik"]; // Hanya ada 2 kategori
+  const [perPage, setPerPage] = useState<number>(5);
 
   const navigate = useNavigate();
   const formatTime = (dateString: string) => {
@@ -45,7 +46,7 @@ export function BrandListTable(props: Props) {
     setLoading(true);
     BrandAPI.get({
       page: page,
-      per_page: 5,
+      per_page: perPage,
       search: props.search,
       sorting: sorting,
       filter: filter,
@@ -69,7 +70,7 @@ export function BrandListTable(props: Props) {
 
   useEffect(() => {
     fetchItems(1);
-  }, [props.search, debouncedSortTerm, filter]);
+  }, [props.search, debouncedSortTerm, filter,perPage]);
   return (
     <>
       <div className="flex flex-col items-start bg-gray-300 rounded-2xl py-4 px-7 mb-2">
@@ -268,12 +269,27 @@ export function BrandListTable(props: Props) {
                         Menampilkan {metadata.from || 0} sampai{" "}
                         {metadata.to || 0} dari {metadata.total || 0} data
                       </div>
-
-                      <Pagination
-                        pageCount={metadata.last_page || 1}
-                        currentPage={metadata.current_page || 1}
-                        onPageChange={(page) => fetchItems(page)}
-                      />
+                      
+                      <div className="flex">
+                        <Pagination
+                          pageCount={metadata.last_page || 1}
+                          currentPage={metadata.current_page || 1}
+                          onPageChange={(page) => fetchItems(page)}
+                        />
+                        <Menu
+                          label={
+                            <div className="flex items-center justify-around">
+                              {perPage} <Lucide icon="ChevronDown" />
+                            </div>
+                          }
+                          buttonClassName="border rounded-md p-2 border-gray-300"
+                        >
+                          <MenuItem label="5" onClick={() => setPerPage(5)} />
+                          <MenuItem label="10" onClick={() => setPerPage(10)} />
+                          <MenuItem label="15" onClick={() => setPerPage(15)} />
+                          <MenuItem label="20" onClick={() => setPerPage(20)} />
+                        </Menu>
+                      </div>
                     </div>
                   )}
                 </td>
