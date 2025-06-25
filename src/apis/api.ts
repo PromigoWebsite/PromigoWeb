@@ -14,5 +14,5 @@ const api = {
     "https://wfovnuzxqrgmlgcrahdm.supabase.co/storage/v1/object/public/promigocloud/",
 }; 
 
-asdsdsd
+
 export default api;
